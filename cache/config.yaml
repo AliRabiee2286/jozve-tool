@@ -1,0 +1,19 @@
+# تنظیمات بررسی: source_dirs پوشه‌های فقط‌خواندنی؛ asset_patterns الگوهای کشف؛ dpi وضوح تصویر؛ bottom_fraction سهم پایین صفحه؛ header_scan_rows عمق جستجوی هدر؛ font_sentence متن تست؛ resolved_assets نام‌های واقعی کشف‌شده
+source_dirs:
+- input
+- assets
+- samples
+asset_patterns:
+  syllabus: '*Syllabus*.xlsx'
+  template: '*First_Page_Template*.pdf'
+  border: '*Sarbarg*.pdf'
+  font: '*Aria-Regular*.otf'
+dpi: 80
+bottom_fraction: 0.1
+header_scan_rows: 10
+font_sentence: ما و رسانه‌ها
+resolved_assets:
+  syllabus: assets/Comprehensive_Syllabus_19 (1)(1).xlsx
+  template: assets/First_Page_Template (1)(1).pdf
+  border: assets/01-Olampiom-Sarbarg-1- (1)(1).pdf
+  font: assets/02-Aria-Regular.otf
