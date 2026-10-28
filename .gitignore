@@ -1,0 +1,14 @@
+# پایتون
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# محلی و حساس
+.env
+*.log
+
+# فایل‌های موقت سیستم
+.DS_Store
+Thumbs.db
