@@ -1,0 +1,304 @@
+{
+  "dpi": 150,
+  "pymupdf_version": "1.28.2",
+  "asset_matches": {
+    "syllabus": "assets/Comprehensive_Syllabus_19 (1)(1).xlsx",
+    "template": "assets/First_Page_Template (1)(1).pdf",
+    "border": "assets/01-Olampiom-Sarbarg-1- (1)(1).pdf",
+    "font": "assets/02-Aria-Regular.otf"
+  },
+  "operation": {
+    "annots": true,
+    "widgets": false
+  },
+  "pages": [
+    {
+      "source": "physics_thermo_10.pdf",
+      "page": 1,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_10.pdf",
+      "page": 2,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_10.pdf",
+      "page": 3,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_10.pdf",
+      "page": 4,
+      "annotations_before": 3,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 1746,
+      "max_channel_difference": 1,
+      "difference_bbox_pixels": [
+        139,
+        19,
+        1108,
+        143
+      ],
+      "image": "bake_physics_thermo_10_p4.png"
+    },
+    {
+      "source": "physics_thermo_10.pdf",
+      "page": 5,
+      "annotations_before": 2,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 1450,
+      "max_channel_difference": 1,
+      "difference_bbox_pixels": [
+        216,
+        22,
+        1189,
+        182
+      ],
+      "image": "bake_physics_thermo_10_p5.png"
+    },
+    {
+      "source": "physics_thermo_10.pdf",
+      "page": 6,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_8.pdf",
+      "page": 1,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_8.pdf",
+      "page": 2,
+      "annotations_before": 2,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 624,
+      "max_channel_difference": 1,
+      "difference_bbox_pixels": [
+        137,
+        19,
+        468,
+        119
+      ],
+      "image": "bake_physics_thermo_8_p2.png"
+    },
+    {
+      "source": "physics_thermo_8.pdf",
+      "page": 3,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_8.pdf",
+      "page": 4,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_8.pdf",
+      "page": 5,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_9.pdf",
+      "page": 1,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_9.pdf",
+      "page": 2,
+      "annotations_before": 6,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 1422,
+      "max_channel_difference": 1,
+      "difference_bbox_pixels": [
+        176,
+        22,
+        1173,
+        133
+      ],
+      "image": "bake_physics_thermo_9_p2.png"
+    },
+    {
+      "source": "physics_thermo_9.pdf",
+      "page": 3,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "physics_thermo_9.pdf",
+      "page": 4,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 1,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 2,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 3,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 4,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 5,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 6,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 7,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 8,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    },
+    {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "page": 9,
+      "annotations_before": 0,
+      "annotations_after": 0,
+      "widgets_before": 0,
+      "widgets_after": 0,
+      "different_pixels": 0,
+      "max_channel_difference": 0,
+      "difference_bbox_pixels": null
+    }
+  ]
+}
