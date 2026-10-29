@@ -4,9 +4,9 @@ paths: # همه مسیرها نسبت به محل همین config.yaml هستن�
   output: output # محل گزارش و خروجی مراحل بعد
 asset_patterns: # هر الگو باید دقیقاً یک فایل پیدا کند
   syllabus: '*Syllabus*.xlsx' # فایل سیلابس
-  template: '*First_Page_Template*.pdf' # تمپلیت؛ در این مرحله باز نمی‌شود
+  template: '*First_Page_Template*.pdf' # تمپلیت فرست‌پیج
   border: '*Sarbarg*.pdf' # بوردر؛ در این مرحله باز نمی‌شود
-  font: '*Aria-Regular*.otf' # فونت؛ در این مرحله باز نمی‌شود
+  font: '*Aria-Regular*.otf' # فونت متن فارسی فرست‌پیج
 resolved_assets: # نام‌های کشف‌شده؛ کشف مجدد با الگو مرجع اجراست
   syllabus: assets/Comprehensive_Syllabus_19 (1)(1).xlsx # سیلابس موجود
   template: assets/First_Page_Template (1)(1).pdf # تمپلیت موجود
@@ -40,3 +40,18 @@ header_overrides: # استثناهای تأییدشدهٔ کاربر؛ نام و
   جغرافیا: # هدرهای تکراری V/W ستون دادهٔ آموزشی نیستند
     namak: B # تأیید کاربر: نامک از B، نه V
     course: D # تأیید کاربر: درس از D، نه W
+cover: # تنظیمات هندسه و چیدمان مرحله ۲؛ مختصات از تمپلیت استخراج می‌شود
+  fields: [teacher, course, chapter, topic] # ترتیب برچسب‌ها از بالا به پایین
+  label_size_hint: 19 # اندازه تقریبی برچسب طبق مشاهده مرحله صفر
+  label_size_tolerance: 1 # تلورانس تشخیص اندازه برچسب بر حسب پوینت
+  row_group_em: 0.15 # تلورانس گروه‌بندی originها نسبت به اندازه برچسب
+  frame_margin_em: 0.7 # حاشیه داخل کادر برای حفظ تزئین گوشه‌ها
+  label_gap_em: 0.2 # فاصله سمت راست مقدار تا چپ‌ترین برچسب
+  row_top_em: 1.35 # فاصله بالای ردیف از baseline برچسب؛ مستقل از bbox متریک
+  line_height: 1.15 # نسبت ارتفاع خط HTML به اندازه فونت
+  min_scale: 0.6 # کوچک‌ترین اندازه مجاز طبق قرارداد
+  scale_step: 0.01 # کاهش یک درصدی پس از امتحان اندازه کامل
+  max_lines: [2, 2, 2, 4] # حداکثر خطوط استاد، درس، فصل، مبحث
+  qc_dpi: 150 # وضوح ثابت QC و مقایسه نمونه
+  ink_threshold: 245 # آستانه جوهر برای اندازه‌گیری bbox؛ معیار تغییر بیرونی بدون تلورانس است
+  guard_em: 3 # فضای شاهد اطراف لایه متن برای آشکارشدن خروج جوهر

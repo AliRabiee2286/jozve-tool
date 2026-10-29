@@ -1,0 +1,202 @@
+{
+  "template_index": 6,
+  "template_page": 6,
+  "orientation": "portrait",
+  "page_size": [
+    595.2760009765625,
+    841.8900146484375
+  ],
+  "frame_bbox": [
+    122.98600006103516,
+    530.1099853515625,
+    471.6709899902344,
+    746.6099853515625
+  ],
+  "fields": {
+    "teacher": {
+      "value": "احسان اردشیری",
+      "bbox": [
+        136.28600006103517,
+        543.4099853515625,
+        395.71458740234374,
+        575.4862915039063
+      ],
+      "ink_bbox": [
+        212.64,
+        552.48,
+        319.68,
+        569.76
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 2,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        136.28600006103517,
+        548.5231382369996,
+        395.71458740234374,
+        627.3731386184693
+      ],
+      "font_embedded": true
+    },
+    "course": {
+      "value": "ترمودینامیک",
+      "bbox": [
+        136.28600006103517,
+        575.4862915039063,
+        395.71458740234374,
+        614.493310546875
+      ],
+      "ink_bbox": [
+        221.76,
+        588.0,
+        310.08,
+        605.28
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 2,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        136.28600006103517,
+        584.0648008346558,
+        395.71458740234374,
+        662.9148012161255
+      ],
+      "font_embedded": true
+    },
+    "chapter": {
+      "value": "حل سوال مرحله اول",
+      "bbox": [
+        136.28600006103517,
+        614.493310546875,
+        395.71458740234374,
+        653.5003295898438
+      ],
+      "ink_bbox": [
+        197.76,
+        627.36,
+        334.56,
+        644.64
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 2,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        136.28600006103517,
+        623.0718198776245,
+        395.71458740234374,
+        701.9218202590943
+      ],
+      "font_embedded": true
+    },
+    "topic": {
+      "value": "حل سوال مرحله اول",
+      "bbox": [
+        136.28600006103517,
+        653.5003295898438,
+        395.71458740234374,
+        733.3099853515625
+      ],
+      "ink_bbox": [
+        197.76,
+        686.4,
+        334.56,
+        703.68
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 4,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        136.28600006103517,
+        682.4801572799684,
+        395.71458740234374,
+        761.3301576614381
+      ],
+      "font_embedded": true
+    }
+  },
+  "namak": "physics_thermo_10",
+  "metrics": {
+    "teacher": {
+      "ours_ink_bbox": [
+        212.64,
+        552.48,
+        319.68,
+        569.76
+      ],
+      "sample_ink_bbox": [
+        214.08,
+        546.24,
+        321.6,
+        563.52
+      ],
+      "center_distance_pt": 6.46219776856143,
+      "different_pixels_percent": 10.084265021754694,
+      "changed_from_blank_pixels": 2803
+    },
+    "course": {
+      "ours_ink_bbox": [
+        222.24,
+        588.0,
+        310.08,
+        605.28
+      ],
+      "sample_ink_bbox": [
+        223.2,
+        585.6,
+        312.0,
+        602.88
+      ],
+      "center_distance_pt": 2.7988569095257527,
+      "different_pixels_percent": 6.648735162050416,
+      "changed_from_blank_pixels": 2422
+    },
+    "chapter": {
+      "ours_ink_bbox": [
+        197.76,
+        627.36,
+        334.56,
+        644.64
+      ],
+      "sample_ink_bbox": [
+        199.2,
+        624.48,
+        336.0,
+        641.76
+      ],
+      "center_distance_pt": 3.2199378875997176,
+      "different_pixels_percent": 9.870848708487085,
+      "changed_from_blank_pixels": 2914
+    },
+    "topic": {
+      "ours_ink_bbox": [
+        197.76,
+        686.4,
+        334.56,
+        703.68
+      ],
+      "sample_ink_bbox": [
+        206.4,
+        663.84,
+        328.8,
+        679.2
+      ],
+      "center_distance_pt": 23.564040400576452,
+      "different_pixels_percent": 4.946196168548512,
+      "changed_from_blank_pixels": 4325
+    }
+  },
+  "outside_changed_pixels": 0,
+  "page_different_percent": 5.685129052323823
+}

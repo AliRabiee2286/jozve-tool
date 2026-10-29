@@ -1,0 +1,202 @@
+{
+  "template_index": 7,
+  "template_page": 21,
+  "orientation": "landscape",
+  "page_size": [
+    841.8900146484375,
+    595.2760009765625
+  ],
+  "frame_bbox": [
+    115.29299926757812,
+    361.1109924316406,
+    725.97802734375,
+    541.6110229492188
+  ],
+  "fields": {
+    "teacher": {
+      "value": "هانیه ملک محمدی",
+      "bbox": [
+        128.59299926757814,
+        374.41099243164064,
+        650.0223266601563,
+        406.48650512695315
+      ],
+      "ink_bbox": [
+        323.04,
+        383.52,
+        455.52,
+        400.32
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 2,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        128.59299926757814,
+        379.52374858856206,
+        650.0223266601563,
+        458.3737489700318
+      ],
+      "font_embedded": true
+    },
+    "course": {
+      "value": "ما و رسانه‌ها",
+      "bbox": [
+        128.59299926757814,
+        406.48650512695315,
+        650.0223266601563,
+        445.4934936523438
+      ],
+      "ink_bbox": [
+        349.44,
+        419.04,
+        429.6,
+        436.32
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 2,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        128.59299926757814,
+        415.0649991989136,
+        650.0223266601563,
+        493.9149995803833
+      ],
+      "font_embedded": true
+    },
+    "chapter": {
+      "value": "پنجگانۀ سوادرسانه‌ای",
+      "bbox": [
+        128.59299926757814,
+        445.4934936523438,
+        650.0223266601563,
+        484.5005126953125
+      ],
+      "ink_bbox": [
+        316.32,
+        456.96,
+        462.24,
+        477.12
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 2,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        128.59299926757814,
+        454.0720029830933,
+        650.0223266601563,
+        532.922003364563
+      ],
+      "font_embedded": true
+    },
+    "topic": {
+      "value": "مدل تک‌خطی ارتباطات و نظریات اولیه ارتباطات",
+      "bbox": [
+        128.59299926757814,
+        484.5005126953125,
+        650.0223266601563,
+        528.3110229492188
+      ],
+      "ink_bbox": [
+        232.32,
+        499.68,
+        546.72,
+        516.96
+      ],
+      "font_size": 19.0,
+      "label_size": 19.0,
+      "scale": 1.0,
+      "line_count": 1,
+      "max_lines": 4,
+      "layout_height": 21.850000381469727,
+      "layout_box": [
+        128.59299926757814,
+        495.4807676315308,
+        650.0223266601563,
+        574.3307680130006
+      ],
+      "font_embedded": true
+    }
+  },
+  "namak": "Savad resane-ma va resane-10",
+  "metrics": {
+    "teacher": {
+      "ours_ink_bbox": [
+        323.04,
+        383.52,
+        455.52,
+        400.32
+      ],
+      "sample_ink_bbox": [
+        326.4,
+        377.76,
+        458.88,
+        394.56
+      ],
+      "center_distance_pt": 6.668373114935905,
+      "different_pixels_percent": 6.088125548726953,
+      "changed_from_blank_pixels": 4593
+    },
+    "course": {
+      "ours_ink_bbox": [
+        349.44,
+        419.04,
+        429.6,
+        436.32
+      ],
+      "sample_ink_bbox": [
+        352.32,
+        416.64,
+        432.96,
+        433.92
+      ],
+      "center_distance_pt": 3.9362926720456386,
+      "different_pixels_percent": 2.876948972360028,
+      "changed_from_blank_pixels": 4048
+    },
+    "chapter": {
+      "ours_ink_bbox": [
+        316.32,
+        456.96,
+        462.24,
+        477.12
+      ],
+      "sample_ink_bbox": [
+        319.2,
+        454.56,
+        465.6,
+        474.72
+      ],
+      "center_distance_pt": 3.936292672045604,
+      "different_pixels_percent": 5.613342898134864,
+      "changed_from_blank_pixels": 4388
+    },
+    "topic": {
+      "ours_ink_bbox": [
+        232.32,
+        499.68,
+        546.72,
+        516.96
+      ],
+      "sample_ink_bbox": [
+        251.52,
+        493.92,
+        533.28,
+        509.76
+      ],
+      "center_distance_pt": 7.09117761729321,
+      "different_pixels_percent": 10.019381393861892,
+      "changed_from_blank_pixels": 7161
+    }
+  },
+  "outside_changed_pixels": 0,
+  "page_different_percent": 5.023122008679137
+}
