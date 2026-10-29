@@ -1,0 +1,74 @@
+{
+  "contacts": [
+    {
+      "image": "border_step3b_contact_1.png",
+      "pages": [
+        "border_physics_thermo_10_p1.png",
+        "border_physics_thermo_10_p2.png",
+        "border_physics_thermo_10_p3.png",
+        "border_physics_thermo_10_p4.png",
+        "border_physics_thermo_10_p5.png",
+        "border_physics_thermo_10_p6.png",
+        "border_physics_thermo_8_p1.png",
+        "border_physics_thermo_8_p2.png"
+      ]
+    },
+    {
+      "image": "border_step3b_contact_2.png",
+      "pages": [
+        "border_physics_thermo_8_p3.png",
+        "border_physics_thermo_8_p4.png",
+        "border_physics_thermo_8_p5.png",
+        "border_physics_thermo_9_p1.png",
+        "border_physics_thermo_9_p2.png",
+        "border_physics_thermo_9_p3.png",
+        "border_physics_thermo_9_p4.png",
+        "border_Savad_resane-ma_va_resane-10_p1.png"
+      ]
+    },
+    {
+      "image": "border_step3b_contact_3.png",
+      "pages": [
+        "border_Savad_resane-ma_va_resane-10_p2.png",
+        "border_Savad_resane-ma_va_resane-10_p3.png",
+        "border_Savad_resane-ma_va_resane-10_p4.png",
+        "border_Savad_resane-ma_va_resane-10_p5.png",
+        "border_Savad_resane-ma_va_resane-10_p6.png",
+        "border_Savad_resane-ma_va_resane-10_p7.png",
+        "border_Savad_resane-ma_va_resane-10_p8.png",
+        "border_Savad_resane-ma_va_resane-10_p9.png"
+      ]
+    }
+  ],
+  "overlap_crops": [
+    "ink_physics_thermo_10_p3_footer.png",
+    "ink_physics_thermo_8_p1_header.png",
+    "ink_physics_thermo_8_p1_footer.png",
+    "ink_physics_thermo_8_p4_header.png",
+    "ink_physics_thermo_9_p1_header.png",
+    "ink_physics_thermo_9_p1_footer.png",
+    "ink_physics_thermo_9_p3_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p1_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p1_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p2_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p2_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p3_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p3_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p4_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p4_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p5_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p5_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p6_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p6_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p7_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p7_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p8_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p8_footer.png",
+    "ink_Savad_resane-ma_va_resane-10_p9_header.png",
+    "ink_Savad_resane-ma_va_resane-10_p9_footer.png"
+  ],
+  "header_check": {
+    "reference_green_pixels": 81476,
+    "unexpected_white_pixels": 0
+  }
+}

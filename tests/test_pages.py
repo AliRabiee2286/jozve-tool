@@ -9,7 +9,8 @@ import pymupdf as fitz
 import pytest
 from syllabus import load_config, discover_assets
 from border import clean_border, apply_border, placements
-from pages import process_pages, number_candidates, remove_numbers, raster
+from pages import (process_pages, number_candidates, remove_numbers, raster,
+                   _preserve_rendering_attributes, meaningful_ink, bake_annotations)
 
 ROOT = Path(__file__).resolve().parents[1]
 CFG = load_config()
@@ -47,7 +48,7 @@ def processed(clean):
         out = fitz.open(target)
         original = fitz.open(src)
         reference = ROOT / CFG['paths']['samples'] / f"{CFG['output_prefix']}_{slug}_{CFG['output_version']}.pdf"
-        indices = sorted({0, len(out)//2, len(out)-1})
+        indices = list(range(len(out)))
         with fitz.open(reference) as sample:
             for i in indices:
                 ours = Image.fromarray(raster(out[i], CFG['pages']['diagnostic_dpi']))
@@ -84,20 +85,25 @@ def test_sample_acceptance(processed,index):
     for p,q in zip(original,out):
         assert image_hashes(original,p)==image_hashes(out,q)
         assert len(q.get_drawings()) >= len(p.get_drawings())
-        assert [(a.type,a.rect) for a in p.annots() or []] == [(a.type,a.rect) for a in q.annots() or []]
+        assert not list(q.annots() or [])
     for page in report['pages']:
         for piece in page['pieces']:
             if piece['part'] != 'middle':
                 assert piece['scale_x']==pytest.approx(piece['scale_y'], abs=1e-12)
     # Coverage must be reported honestly, not suppressed to meet acceptance.
     assert report['content_uncovered'] == (not any(
-        x['nonwhite_pixels'] for p in report['pages'] for x in p['coverage_after_number_removal']))
+        x['meaningful_ink_pixels'] for p in report['pages'] for x in p['coverage_after_number_removal']))
 
 
 @pytest.mark.parametrize('index',range(4))
 def test_no_pixel_change_outside_border_and_removed_numbers(processed,index):
     original,out,report=processed[index]
-    for p,q,entry in zip(original,out,report['pages']):
+    # Bake has its own independently checked user-authorized tolerance. From the
+    # baked baseline onwards the original ZERO exterior-change requirement stays.
+    baseline=fitz.open();baseline.insert_pdf(original)
+    _preserve_rendering_attributes(original,baseline)
+    baseline.bake(annots=True,widgets=False)
+    for p,q,entry in zip(baseline,out,report['pages']):
         before,after=raster(p,150),raster(q,150)
         change=np.any(before!=after,axis=2)
         boxes=[x['bbox'] for x in entry['pieces']]+[x['visible_bbox'] for x in entry['removed']]
@@ -105,6 +111,28 @@ def test_no_pixel_change_outside_border_and_removed_numbers(processed,index):
             x0,y0,x1,y1=(fitz.Rect(box)*(150/72)).irect
             change[max(y0,0):min(y1,change.shape[0]),max(x0,0):min(x1,change.shape[1])]=False
         assert not change.any(), (report['source'],entry['page'],int(change.sum()))
+    baseline.close()
+
+
+def test_widget_bake_is_attempted_and_structural_change_is_rejected():
+    source=fitz.open();p=source.new_page(width=600,height=800)
+    a=p.add_rect_annot(fitz.Rect(30,30,60,60));a.set_colors(stroke=(1,1,1));a.update()
+    widget=fitz.Widget();widget.field_name='example';widget.field_type=fitz.PDF_WIDGET_TYPE_TEXT
+    widget.rect=fitz.Rect(100,100,200,130);widget.field_value='value';p.add_widget(widget)
+    out=fitz.open(stream=source.tobytes(),filetype='pdf')
+    # In this synthetic widget PDF MuPDF adds a drawing during bake. The required
+    # invariant must reject it; widgets are neither removed nor used to skip bake.
+    with pytest.raises(ValueError,match="'widgets_before': 1, 'widgets_after': 1"):
+        bake_annotations(out,CFG['pages'])
+    assert not list(out[0].annots() or [])
+    assert len(list(out[0].widgets()))==1
+    assert len(list(source[0].annots()))==1
+    out.close();source.close()
+
+
+def test_meaningful_ink_colors():
+    colors=np.array([[[202,235,253],[255,255,255],[0,0,0],[255,0,0],[0,150,255],[100,210,0],[255,80,80],[255,134,134],[81,81,81],[227,169,177],[248,97,99]]],dtype=np.uint8)
+    assert meaningful_ink(colors,CFG['pages']).tolist()==[[False,False,True,True,True,True,False,False,True,False,False]]
 
 
 def test_clean_border_preserves_vectors_and_pixels(clean):

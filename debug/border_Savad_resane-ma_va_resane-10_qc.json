@@ -11,7 +11,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 53,
+        "drawings_after": 53,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -21,11 +36,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -37,11 +52,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -55,11 +70,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -71,11 +86,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -208,7 +223,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 77,
+        "drawings_after": 77,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -218,11 +248,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -234,11 +264,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -252,11 +282,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -268,11 +298,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -405,7 +435,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 66,
+        "drawings_after": 66,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -415,11 +460,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -431,11 +476,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -449,11 +494,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -465,11 +510,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -612,7 +657,22 @@
           "number_status": "unknown; image preserved"
         }
       ],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 1,
+        "images_after": 1,
+        "drawings_before": 52,
+        "drawings_after": 52,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -622,11 +682,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -638,11 +698,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -656,11 +716,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -672,11 +732,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -809,7 +869,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 2,
+        "images_after": 2,
+        "drawings_before": 52,
+        "drawings_after": 52,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -819,11 +894,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -835,11 +910,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -853,11 +928,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -869,11 +944,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1006,7 +1081,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 58,
+        "drawings_after": 58,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -1016,11 +1106,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1032,11 +1122,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1050,11 +1140,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1066,11 +1156,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1203,7 +1293,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 60,
+        "drawings_after": 60,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -1213,11 +1318,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1229,11 +1334,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1247,11 +1352,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1263,11 +1368,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1400,7 +1505,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 59,
+        "drawings_after": 59,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -1410,11 +1530,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1426,11 +1546,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1444,11 +1564,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1460,11 +1580,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1597,7 +1717,22 @@
       "rotation": 0,
       "removed": [],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 53,
+        "drawings_after": 53,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
       "coverage_original": [
         {
           "strip": "header",
@@ -1607,11 +1742,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1623,11 +1758,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1641,11 +1776,11 @@
             960.0,
             32.71211242675781
           ],
-          "nonwhite_pixels": 33267,
+          "meaningful_ink_pixels": 33176,
           "ink_bbox": [
-            30.72,
-            6.72,
-            960.0,
+            31.2,
+            24.48,
+            928.8,
             33.12
           ]
         },
@@ -1657,11 +1792,11 @@
             960.0,
             540.0
           ],
-          "nonwhite_pixels": 41391,
+          "meaningful_ink_pixels": 39414,
           "ink_bbox": [
-            0.0,
+            31.68,
             515.04,
-            960.0,
+            928.32,
             540.0
           ]
         }
@@ -1795,11 +1930,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -1813,11 +1948,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -1831,11 +1966,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -1849,11 +1984,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -1867,11 +2002,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -1885,11 +2020,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -1903,11 +2038,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -1921,11 +2056,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -1954,11 +2089,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -1972,11 +2107,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -1990,11 +2125,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -2008,11 +2143,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -2026,11 +2161,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -2044,11 +2179,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -2062,11 +2197,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -2080,11 +2215,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     },
@@ -2098,11 +2233,11 @@
         960.0,
         32.71211242675781
       ],
-      "nonwhite_pixels": 33267,
+      "meaningful_ink_pixels": 33176,
       "ink_bbox": [
-        30.72,
-        6.72,
-        960.0,
+        31.2,
+        24.48,
+        928.8,
         33.12
       ]
     },
@@ -2116,11 +2251,11 @@
         960.0,
         540.0
       ],
-      "nonwhite_pixels": 41391,
+      "meaningful_ink_pixels": 39414,
       "ink_bbox": [
-        0.0,
+        31.68,
         515.04,
-        960.0,
+        928.32,
         540.0
       ]
     }
@@ -2135,7 +2270,13 @@
     "e_footer_text": true,
     "f_comparison_pages": [
       1,
+      2,
+      3,
+      4,
       5,
+      6,
+      7,
+      8,
       9
     ]
   }

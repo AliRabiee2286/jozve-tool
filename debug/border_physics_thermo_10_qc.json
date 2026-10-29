@@ -27,7 +27,29 @@
         }
       ],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 690,
+        "drawings_after": 690,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": {
+        "rgb": [
+          202,
+          235,
+          253
+        ],
+        "repetitions": 54
+      },
       "coverage_original": [
         {
           "strip": "header",
@@ -37,13 +59,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 7762,
-          "ink_bbox": [
-            0.0,
-            17.28,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -53,11 +70,11 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 506,
+          "meaningful_ink_pixels": 306,
           "ink_bbox": [
-            41.28,
-            756.0,
-            204.48,
+            153.6,
+            779.04,
+            204.0,
             784.8
           ]
         }
@@ -71,13 +88,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 7762,
-          "ink_bbox": [
-            0.0,
-            17.28,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -87,13 +99,8 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 2,
-          "ink_bbox": [
-            41.28,
-            756.0,
-            42.24,
-            756.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         }
       ],
       "pieces": [
@@ -240,7 +247,29 @@
         }
       ],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 557,
+        "drawings_after": 557,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": {
+        "rgb": [
+          202,
+          235,
+          253
+        ],
+        "repetitions": 54
+      },
       "coverage_original": [
         {
           "strip": "header",
@@ -250,13 +279,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 7764,
-          "ink_bbox": [
-            0.0,
-            16.8,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -266,11 +290,11 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 517,
+          "meaningful_ink_pixels": 306,
           "ink_bbox": [
-            41.28,
-            756.0,
-            204.96,
+            153.6,
+            779.04,
+            204.48,
             784.8
           ]
         }
@@ -284,13 +308,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 7764,
-          "ink_bbox": [
-            0.0,
-            16.8,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -300,13 +319,8 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 2,
-          "ink_bbox": [
-            41.28,
-            756.0,
-            42.24,
-            756.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         }
       ],
       "pieces": [
@@ -453,7 +467,29 @@
         }
       ],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 676,
+        "drawings_after": 676,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": {
+        "rgb": [
+          202,
+          235,
+          253
+        ],
+        "repetitions": 53
+      },
       "coverage_original": [
         {
           "strip": "header",
@@ -463,13 +499,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 5216,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -479,11 +510,11 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 556,
+          "meaningful_ink_pixels": 338,
           "ink_bbox": [
-            41.28,
+            153.6,
             756.0,
-            511.2,
+            510.72,
             784.8
           ]
         }
@@ -497,13 +528,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 5216,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -513,11 +539,11 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 40,
+          "meaningful_ink_pixels": 30,
           "ink_bbox": [
-            41.28,
+            269.76,
             756.0,
-            511.2,
+            510.72,
             756.48
           ]
         }
@@ -666,35 +692,48 @@
         }
       ],
       "image_candidates": [],
-      "preserved_annotations": [
-        {
-          "type": "Ink",
-          "bbox": [
+      "bake": {
+        "annotations_before": 3,
+        "annotations_after": 0,
+        "annotation_boxes": [
+          [
             63.911468505859375,
             7.96575927734375,
             193.02125549316406,
             58.812255859375
-          ]
-        },
-        {
-          "type": "Ink",
-          "bbox": [
+          ],
+          [
             173.0,
             6.4486083984375,
             530.3217163085938,
             40.07830810546875
-          ]
-        },
-        {
-          "type": "Ink",
-          "bbox": [
+          ],
+          [
             180.5749969482422,
             23.21875,
             534.788330078125,
             71.4161376953125
           ]
-        }
-      ],
+        ],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 968,
+        "drawings_after": 968,
+        "text_equal": true,
+        "different_pixels": 1746,
+        "max_channel_difference": 1,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": {
+        "rgb": [
+          202,
+          235,
+          253
+        ],
+        "repetitions": 53
+      },
       "coverage_original": [
         {
           "strip": "header",
@@ -704,13 +743,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 1761,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -720,10 +754,10 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 515,
+          "meaningful_ink_pixels": 314,
           "ink_bbox": [
-            41.28,
-            756.0,
+            153.6,
+            779.04,
             204.96,
             784.8
           ]
@@ -738,13 +772,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 1761,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -754,13 +783,8 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 2,
-          "ink_bbox": [
-            41.28,
-            756.0,
-            42.24,
-            756.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         }
       ],
       "pieces": [
@@ -907,26 +931,42 @@
         }
       ],
       "image_candidates": [],
-      "preserved_annotations": [
-        {
-          "type": "Ink",
-          "bbox": [
+      "bake": {
+        "annotations_before": 2,
+        "annotations_after": 0,
+        "annotation_boxes": [
+          [
             250.6121826171875,
             7.5068359375,
             573.25,
             58.7821044921875
-          ]
-        },
-        {
-          "type": "Ink",
-          "bbox": [
+          ],
+          [
             100.96546936035156,
             16.98809814453125,
             265.13568115234375,
             90.29931640625
           ]
-        }
-      ],
+        ],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 732,
+        "drawings_after": 732,
+        "text_equal": true,
+        "different_pixels": 1450,
+        "max_channel_difference": 1,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": {
+        "rgb": [
+          202,
+          235,
+          253
+        ],
+        "repetitions": 53
+      },
       "coverage_original": [
         {
           "strip": "header",
@@ -936,13 +976,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 2271,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -952,11 +987,11 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 521,
+          "meaningful_ink_pixels": 307,
           "ink_bbox": [
-            41.28,
-            756.0,
-            204.96,
+            153.6,
+            779.04,
+            204.48,
             784.8
           ]
         }
@@ -970,13 +1005,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 2271,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -986,13 +1016,8 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 2,
-          "ink_bbox": [
-            41.28,
-            756.0,
-            42.24,
-            756.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         }
       ],
       "pieces": [
@@ -1139,7 +1164,29 @@
         }
       ],
       "image_candidates": [],
-      "preserved_annotations": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 394,
+        "drawings_after": 394,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": {
+        "rgb": [
+          202,
+          235,
+          253
+        ],
+        "repetitions": 53
+      },
       "coverage_original": [
         {
           "strip": "header",
@@ -1149,13 +1196,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 5216,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -1165,10 +1207,10 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 523,
+          "meaningful_ink_pixels": 313,
           "ink_bbox": [
-            41.28,
-            756.0,
+            153.6,
+            779.04,
             204.96,
             784.8
           ]
@@ -1183,13 +1225,8 @@
             611.4000244140625,
             48.043190002441406
           ],
-          "nonwhite_pixels": 5216,
-          "ink_bbox": [
-            0.0,
-            17.76,
-            611.52,
-            48.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         },
         {
           "strip": "footer",
@@ -1199,13 +1236,8 @@
             611.4000244140625,
             793.0800170898438
           ],
-          "nonwhite_pixels": 2,
-          "ink_bbox": [
-            41.28,
-            756.0,
-            42.24,
-            756.48
-          ]
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
         }
       ],
       "pieces": [
@@ -1330,23 +1362,23 @@
     {
       "page": 1,
       "kind": "possible_content_coverage",
-      "strip": "header",
+      "strip": "footer",
       "bbox": [
         0.0,
-        10.362256050109863,
+        756.4447021484375,
         611.4000244140625,
-        48.043190002441406
+        793.0800170898438
       ],
-      "nonwhite_pixels": 7762,
+      "meaningful_ink_pixels": 306,
       "ink_bbox": [
-        0.0,
-        17.28,
-        611.52,
-        48.48
+        153.6,
+        779.04,
+        204.0,
+        784.8
       ]
     },
     {
-      "page": 1,
+      "page": 2,
       "kind": "possible_content_coverage",
       "strip": "footer",
       "bbox": [
@@ -1355,69 +1387,15 @@
         611.4000244140625,
         793.0800170898438
       ],
-      "nonwhite_pixels": 506,
+      "meaningful_ink_pixels": 306,
       "ink_bbox": [
-        41.28,
-        756.0,
+        153.6,
+        779.04,
         204.48,
         784.8
       ]
     },
     {
-      "page": 2,
-      "kind": "possible_content_coverage",
-      "strip": "header",
-      "bbox": [
-        0.0,
-        10.362256050109863,
-        611.4000244140625,
-        48.043190002441406
-      ],
-      "nonwhite_pixels": 7764,
-      "ink_bbox": [
-        0.0,
-        16.8,
-        611.52,
-        48.48
-      ]
-    },
-    {
-      "page": 2,
-      "kind": "possible_content_coverage",
-      "strip": "footer",
-      "bbox": [
-        0.0,
-        756.4447021484375,
-        611.4000244140625,
-        793.0800170898438
-      ],
-      "nonwhite_pixels": 517,
-      "ink_bbox": [
-        41.28,
-        756.0,
-        204.96,
-        784.8
-      ]
-    },
-    {
-      "page": 3,
-      "kind": "possible_content_coverage",
-      "strip": "header",
-      "bbox": [
-        0.0,
-        10.362256050109863,
-        611.4000244140625,
-        48.043190002441406
-      ],
-      "nonwhite_pixels": 5216,
-      "ink_bbox": [
-        0.0,
-        17.76,
-        611.52,
-        48.48
-      ]
-    },
-    {
       "page": 3,
       "kind": "possible_content_coverage",
       "strip": "footer",
@@ -1427,30 +1405,12 @@
         611.4000244140625,
         793.0800170898438
       ],
-      "nonwhite_pixels": 556,
+      "meaningful_ink_pixels": 338,
       "ink_bbox": [
-        41.28,
+        153.6,
         756.0,
-        511.2,
+        510.72,
         784.8
-      ]
-    },
-    {
-      "page": 4,
-      "kind": "possible_content_coverage",
-      "strip": "header",
-      "bbox": [
-        0.0,
-        10.362256050109863,
-        611.4000244140625,
-        48.043190002441406
-      ],
-      "nonwhite_pixels": 1761,
-      "ink_bbox": [
-        0.0,
-        17.76,
-        611.52,
-        48.48
       ]
     },
     {
@@ -1463,63 +1423,12 @@
         611.4000244140625,
         793.0800170898438
       ],
-      "nonwhite_pixels": 515,
+      "meaningful_ink_pixels": 314,
       "ink_bbox": [
-        41.28,
-        756.0,
+        153.6,
+        779.04,
         204.96,
         784.8
-      ]
-    },
-    {
-      "page": 4,
-      "kind": "annotation_over_border",
-      "type": "Ink",
-      "bbox": [
-        63.911468505859375,
-        7.96575927734375,
-        193.02125549316406,
-        58.812255859375
-      ]
-    },
-    {
-      "page": 4,
-      "kind": "annotation_over_border",
-      "type": "Ink",
-      "bbox": [
-        173.0,
-        6.4486083984375,
-        530.3217163085938,
-        40.07830810546875
-      ]
-    },
-    {
-      "page": 4,
-      "kind": "annotation_over_border",
-      "type": "Ink",
-      "bbox": [
-        180.5749969482422,
-        23.21875,
-        534.788330078125,
-        71.4161376953125
-      ]
-    },
-    {
-      "page": 5,
-      "kind": "possible_content_coverage",
-      "strip": "header",
-      "bbox": [
-        0.0,
-        10.362256050109863,
-        611.4000244140625,
-        48.043190002441406
-      ],
-      "nonwhite_pixels": 2271,
-      "ink_bbox": [
-        0.0,
-        17.76,
-        611.52,
-        48.48
       ]
     },
     {
@@ -1532,52 +1441,12 @@
         611.4000244140625,
         793.0800170898438
       ],
-      "nonwhite_pixels": 521,
+      "meaningful_ink_pixels": 307,
       "ink_bbox": [
-        41.28,
-        756.0,
-        204.96,
+        153.6,
+        779.04,
+        204.48,
         784.8
-      ]
-    },
-    {
-      "page": 5,
-      "kind": "annotation_over_border",
-      "type": "Ink",
-      "bbox": [
-        250.6121826171875,
-        7.5068359375,
-        573.25,
-        58.7821044921875
-      ]
-    },
-    {
-      "page": 5,
-      "kind": "annotation_over_border",
-      "type": "Ink",
-      "bbox": [
-        100.96546936035156,
-        16.98809814453125,
-        265.13568115234375,
-        90.29931640625
-      ]
-    },
-    {
-      "page": 6,
-      "kind": "possible_content_coverage",
-      "strip": "header",
-      "bbox": [
-        0.0,
-        10.362256050109863,
-        611.4000244140625,
-        48.043190002441406
-      ],
-      "nonwhite_pixels": 5216,
-      "ink_bbox": [
-        0.0,
-        17.76,
-        611.52,
-        48.48
       ]
     },
     {
@@ -1590,10 +1459,10 @@
         611.4000244140625,
         793.0800170898438
       ],
-      "nonwhite_pixels": 523,
+      "meaningful_ink_pixels": 313,
       "ink_bbox": [
-        41.28,
-        756.0,
+        153.6,
+        779.04,
         204.96,
         784.8
       ]
@@ -1609,7 +1478,10 @@
     "e_footer_text": true,
     "f_comparison_pages": [
       1,
+      2,
+      3,
       4,
+      5,
       6
     ]
   }

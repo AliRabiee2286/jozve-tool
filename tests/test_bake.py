@@ -1,4 +1,4 @@
-"""Step 3b stop gate: baking must preserve every rendered pixel, with no border.
+"""Step 3b: user-approved bake tolerance, restricted to annotation rectangles.
 
 Run: python -m pytest tests/test_bake.py -q
 Diagnostics only; never saves or applies a baked PDF to the production pipeline.
@@ -28,18 +28,29 @@ def bake_evidence():
             before = [raster(p, CFG['pages']['diagnostic_dpi']) for p in trial]
             annotations = [len(list(p.annots() or [])) for p in trial]
             widgets = [len(list(p.widgets() or [])) for p in trial]
+            structure = [(len(p.get_images()), len(p.get_drawings()), p.get_text()) for p in trial]
+            boxes = [[list(a.rect*p.rotation_matrix) for a in p.annots() or []] for p in trial]
             # User-authorized operation only. No correction or fallback afterwards.
             trial.bake(annots=True, widgets=False)
             for index, (page, old) in enumerate(zip(trial, before)):
                 new = raster(page, CFG['pages']['diagnostic_dpi'])
                 delta = np.abs(new.astype(np.int16)-old.astype(np.int16))
                 changed = np.any(delta != 0, axis=2)
+                allowed = np.zeros(changed.shape,dtype=bool)
+                for box in boxes[index]:
+                    x0,y0,x1,y1=(fitz.Rect(box)*(CFG['pages']['diagnostic_dpi']/72)).irect
+                    allowed[max(0,y0-3):min(allowed.shape[0],y1+3),max(0,x0-3):min(allowed.shape[1],x1+3)]=True
                 ys,xs = np.nonzero(changed)
                 entry = {'source': path.name, 'page': index+1,
                          'annotations_before': annotations[index],
                          'annotations_after': len(list(page.annots() or [])),
                          'widgets_before': widgets[index],
                          'widgets_after': len(list(page.widgets() or [])),
+                         'images_before': structure[index][0], 'images_after': len(page.get_images()),
+                         'drawings_before': structure[index][1], 'drawings_after': len(page.get_drawings()),
+                         'text_equal': structure[index][2] == page.get_text(),
+                         'outside_annotation_pixels': int(changed[~allowed].sum()),
+                         'annotation_boxes': boxes[index],
                          'different_pixels': int(changed.sum()),
                          'max_channel_difference': int(delta.max()),
                          'difference_bbox_pixels': [int(xs.min()),int(ys.min()),int(xs.max()+1),int(ys.max()+1)] if len(xs) else None}
@@ -72,4 +83,8 @@ def test_bake_pixel_identity(bake_evidence,index):
     entry=bake_evidence[index]
     assert entry['widgets_before']==entry['widgets_after']
     assert entry['annotations_after']==0
-    assert entry['different_pixels']==0, entry
+    assert entry['max_channel_difference']<=2, entry
+    assert entry['outside_annotation_pixels']==0, entry
+    assert entry['images_before']==entry['images_after']
+    assert entry['drawings_before']==entry['drawings_after']
+    assert entry['text_equal']
