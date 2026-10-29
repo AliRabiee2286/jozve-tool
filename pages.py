@@ -1,7 +1,7 @@
 """Vector-preserving content-page processing and conservative coverage diagnostics.
 
-process_pages returns an in-memory document plus a report. Callers must inspect
-coverage warnings: a successful transformation does not mean content is uncovered.
+process_pages returns an in-memory document plus a report. Content is uniformly
+fitted between the bars; any remaining meaningful ink under a bar is rejected.
 No cover is created or inserted by this module.
 """
 from pathlib import Path
@@ -158,8 +158,52 @@ def coverage(page, pieces, settings):
     return records
 
 
+def fit_content(page, pieces, settings):
+    """Uniform vector CTM around existing streams; keep resources, Group and boxes.
+
+    Clip to the original visible page before transforming so off-page content
+    cannot become newly visible. No nested transparency group or image is added.
+    """
+    visible = fitz.Rect(page.rect)
+    top = max(p['bbox'][3] for p in pieces if p['strip'] == 'header') + settings['fit_top_margin']
+    bottom = min(p['bbox'][1] for p in pieces if p['strip'] == 'footer') - settings['fit_bottom_margin']
+    if not 0 <= top < bottom <= visible.height:
+        raise ValueError('Border strips and margins leave no safe content area')
+    scale = min(1.0, (bottom-top)/visible.height)
+    dx = (visible.width-visible.width*scale)/2
+    dy = top + (bottom-top-visible.height*scale)/2
+    display = fitz.Matrix(scale, 0, 0, scale, dx, dy)
+    rotation, rotate_matrix = page.rotation, page.rotation_matrix
+    page.set_rotation(0)
+    try:
+        pdf_to_visible = page.transformation_matrix * rotate_matrix
+    finally:
+        page.set_rotation(rotation)
+    # Compose in float64 to avoid accumulated rounding in coordinate conversion.
+    def homogeneous(matrix):
+        a,b,c,d,e,f = matrix
+        return np.array([[a,b,0],[c,d,0],[e,f,1]], dtype=np.float64)
+    base = homogeneous(pdf_to_visible)
+    composed = base @ homogeneous(display) @ np.linalg.inv(base)
+    transform = (composed[0,0],composed[0,1],composed[1,0],composed[1,1],composed[2,0],composed[2,1])
+    old_clip = visible * ~pdf_to_visible
+    page.wrap_contents()
+    streams = page.get_contents()
+    numbers = lambda xs: ' '.join(f'{v:.12f}' for v in xs)
+    prefix = ('q\n'+numbers(transform)+' cm\n'+
+              numbers((old_clip.x0,old_clip.y0,old_clip.width,old_clip.height))+' re W n\n').encode('ascii')
+    doc = page.parent
+    first, last = doc.get_new_xref(), doc.get_new_xref()
+    doc.update_object(first, '<<>>'); doc.update_stream(first, prefix)
+    doc.update_object(last, '<<>>'); doc.update_stream(last, b'\nQ\n')
+    doc.xref_set_key(page.xref, 'Contents', '['+' '.join(f'{x} 0 R' for x in [first,*streams,last])+']')
+    return {'scale': scale, 'safe_bbox': [0,top,visible.width,bottom],
+            'content_bbox': list(visible*display), 'display_matrix': list(display),
+            'pdf_matrix': list(transform)}
+
+
 def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
-    """Copy pages with insert_pdf; remove footer text; overlay vector border.
+    """Copy pages, bake, remove footer text, fit uniformly, overlay vector border.
 
     source is a path or an open Document (never mutated). Dimensions, boxes and
     rotation remain as supplied. Image footer contents are unknown, never OCR'd.
@@ -188,17 +232,18 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
                     if visible.y1 >= bottom:
                         image_candidates.append({'bbox': list(visible),
                                                  'number_status': 'unknown; image preserved'})
+                fitted = fit_content(page, pieces, config['pages'])
+                fitted_coverage = coverage(page, pieces, config['pages'])
+                if any(item['meaningful_ink_pixels'] for item in fitted_coverage):
+                    # No border is added to conceal an unsuccessful content placement.
+                    raise ValueError(f'Ink remains under strips on page {i+1}: {fitted_coverage}')
                 entry = {'page': i+1, 'size': list(page.rect), 'rotation': page.rotation,
                          'removed': removed, 'image_candidates': image_candidates,
                          'bake': baked[i], 'paper_rule': measure_paper_rule(original[i], config['pages']),
                          'coverage_original': before, 'coverage_after_number_removal': after,
+                         'fit': fitted, 'coverage_after_fit': fitted_coverage,
                          'pieces': apply_border(page, clean, config['border'])}
                 report['pages'].append(entry)
-                for item in before:
-                    if item['meaningful_ink_pixels']:
-                        report['warnings'].append({'page': i+1, 'kind': 'possible_content_coverage', **item})
-                if any(item['meaningful_ink_pixels'] for item in after):
-                    report['content_uncovered'] = False
                 if image_candidates:
                     report['warnings'].append({'page': i+1, 'kind': 'image_number_unknown',
                                                'images': image_candidates})

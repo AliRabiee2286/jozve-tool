@@ -10,7 +10,7 @@ import pytest
 from syllabus import load_config, discover_assets
 from border import clean_border, apply_border, placements
 from pages import (process_pages, number_candidates, remove_numbers, raster,
-                   _preserve_rendering_attributes, meaningful_ink, bake_annotations)
+                   _preserve_rendering_attributes, meaningful_ink, bake_annotations, fit_content)
 
 ROOT = Path(__file__).resolve().parents[1]
 CFG = load_config()
@@ -42,7 +42,7 @@ def processed(clean):
     for src in sorted((ROOT / CFG['paths']['input']).glob('*.pdf')):
         doc, report = process_pages(src, clean_path=clean[0])
         slug = src.stem.replace(' ', '_')
-        target = cache / f'border_{slug}.pdf'
+        target = cache / f'fit_{slug}.pdf'
         doc.save(target, garbage=4, deflate=True)
         doc.close()
         out = fitz.open(target)
@@ -56,7 +56,7 @@ def processed(clean):
                 canvas = Image.new('RGB', (ours.width+theirs.width, max(ours.height,theirs.height)+24), 'white')
                 canvas.paste(ours,(0,24)); canvas.paste(theirs,(ours.width,24))
                 ImageDraw.Draw(canvas).text((5,3),'generated LEFT / sample RIGHT',fill='black')
-                canvas.save(debug / f'border_{slug}_p{i+1}.png')
+                canvas.save(debug / f'fit_{slug}_p{i+1}.png')
         checks = {'a_count':len(original)==len(out), 'b_geometry':True,
                   'c_no_number_text':True, 'd_same_content_text':True,
                   'e_footer_text':True, 'f_comparison_pages':[i+1 for i in indices]}
@@ -71,7 +71,7 @@ def processed(clean):
             checks['d_same_content_text'] &= actual == expected.rstrip('\n')
             checks['e_footer_text'] &= 'BALATAR.GROUP' in q.get_text()
         report.update(source=src.name, checks=checks)
-        (debug/f'border_{slug}_qc.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+        (debug/f'fit_{slug}_qc.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         records.append((original,out,report))
     yield records
     for original,out,_ in records:
@@ -92,7 +92,8 @@ def test_sample_acceptance(processed,index):
                 assert piece['scale_x']==pytest.approx(piece['scale_y'], abs=1e-12)
     # Coverage must be reported honestly, not suppressed to meet acceptance.
     assert report['content_uncovered'] == (not any(
-        x['meaningful_ink_pixels'] for p in report['pages'] for x in p['coverage_after_number_removal']))
+        x['meaningful_ink_pixels'] for p in report['pages'] for x in p['coverage_after_fit']))
+    assert report['content_uncovered']
 
 
 @pytest.mark.parametrize('index',range(4))
@@ -103,15 +104,21 @@ def test_no_pixel_change_outside_border_and_removed_numbers(processed,index):
     baseline=fitz.open();baseline.insert_pdf(original)
     _preserve_rendering_attributes(original,baseline)
     baseline.bake(annots=True,widgets=False)
+    measurements=[]
     for p,q,entry in zip(baseline,out,report['pages']):
+        remove_numbers(p,CFG['pages'])
+        fit_content(p,entry['pieces'],CFG['pages'])
         before,after=raster(p,150),raster(q,150)
         change=np.any(before!=after,axis=2)
-        boxes=[x['bbox'] for x in entry['pieces']]+[x['visible_bbox'] for x in entry['removed']]
+        boxes=[x['bbox'] for x in entry['pieces']]
         for box in boxes:
             x0,y0,x1,y1=(fitz.Rect(box)*(150/72)).irect
             change[max(y0,0):min(y1,change.shape[0]),max(x0,0):min(x1,change.shape[1])]=False
         assert not change.any(), (report['source'],entry['page'],int(change.sum()))
+        measurements.append({'page':entry['page'],'outside_strip_differences':int(change.sum())})
     baseline.close()
+    slug=Path(report['source']).stem.replace(' ','_')
+    (ROOT/CFG['paths']['debug']/f'fit_{slug}_exterior.json').write_text(json.dumps(measurements,indent=2),encoding='utf-8')
 
 
 def test_widget_bake_is_attempted_and_structural_change_is_rejected():
@@ -199,7 +206,7 @@ def test_image_footer_is_preserved_and_reported(clean):
     assert not report['pages'][0]['removed']
     assert report['pages'][0]['image_candidates']
     assert image_hashes(src,p)==image_hashes(out,out[0])
-    assert not report['content_uncovered']
+    assert report['content_uncovered']
     out.close();src.close()
 
 
