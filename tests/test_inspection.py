@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.fixture(scope='module')
 def evidence():
-    return json.loads((ROOT/'cache/inspection.json').read_text(encoding='utf-8'))
+    return json.loads((ROOT/'tests/data/inspection_evidence.json').read_text(encoding='utf-8'))
 
 def test_readonly_sources(evidence):
     expected=evidence['source_hashes_before']
