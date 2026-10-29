@@ -107,9 +107,9 @@
       ],
       "ink_bbox": [
         232.32,
-        499.68,
+        497.28,
         546.72,
-        516.96
+        514.56
       ],
       "font_size": 19.0,
       "label_size": 19.0,
@@ -119,9 +119,9 @@
       "layout_height": 21.850000381469727,
       "layout_box": [
         128.59299926757814,
-        495.4807676315308,
+        493.0790222167969,
         650.0223266601563,
-        574.3307680130006
+        571.9290225982666
       ],
       "font_embedded": true
     }
@@ -182,9 +182,9 @@
     "topic": {
       "ours_ink_bbox": [
         232.32,
-        499.68,
+        497.28,
         546.72,
-        516.96
+        514.56
       ],
       "sample_ink_bbox": [
         251.52,
@@ -192,11 +192,11 @@
         533.28,
         509.76
       ],
-      "center_distance_pt": 7.09117761729321,
-      "different_pixels_percent": 10.019381393861892,
-      "changed_from_blank_pixels": 7161
+      "center_distance_pt": 4.994076491204293,
+      "different_pixels_percent": 9.488890664961637,
+      "changed_from_blank_pixels": 7013
     }
   },
   "outside_changed_pixels": 0,
-  "page_different_percent": 5.023122008679137
+  "page_different_percent": 4.998727439617699
 }

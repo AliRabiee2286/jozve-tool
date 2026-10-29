@@ -109,7 +109,8 @@ def _story(value, size, font_path, settings):
                       user_css=css, archive=fitz.Archive(str(font_path.parent)))
 
 
-def _fit_value(value, region, label_size, max_lines, page_rect, font_path, settings):
+def _fit_value(value, region, label_size, max_lines, page_rect, font_path, settings,
+               first_line_row_height=None):
     if not isinstance(value, str) or not value.strip():
         raise TextFitError('Cover values must be nonempty strings')
     minimum = settings['min_scale']
@@ -126,6 +127,12 @@ def _fit_value(value, region, label_size, max_lines, page_rect, font_path, setti
             continue
         # Deliberately taller than the region: clipping cannot conceal a vertical spill.
         y = region.y0 + (region.height - height) / 2
+        if first_line_row_height is not None:
+            # Anchor the first topic line like a single line in the preceding row.
+            # Extra lines extend downwards; keep the original region and font floor.
+            y = region.y0 + (first_line_row_height - size * settings["line_height"]) / 2
+            if y < region.y0 or y + height > region.y1:
+                continue
         draw_box = fitz.Rect(region.x0, y, region.x1, y + height + size * settings['guard_em'])
         layer = fitz.open()
         p = layer.new_page(width=page_rect.width, height=page_rect.height)
@@ -174,7 +181,10 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
         # Finish all fits before modifying the base page, so a failure yields no partial cover.
         for field, limit in zip(settings['fields'], settings['max_lines']):
             layer, record = _fit_value(values[field], regions[field], sizes[field], limit,
-                                       page.rect, assets['font'], settings)
+                                       page.rect, assets['font'], settings,
+                                       first_line_row_height=(
+                                           regions[settings['fields'][-2]].height
+                                           if field == settings['fields'][-1] else None))
             layers.append(layer); report['fields'][field] = record
         for field, layer in zip(settings['fields'], layers):
             page.draw_rect(regions[field], color=None, fill=(1, 1, 1), overlay=True)
