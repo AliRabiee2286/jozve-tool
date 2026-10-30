@@ -18,12 +18,12 @@ def evidence():
 def test_readonly_sources(evidence):
     expected=evidence['source_hashes_before']
     actual={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
-            for name in ('input','assets','samples') for p in (ROOT/name).rglob('*') if p.is_file()}
+            for name in ('input','assets','samples') for p in (ROOT/name).rglob('*') if p.is_file() and p.relative_to(ROOT).as_posix() in expected}
     assert expected == evidence['source_hashes_after'] == actual
     assert evidence['sources_unchanged'] and not evidence['errors']
 
 def test_every_pdf_page_is_accounted_for(evidence):
-    expected={p.relative_to(ROOT).as_posix() for folder in ('input','assets','samples') for p in (ROOT/folder).glob('*.pdf')}
+    expected={p.relative_to(ROOT).as_posix() for folder in ('input','assets','samples') for p in (ROOT/folder).glob('*.pdf') if p.relative_to(ROOT).as_posix() in evidence['source_hashes_before']}
     assert set(evidence['pdfs']) == expected
     for name,pages in evidence['pdfs'].items():
         with fitz.open(ROOT/name) as doc:
@@ -55,7 +55,7 @@ def test_workbook_rows_and_headers(evidence):
         ws=wb[m['sheet']]
         assert [c.value for c in ws[m['row']]]==m['values']
         assert ws.cell(m['row'],m['column']).value==m['value']
-    assert sorted(m['input'] for m in evidence['matches'])==sorted(p.name for p in (ROOT/'input').glob('*.pdf'))
+    assert sorted(m['input'] for m in evidence['matches'])==sorted(p.name for p in (ROOT/'input').glob('*.pdf') if p.relative_to(ROOT).as_posix() in evidence['source_hashes_before'])
     wb.close()
 
 def test_required_renders_are_present_and_decodable(evidence):

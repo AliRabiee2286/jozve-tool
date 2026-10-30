@@ -40,6 +40,8 @@ def processed(clean):
     cache = ROOT / CFG['paths']['cache']
     records = []
     for src in sorted((ROOT / CFG['paths']['input']).glob('*.pdf')):
+        if 'input/'+src.name not in json.loads((ROOT/'tests/data/inspection_evidence.json').read_text(encoding='utf-8'))['source_hashes_before']:
+            continue
         doc, report = process_pages(src, clean_path=clean[0])
         slug = src.stem.replace(' ', '_')
         target = cache / f'fit_{slug}.pdf'

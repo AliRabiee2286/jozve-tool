@@ -1,3 +1,4 @@
+# Tested on Windows / Python 3.12; download these pinned wheels for offline install.
 pymupdf==1.28.2
 openpyxl==3.1.5
 pyyaml==6.0.3

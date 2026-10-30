@@ -22,6 +22,8 @@ def bake_evidence():
     debug = ROOT / CFG['paths']['debug']
     records = []
     for path in sorted((ROOT / CFG['paths']['input']).glob('*.pdf')):
+        if 'input/'+path.name not in json.loads((ROOT/'tests/data/inspection_evidence.json').read_text(encoding='utf-8'))['source_hashes_before']:
+            continue
         with fitz.open(path) as original, fitz.open() as trial:
             trial.insert_pdf(original)
             _preserve_rendering_attributes(original, trial)

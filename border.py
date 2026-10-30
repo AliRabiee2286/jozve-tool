@@ -8,13 +8,17 @@ class BorderError(ValueError):
     """The calibrated asset or a requested destination is invalid."""
 
 
-def clean_border(config_path=DEFAULT_CONFIG):
+def clean_border(config_path=DEFAULT_CONFIG, cache_dir=None):
     """Return cache path and evidence; remove just the configured number span."""
     config_path = Path(config_path).resolve()
     config = load_config(config_path)
     assets = discover_assets(config, config_path.parent)
     settings = config['border']
-    target = config_path.parent / config['paths']['cache'] / settings['clean_filename']
+    cache_root = (config_path.parent / config['paths']['cache']).resolve()
+    directory = Path(cache_dir).resolve() if cache_dir is not None else cache_root
+    if directory != cache_root and not directory.is_relative_to(cache_root):
+        raise BorderError('Border cache must remain inside the configured cache directory')
+    target = directory / settings['clean_filename']
     if target.resolve() in assets.values():
         raise BorderError('Cache destination must not overwrite an asset')
     with fitz.open(assets['border']) as doc:

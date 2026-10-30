@@ -14,7 +14,7 @@ from syllabus import DEFAULT_CONFIG, load_config
 from border import clean_border, placements, apply_border
 
 
-def _preserve_rendering_attributes(source, destination):
+def _preserve_rendering_attributes(source, destination, destination_start=0, preserve_catalog=True):
     """insert_pdf omits /Group: graft it (including any referenced color space).
 
     Use the object graft API bundled with pinned PyMuPDF, not string substitution
@@ -23,8 +23,9 @@ def _preserve_rendering_attributes(source, destination):
     graft = fitz.Graftmap(destination)
     src = fitz._as_pdf_document(source)
     dst = fitz._as_pdf_document(destination)
-    pairs = [(p.xref, q.xref, ('Group', 'UserUnit')) for p,q in zip(source,destination)]
-    pairs.append((source.pdf_catalog(), destination.pdf_catalog(), ('OutputIntents',)))
+    pairs = [(p.xref, destination[i+destination_start].xref, ('Group', 'UserUnit')) for i,p in enumerate(source)]
+    if preserve_catalog:
+        pairs.append((source.pdf_catalog(), destination.pdf_catalog(), ('OutputIntents',)))
     for old, new, keys in pairs:
         a = fitz.mupdf.pdf_load_object(src, old)
         b = fitz.mupdf.pdf_load_object(dst, new)
@@ -229,7 +230,7 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
                 bottom = page.rect.height * (1-config['pages']['bottom_fraction'])
                 for item in page.get_image_info():
                     visible = fitz.Rect(item['bbox']) * page.rotation_matrix
-                    if visible.y1 >= bottom:
+                    if visible.y1 >= bottom and visible.get_area() < page.rect.get_area()*config['pages']['image_warning_max_fraction']:
                         image_candidates.append({'bbox': list(visible),
                                                  'number_status': 'unknown; image preserved'})
                 fitted = fit_content(page, pieces, config['pages'])
@@ -237,12 +238,16 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
                 if any(item['meaningful_ink_pixels'] for item in fitted_coverage):
                     # No border is added to conceal an unsuccessful content placement.
                     raise ValueError(f'Ink remains under strips on page {i+1}: {fitted_coverage}')
+                streams_before = len(page.get_contents())
+                applied = apply_border(page, clean, config['border'])
                 entry = {'page': i+1, 'size': list(page.rect), 'rotation': page.rotation,
                          'removed': removed, 'image_candidates': image_candidates,
                          'bake': baked[i], 'paper_rule': measure_paper_rule(original[i], config['pages']),
                          'coverage_original': before, 'coverage_after_number_removal': after,
                          'fit': fitted, 'coverage_after_fit': fitted_coverage,
-                         'pieces': apply_border(page, clean, config['border'])}
+                         'border_stream_count': len(page.get_contents())-streams_before,
+                         'content_stream_count': streams_before,
+                         'pieces': applied}
                 report['pages'].append(entry)
                 if image_candidates:
                     report['warnings'].append({'page': i+1, 'kind': 'image_number_unknown',

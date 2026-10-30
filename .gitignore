@@ -4,6 +4,8 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+wheels/
+tests/.pytest_tmp/
 
 # محلی و حساس
 .env

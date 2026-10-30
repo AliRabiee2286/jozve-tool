@@ -17,6 +17,9 @@ resolved_assets: # نام‌های کشف‌شده؛ کشف مجدد با الگ
   font: assets/02-Aria-Regular.otf # فونت موجود
 output_version: v01 # نسخه نام خروجی
 output_prefix: LessonNote_hard # پیشوند نام خروجی
+cli:
+  ignore_prefix: LessonNote_ # خروجی‌های قبلی ورودی محسوب نشوند
+  office_extensions: [.doc, .docx, .ppt, .pptx] # تبدیل آفلاین با LibreOffice در صورت وجود
 header_scan_rows: 5 # محدوده تشخیص هدر طبق قرارداد مرحله ۱
 headers: # نام‌های معنایی ستون؛ هیچ وابستگی به جای ثابت ستون نیست
   namak: [نامک] # کلید تطبیق
@@ -74,6 +77,7 @@ border: # کالیبراسیون با اندازه‌گیری مجدد مسیر�
       cuts: [40, 460] # نشانی و فلش داخل کلاهک راست می‌مانند
       anchor: bottom # فوتر به پایین صفحه متصل باشد
 pages: # سیاست محافظه‌کارانه حذف و اندازه‌گیری پوشش
+  image_warning_max_fraction: 0.30 # فقط تصاویر کوچک‌تر از ۳۰٪ مساحت صفحه در پایین صفحه هشدار شمارهٔ نامعلوم دارند
   bottom_fraction: 0.08 # فقط پایین‌ترین هشت درصد جهت مؤثر
   number_patterns: # fullmatch کل خط؛ اعداد داخل جمله حذف نمی‌شوند
     - '\d+'
