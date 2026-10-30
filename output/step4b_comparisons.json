@@ -1,0 +1,313 @@
+[
+  {
+    "namak": "ADAB_LNG_10",
+    "input_pages": 11,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_ADAB_LNG_10_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.0,
+        842.0
+      ]
+    ],
+    "different_pixels": 127103,
+    "different_percent": 5.835887334678632,
+    "over_10_percent": 1.9878739459722536,
+    "mean_channel_difference": 1.8700958774018135,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_ADAB_LNG_10_v01.png"
+  },
+  {
+    "namak": "ADAB_LNG_9",
+    "input_pages": 8,
+    "qc": true,
+    "comparison_status": "نمونهٔ متناظر یکتا یافت نشد (0 فایل)؛ مقایسه نامعلوم.",
+    "image": "debug/step4b_cover_LessonNote_hard_ADAB_LNG_9_v01.png"
+  },
+  {
+    "namak": "ai_par_2",
+    "input_pages": 3,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_ai_par_2_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ]
+    ],
+    "different_pixels": 129096,
+    "different_percent": 5.930774552835145,
+    "over_10_percent": 2.2249592734736856,
+    "mean_channel_difference": 1.935492826955371,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_ai_par_2_v01.png"
+  },
+  {
+    "namak": "ECONO GO P 7",
+    "input_pages": 13,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_ECONO__GO_P_7_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        841.8900146484375,
+        595.2760009765625
+      ],
+      [
+        0.0,
+        0.0,
+        960.0,
+        540.0
+      ]
+    ],
+    "different_pixels": 256832,
+    "different_percent": 10.3477840451249,
+    "over_10_percent": 9.79532634971797,
+    "mean_channel_difference": 16.29320829975826,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_ECONO_GO_P_7_v01.png"
+  },
+  {
+    "namak": "ECONO EC M 12",
+    "input_pages": 7,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_ECONO_EC_M_12_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        841.8900146484375,
+        595.2760009765625
+      ],
+      [
+        0.0,
+        0.0,
+        1376.0,
+        768.0
+      ]
+    ],
+    "different_pixels": 459031,
+    "different_percent": 10.006779734914545,
+    "over_10_percent": 9.746577432856645,
+    "mean_channel_difference": 16.42837962155563,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_ECONO_EC_M_12_v01.png"
+  },
+  {
+    "namak": "ECONO EC M 15",
+    "input_pages": 5,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_ECONO_EC_M_15_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        841.8900146484375,
+        595.2760009765625
+      ],
+      [
+        0.0,
+        0.0,
+        960.0,
+        540.0
+      ]
+    ],
+    "different_pixels": 255695,
+    "different_percent": 10.301974214343272,
+    "over_10_percent": 9.758058017727638,
+    "mean_channel_difference": 16.224762288477034,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_ECONO_EC_M_15_v01.png"
+  },
+  {
+    "namak": "nojoom_astr_18",
+    "input_pages": 3,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_nojoom_astr_18_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ]
+    ],
+    "different_pixels": 140255,
+    "different_percent": 6.443428029589556,
+    "over_10_percent": 2.775651739273051,
+    "mean_channel_difference": 2.6870725016393213,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_nojoom_astr_18_v01.png"
+  },
+  {
+    "namak": "physics_mech_7",
+    "input_pages": 5,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_physics_mech_7_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ]
+    ],
+    "different_pixels": 118933,
+    "different_percent": 5.463878120873941,
+    "over_10_percent": 2.079694438497662,
+    "mean_channel_difference": 1.700009433179248,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_physics_mech_7_v01.png"
+  },
+  {
+    "namak": "physics_thermo_10",
+    "input_pages": 6,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_physics_thermo_10_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ]
+    ],
+    "different_pixels": 123150,
+    "different_percent": 5.657610508316664,
+    "over_10_percent": 2.2596905243408183,
+    "mean_channel_difference": 1.9844358667851327,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_physics_thermo_10_v01.png"
+  },
+  {
+    "namak": "physics_thermo_8",
+    "input_pages": 5,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_physics_thermo_8_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ]
+    ],
+    "different_pixels": 138404,
+    "different_percent": 6.35839159393471,
+    "over_10_percent": 2.882326295507816,
+    "mean_channel_difference": 2.987448205567352,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_physics_thermo_8_v01.png"
+  },
+  {
+    "namak": "physics_thermo_9",
+    "input_pages": 4,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_physics_thermo_9_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ],
+      [
+        0.0,
+        0.0,
+        595.2760009765625,
+        841.8900146484375
+      ]
+    ],
+    "different_pixels": 137099,
+    "different_percent": 6.298438839461684,
+    "over_10_percent": 2.825956924060763,
+    "mean_channel_difference": 2.892110003120912,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_physics_thermo_9_v01.png"
+  },
+  {
+    "namak": "Savad resane-ma va resane-10",
+    "input_pages": 9,
+    "qc": true,
+    "comparison_status": "فقط گزارش؛ بدون شرط قبولی",
+    "sample": "samples/LessonNote_hard_Savad_resane-ma_va_resane-10_v01.pdf",
+    "sizes_pt": [
+      [
+        0.0,
+        0.0,
+        841.8900146484375,
+        595.2760009765625
+      ],
+      [
+        0.0,
+        0.0,
+        841.8900146484375,
+        595.2760009765625
+      ]
+    ],
+    "different_pixels": 108808,
+    "different_percent": 4.998727439617699,
+    "over_10_percent": 2.305263805901924,
+    "mean_channel_difference": 2.5102665455054423,
+    "max_channel_difference": 255,
+    "image": "debug/step4b_cover_LessonNote_hard_Savad_resane-ma_va_resane-10_v01.png"
+  },
+  {
+    "namak": "shimi_alee_7",
+    "input_pages": 11,
+    "qc": true,
+    "comparison_status": "طبق اعلام کاربر نمونه مربوط به shimi_alee_9 است؛ نام فایل sample ملاک جفت‌کردن نیست. فقط QC.",
+    "image": "debug/step4b_cover_LessonNote_hard_shimi_alee_7_v01.png"
+  }
+]

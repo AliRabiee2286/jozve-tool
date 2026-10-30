@@ -1,4 +1,4 @@
-"""Independent device-transform reference: no intermediate display-list rounding."""
+"""Independent source assembly: PDF affine interpretation precedes device zoom."""
 import json
 from pathlib import Path
 import numpy as np
@@ -7,6 +7,7 @@ import pytest
 from syllabus import load_config, discover_assets
 from border import placements
 from pages import fit_content, remove_numbers, _preserve_rendering_attributes
+from fit_reference import assemble_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 CFG = load_config()
@@ -22,12 +23,16 @@ def render_direct(page, matrix, width, height):
     return np.frombuffer(pix.samples, np.uint8).reshape(height,width,3).copy()
 
 
-def compare_fit(before, after, fit):
+def compare_fit(before, after, fit, pieces):
     zoom = fitz.Matrix(150/72,150/72)
     box = (after.rect * zoom).irect
-    # Source geometry is transformed by the render device, independent of the
-    # production PDF-coordinate CTM. Neither reference PDF nor image is resized.
-    reference = render_direct(before, fitz.Matrix(fit['display_matrix'])*zoom, box.width,box.height)
+    # Assemble from pre-fit source data and independently solved geometry. Putting
+    # the affine map in the PDF stage keeps its arithmetic order equal to actual
+    # rendering; folding it into device zoom was not pixel-equivalent in MuPDF.
+    reference_doc,geometry=assemble_reference(before,pieces,CFG['pages'])
+    with reference_doc:
+        reference=render_direct(reference_doc[before.number],zoom,box.width,box.height)
+    assert fit['scale']==geometry['scale']
     actual = render_direct(after, zoom, box.width,box.height)
     diff = np.abs(actual.astype(np.int16)-reference.astype(np.int16))
     changed = np.any(diff,axis=2)
@@ -58,14 +63,15 @@ def test_scaled_render_preserves_colors_and_transparency(source):
             text=p.get_text(); images=[base.xref_stream(x[0]) for x in p.get_images()]
             group=fitted.xref_get_key(q.xref,'Group')
             intents=fitted.xref_get_key(fitted.pdf_catalog(),'OutputIntents')
-            info=fit_content(q,placements(q.rect,border[0].rect,CFG['border']),CFG['pages'])
+            pieces=placements(q.rect,border[0].rect,CFG['border'])
+            info=fit_content(q,pieces,CFG['pages'])
             assert fitted.xref_get_key(q.xref,'Group')==group
             assert fitted.xref_get_key(fitted.pdf_catalog(),'OutputIntents')==intents
             assert q.get_text()==text
             assert [fitted.xref_stream(x[0]) for x in q.get_images()]==images
             key=(p.rect.width,p.rect.height)
             assert scales.setdefault(key,info['scale'])==info['scale']
-            rows.append({'page':p.number+1,**compare_fit(p,q,info)})
+            rows.append({'page':p.number+1,**compare_fit(p,q,info,pieces)})
     slug=source.stem.replace(' ','_')
     (ROOT/CFG['paths']['debug']/f'fit_{slug}_render.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
 
@@ -79,7 +85,29 @@ def test_fit_rotated_crop(rotation):
         p.insert_text((100,150),'Vector content')
         p.set_cropbox(fitz.Rect(30,40,670,860));p.set_rotation(rotation)
         dst.insert_pdf(src);q=dst[0]
-        info=fit_content(q,placements(q.rect,border[0].rect,CFG['border']),CFG['pages'])
+        pieces=placements(q.rect,border[0].rect,CFG['border'])
+        info=fit_content(q,pieces,CFG['pages'])
         assert (q.rect,q.rotation,q.cropbox,q.mediabox)==(p.rect,p.rotation,p.cropbox,p.mediabox)
         assert q.get_text()==p.get_text()
-        compare_fit(p,q,info)
+        compare_fit(p,q,info,pieces)
+
+
+@pytest.mark.parametrize('mutation',['scale','translation','content'])
+def test_reference_rejects_corrupted_fit(mutation):
+    assets=discover_assets(CFG,ROOT)
+    with fitz.open() as src,fitz.open() as dst,fitz.open(assets['border']) as border:
+        p=src.new_page(width=600,height=800)
+        p.draw_rect(fitz.Rect(100,100,400,500),fill=(0.2,0.4,0.7))
+        p.insert_text((120,150),'Preserve this content')
+        dst.insert_pdf(src);q=dst[0]
+        pieces=placements(q.rect,border[0].rect,CFG['border'])
+        info=fit_content(q,pieces,CFG['pages'])
+        if mutation=='content':
+            dst.update_stream(q.get_contents()[1],b'')
+        else:
+            stream=q.get_contents()[0];tokens=dst.xref_stream(stream).decode('ascii').split()
+            if mutation=='scale':
+                tokens[1]=str(float(tokens[1])*0.99);tokens[4]=str(float(tokens[4])*0.99)
+            else:tokens[5]=str(float(tokens[5])+1)
+            dst.update_stream(stream,' '.join(tokens).encode('ascii'))
+        with pytest.raises(AssertionError):compare_fit(p,q,info,pieces)

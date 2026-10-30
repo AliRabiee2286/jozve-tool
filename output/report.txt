@@ -2,6 +2,301 @@
 
 هشدار سیلابس: اقتصاد: teacher fallback to column 3, header 'اطلاعات عمومی'
 
+موفق: ADAB_LNG_10 (1).pdf
+نامک: ADAB_LNG_10
+رشته: ادبی
+جهت: عمودی
+صفحات ورودی: 11
+صفحات خروجی: 12
+نام خروجی: LessonNote_hard_ADAB_LNG_10_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 4: رندر پس از مونتاژ: قبول
+  صفحه محتوا 4: اندازه و جهت و rotation: قبول
+  صفحه محتوا 4: BALATAR.GROUP: قبول
+  صفحه محتوا 4: نبود شماره متن: قبول
+  صفحه محتوا 4: متن حفظ شده: قبول
+  صفحه محتوا 4: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 4: ساختار لایه بوردر: قبول
+  صفحه محتوا 4: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 5: رندر پس از مونتاژ: قبول
+  صفحه محتوا 5: اندازه و جهت و rotation: قبول
+  صفحه محتوا 5: BALATAR.GROUP: قبول
+  صفحه محتوا 5: نبود شماره متن: قبول
+  صفحه محتوا 5: متن حفظ شده: قبول
+  صفحه محتوا 5: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 5: ساختار لایه بوردر: قبول
+  صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 6: رندر پس از مونتاژ: قبول
+  صفحه محتوا 6: اندازه و جهت و rotation: قبول
+  صفحه محتوا 6: BALATAR.GROUP: قبول
+  صفحه محتوا 6: نبود شماره متن: قبول
+  صفحه محتوا 6: متن حفظ شده: قبول
+  صفحه محتوا 6: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 6: ساختار لایه بوردر: قبول
+  صفحه محتوا 6: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 7: رندر پس از مونتاژ: قبول
+  صفحه محتوا 7: اندازه و جهت و rotation: قبول
+  صفحه محتوا 7: BALATAR.GROUP: قبول
+  صفحه محتوا 7: نبود شماره متن: قبول
+  صفحه محتوا 7: متن حفظ شده: قبول
+  صفحه محتوا 7: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 7: ساختار لایه بوردر: قبول
+  صفحه محتوا 7: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 8: رندر پس از مونتاژ: قبول
+  صفحه محتوا 8: اندازه و جهت و rotation: قبول
+  صفحه محتوا 8: BALATAR.GROUP: قبول
+  صفحه محتوا 8: نبود شماره متن: قبول
+  صفحه محتوا 8: متن حفظ شده: قبول
+  صفحه محتوا 8: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 8: ساختار لایه بوردر: قبول
+  صفحه محتوا 8: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 9: رندر پس از مونتاژ: قبول
+  صفحه محتوا 9: اندازه و جهت و rotation: قبول
+  صفحه محتوا 9: BALATAR.GROUP: قبول
+  صفحه محتوا 9: نبود شماره متن: قبول
+  صفحه محتوا 9: متن حفظ شده: قبول
+  صفحه محتوا 9: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 9: ساختار لایه بوردر: قبول
+  صفحه محتوا 9: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 10: رندر پس از مونتاژ: قبول
+  صفحه محتوا 10: اندازه و جهت و rotation: قبول
+  صفحه محتوا 10: BALATAR.GROUP: قبول
+  صفحه محتوا 10: نبود شماره متن: قبول
+  صفحه محتوا 10: متن حفظ شده: قبول
+  صفحه محتوا 10: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 10: ساختار لایه بوردر: قبول
+  صفحه محتوا 10: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 11: رندر پس از مونتاژ: قبول
+  صفحه محتوا 11: اندازه و جهت و rotation: قبول
+  صفحه محتوا 11: BALATAR.GROUP: قبول
+  صفحه محتوا 11: نبود شماره متن: قبول
+  صفحه محتوا 11: متن حفظ شده: قبول
+  صفحه محتوا 11: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 11: ساختار لایه بوردر: قبول
+  صفحه محتوا 11: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2690, "course": 2251, "chapter": 2120, "topic": 4069}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 7: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 7: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 8: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 8: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 9: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 9: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 10: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 10: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 11: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 11: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+شمارهٔ تصویری نامعلوم: 11 صفحه (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)؛ علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 7, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 8, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 9, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 10, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 11, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+
+موفق: ADAB_LNG_9.pdf
+نامک: ADAB_LNG_9
+رشته: ادبی
+جهت: عمودی
+صفحات ورودی: 8
+صفحات خروجی: 9
+نام خروجی: LessonNote_hard_ADAB_LNG_9_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 4: رندر پس از مونتاژ: قبول
+  صفحه محتوا 4: اندازه و جهت و rotation: قبول
+  صفحه محتوا 4: BALATAR.GROUP: قبول
+  صفحه محتوا 4: نبود شماره متن: قبول
+  صفحه محتوا 4: متن حفظ شده: قبول
+  صفحه محتوا 4: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 4: ساختار لایه بوردر: قبول
+  صفحه محتوا 4: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 5: رندر پس از مونتاژ: قبول
+  صفحه محتوا 5: اندازه و جهت و rotation: قبول
+  صفحه محتوا 5: BALATAR.GROUP: قبول
+  صفحه محتوا 5: نبود شماره متن: قبول
+  صفحه محتوا 5: متن حفظ شده: قبول
+  صفحه محتوا 5: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 5: ساختار لایه بوردر: قبول
+  صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 6: رندر پس از مونتاژ: قبول
+  صفحه محتوا 6: اندازه و جهت و rotation: قبول
+  صفحه محتوا 6: BALATAR.GROUP: قبول
+  صفحه محتوا 6: نبود شماره متن: قبول
+  صفحه محتوا 6: متن حفظ شده: قبول
+  صفحه محتوا 6: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 6: ساختار لایه بوردر: قبول
+  صفحه محتوا 6: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 7: رندر پس از مونتاژ: قبول
+  صفحه محتوا 7: اندازه و جهت و rotation: قبول
+  صفحه محتوا 7: BALATAR.GROUP: قبول
+  صفحه محتوا 7: نبود شماره متن: قبول
+  صفحه محتوا 7: متن حفظ شده: قبول
+  صفحه محتوا 7: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 7: ساختار لایه بوردر: قبول
+  صفحه محتوا 7: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 8: رندر پس از مونتاژ: قبول
+  صفحه محتوا 8: اندازه و جهت و rotation: قبول
+  صفحه محتوا 8: BALATAR.GROUP: قبول
+  صفحه محتوا 8: نبود شماره متن: قبول
+  صفحه محتوا 8: متن حفظ شده: قبول
+  صفحه محتوا 8: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 8: ساختار لایه بوردر: قبول
+  صفحه محتوا 8: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2690, "course": 2251, "chapter": 2120, "topic": 3766}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 7: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 7: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 8: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 8: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.99489974975586, 595.0, 50.97635269165039], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 803.1279907226562, 595.0, 842.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+شمارهٔ تصویری نامعلوم: 8 صفحه (1, 2, 3, 4, 5, 6, 7, 8)؛ علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 7, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 8, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+
+موفق: ai_par_2.pdf
+نامک: ai_par_2
+رشته: هوش مصنوعی
+جهت: عمودی
+صفحات ورودی: 3
+صفحات خروجی: 4
+نام خروجی: LessonNote_hard_ai_par_2_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2874, "course": 2710, "chapter": 1911, "topic": 4180}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.999992370605469, 595.2755737304688, 50.999961853027344], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.999755859375, 595.2755737304688, 841.8897705078125], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.999992370605469, 595.2755737304688, 50.999961853027344], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.999755859375, 595.2755737304688, 841.8897705078125], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.999992370605469, 595.2755737304688, 50.999961853027344], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.999755859375, 595.2755737304688, 841.8897705078125], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+
 موفق: ECONO  GO P 7.pdf
 نامک: ECONO GO P 7
 رشته: اقتصاد
@@ -122,22 +417,46 @@
   صفحه محتوا 13: ساختار لایه بوردر: قبول
   صفحه محتوا 13: جوهر زیر نوارها صفر: قبول
 {"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 4379, "course": 3723, "chapter": 5003, "topic": 4729}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 7: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 7: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 8: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 8: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 9: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 9: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 10: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 10: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 11: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 11: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 12: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 12: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 13: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 13: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
-شمارهٔ تصویری نامعلوم؛ تصویر حذف نشد: {"page": 4, "kind": "image_number_unknown", "images": [{"bbox": [536.52001953125, 447.239990234375, 875.8200073242188, 501.05999755859375], "number_status": "unknown; image preserved"}]}
-شمارهٔ تصویری نامعلوم؛ تصویر حذف نشد: {"page": 5, "kind": "image_number_unknown", "images": [{"bbox": [24.479999542236328, 315.12213134765625, 409.08001708984375, 549.4821166992188], "number_status": "unknown; image preserved"}, {"bbox": [39.845001220703125, 330.4840087890625, 379.57501220703125, 519.9840087890625], "number_status": "unknown; image preserved"}]}
-شمارهٔ تصویری نامعلوم؛ تصویر حذف نشد: {"page": 7, "kind": "image_number_unknown", "images": [{"bbox": [412.20001220703125, 453.9599914550781, 858.9000244140625, 507.7799987792969], "number_status": "unknown; image preserved"}]}
+شمارهٔ تصویری نامعلوم: 3 صفحه (4, 5, 7)؛ علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 7, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 8, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 9, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 10, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 11, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 12, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 13, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
 حذف شمارهٔ متنی صفحه 2: 2
 حذف شمارهٔ متنی صفحه 3: 3
 حذف شمارهٔ متنی صفحه 4: 4
@@ -150,6 +469,101 @@
 حذف شمارهٔ متنی صفحه 11: 11
 حذف شمارهٔ متنی صفحه 12: 12
 حذف شمارهٔ متنی صفحه 13: 13
+
+موفق: ECONO EC M 12.pdf
+نامک: ECONO EC M 12
+رشته: اقتصاد
+جهت: افقی
+صفحات ورودی: 7
+صفحات خروجی: 8
+نام خروجی: LessonNote_hard_ECONO_EC_M_12_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 4: رندر پس از مونتاژ: قبول
+  صفحه محتوا 4: اندازه و جهت و rotation: قبول
+  صفحه محتوا 4: BALATAR.GROUP: قبول
+  صفحه محتوا 4: نبود شماره متن: قبول
+  صفحه محتوا 4: متن حفظ شده: قبول
+  صفحه محتوا 4: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 4: ساختار لایه بوردر: قبول
+  صفحه محتوا 4: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 5: رندر پس از مونتاژ: قبول
+  صفحه محتوا 5: اندازه و جهت و rotation: قبول
+  صفحه محتوا 5: BALATAR.GROUP: قبول
+  صفحه محتوا 5: نبود شماره متن: قبول
+  صفحه محتوا 5: متن حفظ شده: قبول
+  صفحه محتوا 5: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 5: ساختار لایه بوردر: قبول
+  صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 6: رندر پس از مونتاژ: قبول
+  صفحه محتوا 6: اندازه و جهت و rotation: قبول
+  صفحه محتوا 6: BALATAR.GROUP: قبول
+  صفحه محتوا 6: نبود شماره متن: قبول
+  صفحه محتوا 6: متن حفظ شده: قبول
+  صفحه محتوا 6: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 6: ساختار لایه بوردر: قبول
+  صفحه محتوا 6: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 7: رندر پس از مونتاژ: قبول
+  صفحه محتوا 7: اندازه و جهت و rotation: قبول
+  صفحه محتوا 7: BALATAR.GROUP: قبول
+  صفحه محتوا 7: نبود شماره متن: قبول
+  صفحه محتوا 7: متن حفظ شده: قبول
+  صفحه محتوا 7: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 7: ساختار لایه بوردر: قبول
+  صفحه محتوا 7: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 4910, "course": 3646, "chapter": 3846, "topic": 6346}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 7: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 7: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.034564971923828, 1376.0, 46.52389144897461], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 732.5232543945312, 1376.0, 768.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+شمارهٔ تصویری نامعلوم: 2 صفحه (5, 6)؛ علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 3779060, "pixels_over_10": 75428, "percent_over_10": 1.6443146145797, "max_channel_difference": 31}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 3779204, "pixels_over_10": 171061, "percent_over_10": 3.7290940006975934, "max_channel_difference": 44}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 3779376, "pixels_over_10": 354933, "percent_over_10": 7.7374651203348455, "max_channel_difference": 32}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 3778942, "pixels_over_10": 134041, "percent_over_10": 2.9220657481688175, "max_channel_difference": 114}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 3774284, "pixels_over_10": 197015, "percent_over_10": 4.2948857690966165, "max_channel_difference": 113}
+اثر OutputIntents (صرفاً گزارش): {"page": 7, "different_pixels": 3779581, "pixels_over_10": 174198, "percent_over_10": 3.797479944192536, "max_channel_difference": 111}
 
 موفق: ECONO EC M 15.pdf
 نامک: ECONO EC M 15
@@ -207,11 +621,146 @@
   صفحه محتوا 5: ساختار لایه بوردر: قبول
   صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
 {"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 4910, "course": 3646, "chapter": 3846, "topic": 5057}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+
+موفق: nojoom_astr_18.pdf
+نامک: nojoom_astr_18
+رشته: نجوم
+جهت: عمودی
+صفحات ورودی: 3
+صفحات خروجی: 4
+نام خروجی: LessonNote_hard_nojoom_astr_18_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2801, "course": 2345, "chapter": 2992, "topic": 9446}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.363823890686035, 611.8800048828125, 48.05045700073242], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.5591430664062, 611.8800048828125, 793.2000122070312], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.363823890686035, 611.8800048828125, 48.05045700073242], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.5591430664062, 611.8800048828125, 793.2000122070312], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.363823890686035, 611.8800048828125, 48.05045700073242], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.5591430664062, 611.8800048828125, 793.2000122070312], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+حذف شمارهٔ متنی صفحه 1: elminoastp 1 Page 1
+حذف شمارهٔ متنی صفحه 2: elminoastp 1 Page 2
+حذف شمارهٔ متنی صفحه 3: elminoastp 1 Page 3
+
+موفق: physics_mech_7(1).pdf
+نامک: physics_mech_7
+رشته: فیزیک
+جهت: عمودی
+صفحات ورودی: 5
+صفحات خروجی: 6
+نام خروجی: LessonNote_hard_physics_mech_7_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 4: رندر پس از مونتاژ: قبول
+  صفحه محتوا 4: اندازه و جهت و rotation: قبول
+  صفحه محتوا 4: BALATAR.GROUP: قبول
+  صفحه محتوا 4: نبود شماره متن: قبول
+  صفحه محتوا 4: متن حفظ شده: قبول
+  صفحه محتوا 4: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 4: ساختار لایه بوردر: قبول
+  صفحه محتوا 4: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 5: رندر پس از مونتاژ: قبول
+  صفحه محتوا 5: اندازه و جهت و rotation: قبول
+  صفحه محتوا 5: BALATAR.GROUP: قبول
+  صفحه محتوا 5: نبود شماره متن: قبول
+  صفحه محتوا 5: متن حفظ شده: قبول
+  صفحه محتوا 5: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 5: ساختار لایه بوردر: قبول
+  صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2784, "course": 1936, "chapter": 2199, "topic": 3211}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 11.079832077026367, 600.0, 51.37013244628906], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 808.8277587890625, 600.0, 848.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 11.079832077026367, 600.0, 51.37013244628906], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 808.8277587890625, 600.0, 848.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 11.079832077026367, 600.0, 51.37013244628906], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 808.8277587890625, 600.0, 848.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 11.079832077026367, 600.0, 51.37013244628906], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 808.8277587890625, 600.0, 848.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 11.079832077026367, 600.0, 51.37013244628906], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 808.8277587890625, 600.0, 848.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 280104, "pixels_over_10": 21553, "percent_over_10": 0.975800792303339, "max_channel_difference": 85}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 316079, "pixels_over_10": 55429, "percent_over_10": 2.5095189586870403, "max_channel_difference": 91}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 288463, "pixels_over_10": 25485, "percent_over_10": 1.1538200339558573, "max_channel_difference": 85}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 293219, "pixels_over_10": 16877, "percent_over_10": 0.7640973401245048, "max_channel_difference": 85}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 282364, "pixels_over_10": 12298, "percent_over_10": 0.5567855121675155, "max_channel_difference": 91}
 
 موفق: physics_thermo_10.pdf
 نامک: physics_thermo_10
@@ -277,12 +826,24 @@
   صفحه محتوا 6: ساختار لایه بوردر: قبول
   صفحه محتوا 6: جوهر زیر نوارها صفر: قبول
 {"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2803, "course": 2422, "chapter": 2914, "topic": 4062}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
 حذف شمارهٔ متنی صفحه 1: New Section 1 Page 1
 حذف شمارهٔ متنی صفحه 2: New Section 1 Page 2
 حذف شمارهٔ متنی صفحه 3: New Section 1 Page 3
@@ -346,11 +907,21 @@
   صفحه محتوا 5: ساختار لایه بوردر: قبول
   صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
 {"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2803, "course": 2422, "chapter": 3024, "topic": 12351}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.991943359375, 594.8400268554688, 50.962646484375], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.698486328125, 594.8400268554688, 841.5599975585938], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.991943359375, 594.8400268554688, 50.962646484375], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.698486328125, 594.8400268554688, 841.5599975585938], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.991943359375, 594.8400268554688, 50.962646484375], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.698486328125, 594.8400268554688, 841.5599975585938], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.991943359375, 594.8400268554688, 50.962646484375], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.698486328125, 594.8400268554688, 841.5599975585938], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.991943359375, 594.8400268554688, 50.962646484375], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 802.698486328125, 594.8400268554688, 841.5599975585938], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
 حذف شمارهٔ متنی صفحه 1: New Section 1 Page 1
 حذف شمارهٔ متنی صفحه 2: New Section 1 Page 2
 حذف شمارهٔ متنی صفحه 3: New Section 1 Page 3
@@ -405,10 +976,18 @@
   صفحه محتوا 4: ساختار لایه بوردر: قبول
   صفحه محتوا 4: جوهر زیر نوارها صفر: قبول
 {"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2803, "course": 2422, "chapter": 3024, "topic": 11799}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.362256050109863, 611.4000244140625, 48.043190002441406], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 756.4447021484375, 611.4000244140625, 793.0800170898438], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
 حذف شمارهٔ متنی صفحه 1: New Section 1 Page 1
 حذف شمارهٔ متنی صفحه 2: New Section 1 Page 2
 حذف شمارهٔ متنی صفحه 3: New Section 1 Page 3
@@ -502,14 +1081,172 @@
   صفحه محتوا 9: ساختار لایه بوردر: قبول
   صفحه محتوا 9: جوهر زیر نوارها صفر: قبول
 {"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 4593, "course": 4048, "chapter": 4388, "topic": 7013}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 7: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 7: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 8: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 8: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 9: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
 {"check": "صفحه محتوا 9: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 7.055553436279297, 960.0, 32.71211242675781], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 515.055419921875, 960.0, 540.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 7, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 8, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 9, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
 
-خلاصه: 6 موفق؛ 0 خطا؛ 6 مورد
+موفق: shimi_alee_7.pdf
+نامک: shimi_alee_7
+رشته: شیمی
+جهت: عمودی
+صفحات ورودی: 11
+صفحات خروجی: 12
+نام خروجی: LessonNote_hard_shimi_alee_7_v01.pdf
+  باز شدن PDF: قبول
+  نام فایل: قبول
+  تعداد صفحات: قبول
+  جهت فرست‌پیج: قبول
+  فونت Aria Regular جاسازی‌شده: قبول
+  چهار مقدار دقیق و ناتهی: قبول
+  رندر فرست‌پیج فقط در چهار ناحیه: قبول
+  فرست‌پیج بدون بوردر و برابر مرجع نوشتن: قبول
+  صفحه محتوا 1: رندر پس از مونتاژ: قبول
+  صفحه محتوا 1: اندازه و جهت و rotation: قبول
+  صفحه محتوا 1: BALATAR.GROUP: قبول
+  صفحه محتوا 1: نبود شماره متن: قبول
+  صفحه محتوا 1: متن حفظ شده: قبول
+  صفحه محتوا 1: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 1: ساختار لایه بوردر: قبول
+  صفحه محتوا 1: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 2: رندر پس از مونتاژ: قبول
+  صفحه محتوا 2: اندازه و جهت و rotation: قبول
+  صفحه محتوا 2: BALATAR.GROUP: قبول
+  صفحه محتوا 2: نبود شماره متن: قبول
+  صفحه محتوا 2: متن حفظ شده: قبول
+  صفحه محتوا 2: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 2: ساختار لایه بوردر: قبول
+  صفحه محتوا 2: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 3: رندر پس از مونتاژ: قبول
+  صفحه محتوا 3: اندازه و جهت و rotation: قبول
+  صفحه محتوا 3: BALATAR.GROUP: قبول
+  صفحه محتوا 3: نبود شماره متن: قبول
+  صفحه محتوا 3: متن حفظ شده: قبول
+  صفحه محتوا 3: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 3: ساختار لایه بوردر: قبول
+  صفحه محتوا 3: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 4: رندر پس از مونتاژ: قبول
+  صفحه محتوا 4: اندازه و جهت و rotation: قبول
+  صفحه محتوا 4: BALATAR.GROUP: قبول
+  صفحه محتوا 4: نبود شماره متن: قبول
+  صفحه محتوا 4: متن حفظ شده: قبول
+  صفحه محتوا 4: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 4: ساختار لایه بوردر: قبول
+  صفحه محتوا 4: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 5: رندر پس از مونتاژ: قبول
+  صفحه محتوا 5: اندازه و جهت و rotation: قبول
+  صفحه محتوا 5: BALATAR.GROUP: قبول
+  صفحه محتوا 5: نبود شماره متن: قبول
+  صفحه محتوا 5: متن حفظ شده: قبول
+  صفحه محتوا 5: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 5: ساختار لایه بوردر: قبول
+  صفحه محتوا 5: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 6: رندر پس از مونتاژ: قبول
+  صفحه محتوا 6: اندازه و جهت و rotation: قبول
+  صفحه محتوا 6: BALATAR.GROUP: قبول
+  صفحه محتوا 6: نبود شماره متن: قبول
+  صفحه محتوا 6: متن حفظ شده: قبول
+  صفحه محتوا 6: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 6: ساختار لایه بوردر: قبول
+  صفحه محتوا 6: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 7: رندر پس از مونتاژ: قبول
+  صفحه محتوا 7: اندازه و جهت و rotation: قبول
+  صفحه محتوا 7: BALATAR.GROUP: قبول
+  صفحه محتوا 7: نبود شماره متن: قبول
+  صفحه محتوا 7: متن حفظ شده: قبول
+  صفحه محتوا 7: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 7: ساختار لایه بوردر: قبول
+  صفحه محتوا 7: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 8: رندر پس از مونتاژ: قبول
+  صفحه محتوا 8: اندازه و جهت و rotation: قبول
+  صفحه محتوا 8: BALATAR.GROUP: قبول
+  صفحه محتوا 8: نبود شماره متن: قبول
+  صفحه محتوا 8: متن حفظ شده: قبول
+  صفحه محتوا 8: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 8: ساختار لایه بوردر: قبول
+  صفحه محتوا 8: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 9: رندر پس از مونتاژ: قبول
+  صفحه محتوا 9: اندازه و جهت و rotation: قبول
+  صفحه محتوا 9: BALATAR.GROUP: قبول
+  صفحه محتوا 9: نبود شماره متن: قبول
+  صفحه محتوا 9: متن حفظ شده: قبول
+  صفحه محتوا 9: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 9: ساختار لایه بوردر: قبول
+  صفحه محتوا 9: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 10: رندر پس از مونتاژ: قبول
+  صفحه محتوا 10: اندازه و جهت و rotation: قبول
+  صفحه محتوا 10: BALATAR.GROUP: قبول
+  صفحه محتوا 10: نبود شماره متن: قبول
+  صفحه محتوا 10: متن حفظ شده: قبول
+  صفحه محتوا 10: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 10: ساختار لایه بوردر: قبول
+  صفحه محتوا 10: جوهر زیر نوارها صفر: قبول
+  صفحه محتوا 11: رندر پس از مونتاژ: قبول
+  صفحه محتوا 11: اندازه و جهت و rotation: قبول
+  صفحه محتوا 11: BALATAR.GROUP: قبول
+  صفحه محتوا 11: نبود شماره متن: قبول
+  صفحه محتوا 11: متن حفظ شده: قبول
+  صفحه محتوا 11: هش تصاویر و تعداد کاربردها: قبول
+  صفحه محتوا 11: ساختار لایه بوردر: قبول
+  صفحه محتوا 11: جوهر زیر نوارها صفر: قبول
+{"check": "رندر فرست‌پیج فقط در چهار ناحیه", "detail": {"outside_pixels": 0, "field_pixels": {"teacher": 2584, "course": 2046, "chapter": 2901, "topic": 4480}}}
+{"check": "صفحه محتوا 1: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 1: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 2: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 2: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 3: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 3: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 4: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 4: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 5: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 5: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 6: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 6: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 7: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 7: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 8: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 8: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 9: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 9: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 10: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 10: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+{"check": "صفحه محتوا 11: رندر پس از مونتاژ", "detail": {"different_pixels": 0, "same_shape": true}}
+{"check": "صفحه محتوا 11: جوهر زیر نوارها صفر", "detail": [{"strip": "header", "bbox": [0.0, 10.348145484924316, 612.0, 47.97776412963867], "meaningful_ink_pixels": 0, "ink_bbox": null}, {"strip": "footer", "bbox": [0.0, 755.4146118164062, 612.0, 792.0], "meaningful_ink_pixels": 0, "ink_bbox": null}]}
+اثر OutputIntents (صرفاً گزارش): {"page": 1, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 2, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 3, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 4, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 5, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 6, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 7, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 8, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 9, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 10, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+اثر OutputIntents (صرفاً گزارش): {"page": 11, "different_pixels": 0, "pixels_over_10": 0, "percent_over_10": 0.0, "max_channel_difference": 0}
+
+خلاصه: 13 موفق؛ 0 خطا؛ 13 مورد
+
+تأیید نهایی مرحلهٔ ۴b: ۱۵۶ تست قبول، صفر رد؛ اختلاف fit هر ۹۰ صفحه صفر.

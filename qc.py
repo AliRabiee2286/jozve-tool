@@ -21,7 +21,7 @@ def image_signature(document,page):
 
 
 def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
-              config_path=DEFAULT_CONFIG, output_name=None, expected_content=None):
+              config_path=DEFAULT_CONFIG, output_name=None, expected_content_renders=None):
     cfg=load_config(config_path); assets=discover_assets(cfg,Path(config_path).resolve().parent)
     checks={}; details=[]
     def check(name, passed, detail=None):
@@ -60,13 +60,18 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
                 check('فرست‌پیج بدون بوردر و برابر مرجع نوشتن',a.shape==reference.shape and np.array_equal(a,reference))
             for i,(original,page,entry) in enumerate(zip(source,list(doc)[1:],pages_report['pages']),1):
                 prefix=f'صفحه محتوا {i}: '
-                if expected_content is not None:
-                    check(prefix+'رندر پس از مونتاژ',np.array_equal(raster(page,cfg['pages']['diagnostic_dpi']),
-                          raster(expected_content[i-1],cfg['pages']['diagnostic_dpi'])))
+                if expected_content_renders is not None:
+                    actual_render=raster(page,cfg['pages']['diagnostic_dpi'])
+                    reference_render=expected_content_renders[i-1]
+                    same_shape=actual_render.shape==reference_render.shape
+                    different=int(np.any(actual_render!=reference_render,axis=2).sum()) if same_shape else None
+                    check(prefix+'رندر پس از مونتاژ',same_shape and different==0,
+                          {'different_pixels':different,'same_shape':same_shape})
                 check(prefix+'اندازه و جهت و rotation',original.rect==page.rect and original.rotation==page.rotation and
                       original.cropbox==page.cropbox and original.mediabox==page.mediabox)
                 check(prefix+'BALATAR.GROUP',cfg['border']['retained_text'] in page.get_text())
-                check(prefix+'نبود شماره متن',not number_candidates(page,cfg['pages']))
+                check(prefix+'نبود شماره متن',not number_candidates(page,
+                      {**cfg['pages'],'bottom_fraction':cfg['pages']['qc_bottom_fraction']}))
                 expected=original.get_text()
                 for removed in entry['removed']: expected=expected.replace(removed['text']+'\n','')
                 actual='\n'.join(s for s in page.get_text().splitlines() if s.strip()!=cfg['border']['retained_text'])

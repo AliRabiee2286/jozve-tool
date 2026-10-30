@@ -1,0 +1,765 @@
+[
+  {
+    "source": "ai_par_2",
+    "page": 1,
+    "max_channel_difference": 17,
+    "different_pixels": 124,
+    "float64_reference_max": 17,
+    "float64_reference_different_pixels": 124,
+    "split_device_max": 17,
+    "split_device_pixels": 124,
+    "fit": {
+      "scale": 0.8837259299720012,
+      "safe_bbox": [
+        0,
+        54.99996339588569,
+        595.2755737304688,
+        798.999783771817
+      ],
+      "content_bbox": [
+        34.6075553894043,
+        54.999961853027344,
+        560.6680297851562,
+        798.999755859375
+      ],
+      "display_matrix": [
+        0.8837259299720012,
+        0.0,
+        0.0,
+        0.8837259299720012,
+        34.60755687294687,
+        54.99996339588569
+      ],
+      "pdf_matrix": [
+        0.8837259299720012,
+        0.0,
+        0.0,
+        0.8837259299720012,
+        34.60755687294687,
+        42.889986735995535
+      ]
+    },
+    "difference_bbox_pixels": [
+      61,
+      104,
+      1179,
+      1660
+    ],
+    "exact_difference_bbox_pixels": [
+      71,
+      114,
+      1169,
+      1650
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "ai_par_2",
+    "page": 2,
+    "max_channel_difference": 17,
+    "different_pixels": 124,
+    "float64_reference_max": 17,
+    "float64_reference_different_pixels": 124,
+    "split_device_max": 17,
+    "split_device_pixels": 124,
+    "fit": {
+      "scale": 0.8837259299720012,
+      "safe_bbox": [
+        0,
+        54.99996339588569,
+        595.2755737304688,
+        798.999783771817
+      ],
+      "content_bbox": [
+        34.6075553894043,
+        54.999961853027344,
+        560.6680297851562,
+        798.999755859375
+      ],
+      "display_matrix": [
+        0.8837259299720012,
+        0.0,
+        0.0,
+        0.8837259299720012,
+        34.60755687294687,
+        54.99996339588569
+      ],
+      "pdf_matrix": [
+        0.8837259299720012,
+        0.0,
+        0.0,
+        0.8837259299720012,
+        34.60755687294687,
+        42.889986735995535
+      ]
+    },
+    "difference_bbox_pixels": [
+      61,
+      104,
+      1179,
+      1660
+    ],
+    "exact_difference_bbox_pixels": [
+      71,
+      114,
+      1169,
+      1650
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "ai_par_2",
+    "page": 3,
+    "max_channel_difference": 235,
+    "different_pixels": 221,
+    "float64_reference_max": 235,
+    "float64_reference_different_pixels": 221,
+    "split_device_max": 235,
+    "split_device_pixels": 221,
+    "fit": {
+      "scale": 0.8837259299720012,
+      "safe_bbox": [
+        0,
+        54.99996339588569,
+        595.2755737304688,
+        798.999783771817
+      ],
+      "content_bbox": [
+        34.6075553894043,
+        54.999961853027344,
+        560.6680297851562,
+        798.999755859375
+      ],
+      "display_matrix": [
+        0.8837259299720012,
+        0.0,
+        0.0,
+        0.8837259299720012,
+        34.60755687294687,
+        54.99996339588569
+      ],
+      "pdf_matrix": [
+        0.8837259299720012,
+        0.0,
+        0.0,
+        0.8837259299720012,
+        34.60755687294687,
+        42.889986735995535
+      ]
+    },
+    "difference_bbox_pixels": [
+      61,
+      104,
+      1179,
+      1679
+    ],
+    "exact_difference_bbox_pixels": [
+      71,
+      114,
+      1169,
+      1669
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 1,
+    "max_channel_difference": 12,
+    "different_pixels": 201,
+    "float64_reference_max": 12,
+    "float64_reference_different_pixels": 201,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    },
+    "difference_bbox_pixels": [
+      114,
+      128,
+      981,
+      1372
+    ],
+    "exact_difference_bbox_pixels": [
+      124,
+      138,
+      971,
+      1362
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 2,
+    "max_channel_difference": 10,
+    "different_pixels": 214,
+    "float64_reference_max": 10,
+    "float64_reference_different_pixels": 214,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    },
+    "difference_bbox_pixels": [
+      104,
+      107,
+      1193,
+      1502
+    ],
+    "exact_difference_bbox_pixels": [
+      114,
+      117,
+      1183,
+      1492
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 3,
+    "max_channel_difference": 11,
+    "different_pixels": 127,
+    "float64_reference_max": 11,
+    "float64_reference_different_pixels": 127,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    },
+    "difference_bbox_pixels": [
+      104,
+      142,
+      1011,
+      1287
+    ],
+    "exact_difference_bbox_pixels": [
+      114,
+      152,
+      1001,
+      1277
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 4,
+    "max_channel_difference": 13,
+    "different_pixels": 206,
+    "float64_reference_max": 13,
+    "float64_reference_different_pixels": 206,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    },
+    "difference_bbox_pixels": [
+      107,
+      153,
+      1158,
+      1127
+    ],
+    "exact_difference_bbox_pixels": [
+      117,
+      163,
+      1148,
+      1117
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 5,
+    "max_channel_difference": 16,
+    "different_pixels": 185,
+    "float64_reference_max": 16,
+    "float64_reference_different_pixels": 185,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    },
+    "difference_bbox_pixels": [
+      114,
+      110,
+      1147,
+      1376
+    ],
+    "exact_difference_bbox_pixels": [
+      124,
+      120,
+      1137,
+      1366
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 6,
+    "max_channel_difference": 6,
+    "different_pixels": 65,
+    "float64_reference_max": 6,
+    "float64_reference_different_pixels": 65,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    },
+    "difference_bbox_pixels": [
+      109,
+      134,
+      1005,
+      715
+    ],
+    "exact_difference_bbox_pixels": [
+      119,
+      144,
+      995,
+      705
+    ],
+    "dpi": 150,
+    "output_intents_before": [
+      "null",
+      "null"
+    ],
+    "output_intents_after": [
+      "null",
+      "null"
+    ]
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 7,
+    "max_channel_difference": 0,
+    "different_pixels": 0,
+    "float64_reference_max": 0,
+    "float64_reference_different_pixels": 0,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    }
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 8,
+    "max_channel_difference": 0,
+    "different_pixels": 0,
+    "float64_reference_max": 0,
+    "float64_reference_different_pixels": 0,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    }
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 9,
+    "max_channel_difference": 0,
+    "different_pixels": 0,
+    "float64_reference_max": 0,
+    "float64_reference_different_pixels": 0,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    }
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 10,
+    "max_channel_difference": 0,
+    "different_pixels": 0,
+    "float64_reference_max": 0,
+    "float64_reference_different_pixels": 0,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    }
+  },
+  {
+    "source": "shimi_alee_7",
+    "page": 11,
+    "max_channel_difference": 0,
+    "different_pixels": 0,
+    "float64_reference_max": 0,
+    "float64_reference_different_pixels": 0,
+    "split_device_max": 0,
+    "split_device_pixels": 0,
+    "fit": {
+      "scale": 0.8831273058495308,
+      "safe_bbox": [
+        0,
+        51.97776348121575,
+        612.0,
+        751.4145897140442
+      ],
+      "content_bbox": [
+        35.76304626464844,
+        51.97776412963867,
+        576.2369995117188,
+        751.4146118164062
+      ],
+      "display_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495308,
+        35.76304441004356,
+        51.97776348121575
+      ],
+      "pdf_matrix": [
+        0.8831273058495308,
+        0.0,
+        0.0,
+        0.8831273058495307,
+        35.76304441004356,
+        40.585410285955845
+      ]
+    }
+  }
+]

@@ -10,11 +10,12 @@ import subprocess
 import sys
 import tempfile
 import warnings
+import numpy as np
 import pymupdf as fitz
 from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets
 from naamak import resolve, to_output_name
 from cover import build_cover, effective_orientation
-from pages import process_pages, _preserve_rendering_attributes
+from pages import process_pages, _preserve_rendering_attributes, raster
 from border import clean_border
 from qc import check_pdf
 
@@ -85,9 +86,22 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
             result=stack.enter_context(fitz.open(stream=cover.tobytes(),filetype='pdf'))
             result.insert_pdf(content)
             _preserve_rendering_attributes(content,result,1,preserve_catalog=False)
+            # Render the actual assembly before saving: its catalog carries the
+            # cover's OutputIntents, which can alter image color interpretation.
+            baseline=[]; effects=[]
+            for index,page in enumerate(content):
+                assembled=raster(result[index+1],cfg['pages']['diagnostic_dpi'])
+                baseline.append(assembled)
+                raw=raster(page,cfg['pages']['diagnostic_dpi'])
+                delta=np.abs(raw.astype(np.int16)-assembled.astype(np.int16))
+                effects.append({'page':index+1,'different_pixels':int(np.any(delta,axis=2).sum()),
+                    'pixels_over_10':int(np.any(delta>10,axis=2).sum()),
+                    'percent_over_10':float(np.any(delta>10,axis=2).mean()*100),
+                    'max_channel_difference':int(delta.max())})
+            item['output_intents_effect']=effects
             temporary=Path(scratch)/name
             result.save(temporary,garbage=4,deflate=True)
-            quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,expected_content=content)
+            quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,expected_content_renders=baseline)
             item['qc']=quality
             if not quality['passed']: raise ValueError('کنترل کیفیت رد شد؛ خروجی جدید منتشر نشد')
             os.replace(temporary,output/name)
@@ -110,9 +124,15 @@ def write_report(output,items,global_warnings):
                 lines.append(f'{label}: {value}')
         for key,passed in item.get('qc',{}).get('checks',{}).items(): lines.append(f"  {key}: {'قبول' if passed else 'رد'}")
         for detail in item.get('qc',{}).get('details',[]): lines.append(json.dumps(detail,ensure_ascii=False))
+        image_warnings=[w for w in item.get('warnings',[]) if w['kind']=='image_number_unknown']
+        if image_warnings:
+            affected=sorted({w['page'] for w in image_warnings})
+            lines.append(f'شمارهٔ تصویری نامعلوم: {len(affected)} صفحه ({", ".join(map(str,affected))})؛ '
+                         'علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.')
         for warning in item.get('warnings',[]):
-            label='شمارهٔ تصویری نامعلوم؛ تصویر حذف نشد' if warning['kind']=='image_number_unknown' else 'هشدار'
-            lines.append(label+': '+json.dumps(warning,ensure_ascii=False))
+            if warning['kind']!='image_number_unknown': lines.append('هشدار: '+json.dumps(warning,ensure_ascii=False))
+        for effect in item.get('output_intents_effect',[]):
+            lines.append('اثر OutputIntents (صرفاً گزارش): '+json.dumps(effect,ensure_ascii=False))
         for page in item.get('pages',[]):
             for removed in page['removed']: lines.append(f"حذف شمارهٔ متنی صفحه {page['page']}: {removed['text']}")
         if item['status']!='موفق': lines.append('اگر خروجی قدیمی وجود دارد، نتیجهٔ این اجرا نیست و بازنویسی نشده است.')

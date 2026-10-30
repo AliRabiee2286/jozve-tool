@@ -6,6 +6,8 @@ from cover import build_cover
 from pages import process_pages, _preserve_rendering_attributes
 from qc import check_pdf
 from naamak import to_output_name
+from pages import raster
+from syllabus import load_config
 
 
 @pytest.fixture
@@ -50,3 +52,23 @@ def test_extra_cover_mark_is_rejected(example):
     quality=check(example)
     assert not quality['passed']
     assert not quality['checks']['رندر فرست‌پیج فقط در چهار ناحیه']
+
+
+def test_assembly_qc_rejects_even_one_channel_level(example):
+    source,record,cover,cr,pr,result,path=example
+    reference=raster(result[1],load_config()['pages']['diagnostic_dpi'])
+    reference[0,0,0]^=1
+    result.save(path)
+    quality=check_pdf(path,source,record,cr,pr,cover,expected_content_renders=[reference])
+    assert not quality['passed']
+    assert not quality['checks']['صفحه محتوا 1: رندر پس از مونتاژ']
+    detail=next(d['detail'] for d in quality['details'] if d['check'].endswith('رندر پس از مونتاژ'))
+    assert detail['different_pixels']==1
+
+
+def test_qc_detects_generic_number_in_expanded_bottom_band(example):
+    page=example[5][1]
+    page.insert_text((60,page.rect.height*0.90),'elminoastp 1 Page 1',fontsize=10)
+    quality=check(example)
+    assert not quality['passed']
+    assert not quality['checks']['صفحه محتوا 1: نبود شماره متن']

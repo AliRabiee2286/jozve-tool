@@ -1,4 +1,4 @@
-"""Step 4: real six-file acceptance and isolated Windows/error-path contracts."""
+"""Steps 4/4b: thirteen-file acceptance and Windows/error-path contracts."""
 import json
 from pathlib import Path
 import subprocess
@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def run(*args):
     return subprocess.run([sys.executable,'-X','utf8',str(ROOT/'main.py'),*map(str,args)],cwd=ROOT,
-                          capture_output=True,text=True,encoding='utf-8',timeout=900)
+                          capture_output=True,text=True,encoding='utf-8',timeout=1800)
 
 
 def make_pdf(path,text='vector',size=(600,800)):
@@ -27,9 +27,9 @@ def make_pdf(path,text='vector',size=(600,800)):
         doc.save(path)
 
 
-def test_six_real_inputs_and_overwrite():
+def test_thirteen_real_inputs_and_overwrite():
     cfg=load_config();syll=Syllabus();sources=sorted((ROOT/cfg['paths']['input']).glob('*.pdf'))
-    assert len(sources)==6
+    assert len(sources)==13
     before={p:hashlib.sha256(p.read_bytes()).hexdigest() for directory in ('input','assets','samples') for p in (ROOT/cfg['paths'][directory]).iterdir() if p.is_file()}
     names={to_output_name(resolve(p.stem,syll)) for p in sources}
     output=ROOT/cfg['paths']['output']
@@ -37,7 +37,7 @@ def test_six_real_inputs_and_overwrite():
     mtimes={name:(output/name).stat().st_mtime_ns for name in names}
     result=run();assert result.returncode==0,result.stdout+result.stderr
     report=json.loads((output/'report.json').read_text(encoding='utf-8'))
-    assert len(report['items'])==6
+    assert len(report['items'])==13
     for item in report['items']:
         assert item['status']=='موفق' and item['qc']['passed'],item
         assert all(item['qc']['checks'].values())
@@ -110,6 +110,7 @@ def test_protected_output_is_rejected():
 
 def test_all_sources_match_recorded_step4_baseline():
     expected=json.loads((ROOT/'tests/data/step4_source_hashes.json').read_text(encoding='utf-8'))
+    expected.update(json.loads((ROOT/'tests/data/step4b_source_hashes.json').read_text(encoding='utf-8')))
     actual={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
             for folder in ('input','assets','samples') for p in (ROOT/folder).iterdir() if p.is_file()}
     assert actual==expected

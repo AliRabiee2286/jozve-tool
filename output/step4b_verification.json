@@ -1,0 +1,18 @@
+{
+  "successful_files": 13,
+  "content_pages": 90,
+  "failed_qc_checks": 0,
+  "assembly_different_pixels": 0,
+  "under_bar_ink_pixels": 0,
+  "six_previous_fit_parameters_identical": true,
+  "affected_fourteen_fit_parameters_identical": true,
+  "source_count": 30,
+  "source_hashes_unchanged": true,
+  "fit_pages": 90,
+  "fit_different_pixels": 0,
+  "fit_max_channel_difference": 0,
+  "pytest_passed": 156,
+  "pytest_failed": 0,
+  "pytest_warnings": 6,
+  "pytest_seconds": 1267.5
+}
