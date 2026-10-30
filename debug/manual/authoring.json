@@ -1,0 +1,31 @@
+{
+  "intended_pages": 16,
+  "titles": [
+    "راهنمای بهره‌برداری و تحویل ابزار آماده‌سازی جزوه",
+    "نصب و آماده‌سازی",
+    "پوشه‌ها و مسئولیت‌ها",
+    "شرایط فایل ورودی",
+    "نام فایل‌ها",
+    "اجرای روزانه",
+    "ادغام و تبدیل فایل‌های Office",
+    "سیلابس و فرست‌پیج",
+    "الگوریتم سربرگ هر صفحه",
+    "حذف شمارهٔ صفحه",
+    "کنترل کیفیت و میزان اطمینان",
+    "رفع خطا",
+    "رشته‌ها و تمپلیت‌ها",
+    "تنظیمات فنی",
+    "آزمون تحویل و پشتیبان‌گیری",
+    "واژه‌نامه و اطلاعات پشتیبانی"
+  ],
+  "font_family": "Aria Normal",
+  "font_asset": "assets/02-Aria-Regular.otf",
+  "font_sha256": "5fc860fb565bb3b2f5f3d349a6b78bc7f90bcf828adf12e1dc5f625881e8a078",
+  "asset_matches": {
+    "syllabus": "assets/Comprehensive_Syllabus_19 (1)(1).xlsx",
+    "template": "assets/First_Page_Template (1)(1).pdf",
+    "border": "assets/01-Olampiom-Sarbarg-1- (1)(1).pdf",
+    "font": "assets/02-Aria-Regular.otf"
+  },
+  "font_fsType": 8
+}

@@ -1,0 +1,18 @@
+{
+  "passed": 12,
+  "failed": 0,
+  "checks": {
+    "zip_integrity": true,
+    "editable_text": true,
+    "no_rasterized_text": true,
+    "rtl_paragraphs": true,
+    "aria_run_font": true,
+    "embedded_font_exact": true,
+    "no_title_rules": true,
+    "sixteen_sections": true,
+    "no_personal_author": true,
+    "sixteen_rendered_pages": true,
+    "sixteen_page_images": true,
+    "under_git_size_limit": true
+  }
+}
