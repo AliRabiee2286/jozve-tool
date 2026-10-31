@@ -32,7 +32,13 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
             check('باز شدن PDF',not doc.needs_pass)
             check('نام فایل',(output_name or Path(path).name)==to_output_name(record['namak'],config_path))
             check('تعداد صفحات',len(doc)==len(source)+1)
-            if doc.needs_pass or len(doc)!=len(source)+1:
+            # A truncated zip would otherwise silently skip content-page QC.
+            evidence=pages_report.get('pages',[])
+            evidence_complete=len(evidence)==len(source)
+            check('تعداد شواهد صفحات محتوا',evidence_complete)
+            renders_complete=expected_content_renders is None or len(expected_content_renders)==len(source)
+            check('تعداد رندرهای مرجع محتوا',renders_complete)
+            if doc.needs_pass or len(doc)!=len(source)+1 or not evidence_complete or not renders_complete:
                 return {'passed':False,'checks':checks,'details':details}
             front=doc[0]; dpi=cfg['cover']['qc_dpi']
             check('جهت فرست‌پیج',effective_orientation(front)==effective_orientation(source[0]))

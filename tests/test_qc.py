@@ -72,3 +72,24 @@ def test_qc_detects_generic_number_in_expanded_bottom_band(example):
     quality=check(example)
     assert not quality['passed']
     assert not quality['checks']['صفحه محتوا 1: نبود شماره متن']
+
+
+def test_qc_rejects_missing_page_evidence(example):
+    # zip() must not silently skip all content checks when evidence is truncated.
+    example[4]['pages'].clear()
+    assert not check(example)['passed']
+
+
+def test_qc_rejects_extra_page_evidence(example):
+    example[4]['pages'].append(dict(example[4]['pages'][0]))
+    assert not check(example)['passed']
+
+
+@pytest.mark.parametrize('count',[0,2])
+def test_qc_rejects_wrong_reference_render_count(example,count):
+    source,record,cover,cr,pr,result,path=example
+    reference=raster(result[1],load_config()['pages']['diagnostic_dpi'])
+    result.save(path)
+    quality=check_pdf(path,source,record,cr,pr,cover,expected_content_renders=[reference]*count)
+    assert not quality['passed']
+    assert not quality['checks']['تعداد رندرهای مرجع محتوا']

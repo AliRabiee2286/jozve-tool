@@ -49,9 +49,10 @@ def data():
 
 
 @pytest.fixture(scope='module')
-def covers(data):
+def covers(data,tmp_path_factory):
     cfg,syll,rows=data
     result=[]
+    saved_covers=tmp_path_factory.mktemp('saved_covers')
     for source in sorted((ROOT/cfg['paths']['input']).glob('*.pdf')):
         if 'input/'+source.name not in json.loads((ROOT/'tests/data/inspection_evidence.json').read_text(encoding='utf-8'))['source_hashes_before']:
             continue  # Historical four-sample visual baseline; six-file CLI acceptance is separate.
@@ -63,9 +64,10 @@ def covers(data):
         with fitz.open(source) as doc:orientation=effective_orientation(doc[0])
         doc,report=build_cover(record['template_index'],orientation,values)
         slug=name.replace(' ','_')
-        doc.save(ROOT/f'debug/cover_{slug}.pdf',deflate=True)
+        saved=saved_covers/f'cover_{slug}.pdf'
+        doc.save(saved,deflate=True)
         # QC the saved/reopened PDF, including catalog color management.
-        reopened=fitz.open(ROOT/f'debug/cover_{slug}.pdf')
+        reopened=fitz.open(saved)
         doc.close();doc=reopened
         generated=raster(doc[0]);Image.fromarray(generated).save(ROOT/f'debug/cover_{slug}.png')
         with fitz.open(syll.assets['template']) as templates:
