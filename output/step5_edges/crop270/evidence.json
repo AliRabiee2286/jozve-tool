@@ -1,0 +1,365 @@
+{
+  "files": [
+    "physics_thermo_9.pdf"
+  ],
+  "status": "موفق",
+  "warnings": [],
+  "namak": "physics_thermo_9",
+  "sheet": "فیزیک",
+  "output": "LessonNote_hard_physics_thermo_9_v01.pdf",
+  "orientation": "landscape",
+  "input_pages": 1,
+  "output_pages": 2,
+  "pages": [
+    {
+      "page": 1,
+      "size": [
+        0.0,
+        0.0,
+        810.0,
+        620.0
+      ],
+      "rotation": 270,
+      "removed": [
+        {
+          "text": "Page 7",
+          "bbox": [
+            9.607999801635742,
+            80.0,
+            20.600000381469727,
+            105.35198974609375
+          ],
+          "visible_bbox": [
+            80.0,
+            599.4000244140625,
+            105.35198974609375,
+            610.3920288085938
+          ]
+        }
+      ],
+      "image_candidates": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 0,
+        "drawings_after": 0,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
+      "coverage_original": [
+        {
+          "strip": "header",
+          "bbox": [
+            0.0,
+            8.100820541381836,
+            810.0,
+            37.558349609375
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        },
+        {
+          "strip": "footer",
+          "bbox": [
+            0.0,
+            591.3599243164062,
+            810.0,
+            620.0
+          ],
+          "meaningful_ink_pixels": 243,
+          "ink_bbox": [
+            80.64,
+            602.4,
+            105.12,
+            610.08
+          ]
+        }
+      ],
+      "coverage_after_number_removal": [
+        {
+          "strip": "header",
+          "bbox": [
+            0.0,
+            8.100820541381836,
+            810.0,
+            37.558349609375
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        },
+        {
+          "strip": "footer",
+          "bbox": [
+            0.0,
+            591.3599243164062,
+            810.0,
+            620.0
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        }
+      ],
+      "fit": {
+        "scale": 0.8803250901440892,
+        "safe_bbox": [
+          0,
+          41.55835019994163,
+          810.0,
+          587.3599060892769
+        ],
+        "content_bbox": [
+          48.46833801269531,
+          41.558349609375,
+          761.5316162109375,
+          587.3599243164062
+        ],
+        "display_matrix": [
+          0.8803250901440892,
+          0.0,
+          0.0,
+          0.8803250901440892,
+          48.46833849164386,
+          41.55835019994163
+        ],
+        "pdf_matrix": [
+          0.8803250901440892,
+          0.0,
+          0.0,
+          0.8803250901440892,
+          36.23034120640034,
+          54.452083984439355
+        ]
+      },
+      "coverage_after_fit": [
+        {
+          "strip": "header",
+          "bbox": [
+            0.0,
+            8.100820541381836,
+            810.0,
+            37.558349609375
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        },
+        {
+          "strip": "footer",
+          "bbox": [
+            0.0,
+            591.3599243164062,
+            810.0,
+            620.0
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        }
+      ],
+      "border_stream_count": 6,
+      "content_stream_count": 3,
+      "pieces": [
+        {
+          "strip": "header",
+          "part": "left",
+          "clip": [
+            0.0,
+            11.0,
+            80.0,
+            51.0
+          ],
+          "bbox": [
+            0.0,
+            8.100820631359959,
+            58.91505913716333,
+            37.55835019994163
+          ],
+          "scale": 0.7364382392145417,
+          "scale_x": 0.7364382392145417,
+          "scale_y": 0.7364382392145418
+        },
+        {
+          "strip": "header",
+          "part": "middle",
+          "clip": [
+            80.0,
+            11.0,
+            540.0,
+            51.0
+          ],
+          "bbox": [
+            58.91505913716333,
+            8.100820631359959,
+            769.292639169999,
+            37.55835019994163
+          ],
+          "scale": 0.7364382392145417,
+          "scale_x": 1.5442990870279036,
+          "scale_y": 0.7364382392145418
+        },
+        {
+          "strip": "header",
+          "part": "right",
+          "clip": [
+            540.0,
+            11.0,
+            595.2760009765625,
+            51.0
+          ],
+          "bbox": [
+            769.292639169999,
+            8.100820631359959,
+            810.0,
+            37.55835019994163
+          ],
+          "scale": 0.7364382392145417,
+          "scale_x": 0.736438239214542,
+          "scale_y": 0.7364382392145418
+        },
+        {
+          "strip": "footer",
+          "part": "left",
+          "clip": [
+            0.0,
+            803.0,
+            40.0,
+            841.89
+          ],
+          "bbox": [
+            0.0,
+            591.3599060892769,
+            29.457529568581666,
+            619.9999892123304
+          ],
+          "scale": 0.7364382392145417,
+          "scale_x": 0.7364382392145417,
+          "scale_y": 0.7364382392145413
+        },
+        {
+          "strip": "footer",
+          "part": "middle",
+          "clip": [
+            40.0,
+            803.0,
+            460.0,
+            841.89
+          ],
+          "bbox": [
+            29.457529568581666,
+            591.3599060892769,
+            710.3775800328357,
+            619.9999892123304
+          ],
+          "scale": 0.7364382392145417,
+          "scale_x": 1.621238215391081,
+          "scale_y": 0.7364382392145413
+        },
+        {
+          "strip": "footer",
+          "part": "right",
+          "clip": [
+            460.0,
+            803.0,
+            595.2760009765625,
+            841.89
+          ],
+          "bbox": [
+            710.3775800328357,
+            591.3599060892769,
+            810.0,
+            619.9999892123304
+          ],
+          "scale": 0.7364382392145417,
+          "scale_x": 0.7364382392145418,
+          "scale_y": 0.7364382392145413
+        }
+      ]
+    }
+  ],
+  "output_intents_effect": [
+    {
+      "page": 1,
+      "different_pixels": 0,
+      "pixels_over_10": 0,
+      "percent_over_10": 0.0,
+      "max_channel_difference": 0
+    }
+  ],
+  "qc": {
+    "passed": true,
+    "checks": {
+      "باز شدن PDF": true,
+      "نام فایل": true,
+      "تعداد صفحات": true,
+      "تعداد شواهد صفحات محتوا": true,
+      "تعداد رندرهای مرجع محتوا": true,
+      "جهت فرست‌پیج": true,
+      "فونت Aria Regular جاسازی‌شده": true,
+      "چهار مقدار دقیق و ناتهی": true,
+      "رندر فرست‌پیج فقط در چهار ناحیه": true,
+      "فرست‌پیج بدون بوردر و برابر مرجع نوشتن": true,
+      "صفحه محتوا 1: رندر پس از مونتاژ": true,
+      "صفحه محتوا 1: اندازه و جهت و rotation": true,
+      "صفحه محتوا 1: BALATAR.GROUP": true,
+      "صفحه محتوا 1: نبود شماره متن": true,
+      "صفحه محتوا 1: متن حفظ شده": true,
+      "صفحه محتوا 1: هش تصاویر و تعداد کاربردها": true,
+      "صفحه محتوا 1: ساختار لایه بوردر": true,
+      "صفحه محتوا 1: جوهر زیر نوارها صفر": true
+    },
+    "details": [
+      {
+        "check": "رندر فرست‌پیج فقط در چهار ناحیه",
+        "detail": {
+          "outside_pixels": 0,
+          "field_pixels": {
+            "teacher": 4340,
+            "course": 4121,
+            "chapter": 4208,
+            "topic": 8299
+          }
+        }
+      },
+      {
+        "check": "صفحه محتوا 1: رندر پس از مونتاژ",
+        "detail": {
+          "different_pixels": 0,
+          "same_shape": true
+        }
+      },
+      {
+        "check": "صفحه محتوا 1: جوهر زیر نوارها صفر",
+        "detail": [
+          {
+            "strip": "header",
+            "bbox": [
+              0.0,
+              8.100820541381836,
+              810.0,
+              37.558349609375
+            ],
+            "meaningful_ink_pixels": 0,
+            "ink_bbox": null
+          },
+          {
+            "strip": "footer",
+            "bbox": [
+              0.0,
+              591.3599243164062,
+              810.0,
+              620.0
+            ],
+            "meaningful_ink_pixels": 0,
+            "ink_bbox": null
+          }
+        ]
+      }
+    ]
+  }
+}

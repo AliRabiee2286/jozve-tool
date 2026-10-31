@@ -1,0 +1,67 @@
+{
+  "pip_check": "No broken requirements found.",
+  "cli_passed": true,
+  "wheels": [
+    {
+      "name": "colorama",
+      "version": "0.4.6",
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
+    },
+    {
+      "name": "et_xmlfile",
+      "version": "2.0.0",
+      "sha256": "7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.1",
+      "sha256": "9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7"
+    },
+    {
+      "name": "numpy",
+      "version": "1.26.4",
+      "sha256": "08beddf13648eb95f8d867350f6a018a4be2e5ad54c8d8caed89ebca558b2818"
+    },
+    {
+      "name": "openpyxl",
+      "version": "3.1.5",
+      "sha256": "5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+    },
+    {
+      "name": "pillow\r",
+      "version": "12.0.0\r",
+      "sha256": "9fe611163f6303d1619bbcb653540a4d60f9e55e622d60a3108be0d5b441017a"
+    },
+    {
+      "name": "pluggy",
+      "version": "1.7.0",
+      "sha256": "7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec"
+    },
+    {
+      "name": "Pygments",
+      "version": "2.21.0",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"
+    },
+    {
+      "name": "pymupdf",
+      "version": "1.28.2",
+      "sha256": "ebd244918798502d7b4504c90410d1711a4d7675a32584ca30f1bab419ecbffe"
+    },
+    {
+      "name": "pytest",
+      "version": "9.1.1",
+      "sha256": "37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c"
+    },
+    {
+      "name": "PyYAML\r",
+      "version": "6.0.3\r",
+      "sha256": "5fcd34e47f6e0b794d17de1b4ff496c00986e1c83f7ab2fb8fcfe9616ff7477b"
+    }
+  ],
+  "network_policy": "--no-index --no-cache-dir; HTTP(S)_PROXY=127.0.0.1:9; pip version check disabled"
+}

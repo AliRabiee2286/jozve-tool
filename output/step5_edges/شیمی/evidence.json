@@ -1,0 +1,344 @@
+{
+  "files": [
+    "shimi_alee_7.pdf"
+  ],
+  "status": "موفق",
+  "warnings": [],
+  "namak": "shimi_alee_7",
+  "sheet": "شیمی",
+  "output": "LessonNote_hard_shimi_alee_7_v01.pdf",
+  "orientation": "portrait",
+  "input_pages": 1,
+  "output_pages": 2,
+  "pages": [
+    {
+      "page": 1,
+      "size": [
+        0.0,
+        0.0,
+        595.0,
+        842.0
+      ],
+      "rotation": 0,
+      "removed": [],
+      "image_candidates": [],
+      "bake": {
+        "annotations_before": 0,
+        "annotations_after": 0,
+        "annotation_boxes": [],
+        "widgets_before": 0,
+        "widgets_after": 0,
+        "images_before": 0,
+        "images_after": 0,
+        "drawings_before": 1,
+        "drawings_after": 1,
+        "text_equal": true,
+        "different_pixels": 0,
+        "max_channel_difference": 0,
+        "outside_annotation_pixels": 0
+      },
+      "paper_rule": null,
+      "coverage_original": [
+        {
+          "strip": "header",
+          "bbox": [
+            0.0,
+            10.99489974975586,
+            595.0,
+            50.97635269165039
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        },
+        {
+          "strip": "footer",
+          "bbox": [
+            0.0,
+            803.1279907226562,
+            595.0,
+            842.0
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        }
+      ],
+      "coverage_after_number_removal": [
+        {
+          "strip": "header",
+          "bbox": [
+            0.0,
+            10.99489974975586,
+            595.0,
+            50.97635269165039
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        },
+        {
+          "strip": "footer",
+          "bbox": [
+            0.0,
+            803.1279907226562,
+            595.0,
+            842.0
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        }
+      ],
+      "fit": {
+        "scale": 0.8837905736899363,
+        "safe_bbox": [
+          0,
+          54.976353742160626,
+          595.0,
+          799.128016789087
+        ],
+        "content_bbox": [
+          34.572303771972656,
+          54.97635269165039,
+          560.427734375,
+          799.1280517578125
+        ],
+        "display_matrix": [
+          0.8837905736899363,
+          0.0,
+          0.0,
+          0.8837905736899363,
+          34.572304327243955,
+          54.976353742160626
+        ],
+        "pdf_matrix": [
+          0.8837905736899363,
+          0.0,
+          0.0,
+          0.8837905736899363,
+          34.572304327243955,
+          42.87198321091296
+        ]
+      },
+      "coverage_after_fit": [
+        {
+          "strip": "header",
+          "bbox": [
+            0.0,
+            10.99489974975586,
+            595.0,
+            50.97635269165039
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        },
+        {
+          "strip": "footer",
+          "bbox": [
+            0.0,
+            803.1279907226562,
+            595.0,
+            842.0
+          ],
+          "meaningful_ink_pixels": 0,
+          "ink_bbox": null
+        }
+      ],
+      "border_stream_count": 6,
+      "content_stream_count": 4,
+      "pieces": [
+        {
+          "strip": "header",
+          "part": "left",
+          "clip": [
+            0.0,
+            11.0,
+            80.0,
+            51.0
+          ],
+          "bbox": [
+            0.0,
+            10.994899826740527,
+            79.9629078308402,
+            50.976353742160626
+          ],
+          "scale": 0.9995363478855024,
+          "scale_x": 0.9995363478855024,
+          "scale_y": 0.9995363478855024
+        },
+        {
+          "strip": "header",
+          "part": "middle",
+          "clip": [
+            80.0,
+            11.0,
+            540.0,
+            51.0
+          ],
+          "bbox": [
+            79.9629078308402,
+            10.994899826740527,
+            539.7496278581713,
+            50.976353742160626
+          ],
+          "scale": 0.9995363478855024,
+          "scale_x": 0.9995363478855023,
+          "scale_y": 0.9995363478855024
+        },
+        {
+          "strip": "header",
+          "part": "right",
+          "clip": [
+            540.0,
+            11.0,
+            595.2760009765625,
+            51.0
+          ],
+          "bbox": [
+            539.7496278581713,
+            10.994899826740527,
+            595.0,
+            50.976353742160626
+          ],
+          "scale": 0.9995363478855024,
+          "scale_x": 0.9995363478855022,
+          "scale_y": 0.9995363478855024
+        },
+        {
+          "strip": "footer",
+          "part": "left",
+          "clip": [
+            0.0,
+            803.0,
+            40.0,
+            841.89
+          ],
+          "bbox": [
+            0.0,
+            803.128016789087,
+            39.9814539154201,
+            841.9999853583543
+          ],
+          "scale": 0.9995363478855024,
+          "scale_x": 0.9995363478855024,
+          "scale_y": 0.9995363478855033
+        },
+        {
+          "strip": "footer",
+          "part": "middle",
+          "clip": [
+            40.0,
+            803.0,
+            460.0,
+            841.89
+          ],
+          "bbox": [
+            39.9814539154201,
+            803.128016789087,
+            459.78672002733106,
+            841.9999853583543
+          ],
+          "scale": 0.9995363478855024,
+          "scale_x": 0.9995363478855023,
+          "scale_y": 0.9995363478855033
+        },
+        {
+          "strip": "footer",
+          "part": "right",
+          "clip": [
+            460.0,
+            803.0,
+            595.2760009765625,
+            841.89
+          ],
+          "bbox": [
+            459.78672002733106,
+            803.128016789087,
+            595.0,
+            841.9999853583543
+          ],
+          "scale": 0.9995363478855024,
+          "scale_x": 0.9995363478855024,
+          "scale_y": 0.9995363478855033
+        }
+      ]
+    }
+  ],
+  "output_intents_effect": [
+    {
+      "page": 1,
+      "different_pixels": 0,
+      "pixels_over_10": 0,
+      "percent_over_10": 0.0,
+      "max_channel_difference": 0
+    }
+  ],
+  "qc": {
+    "passed": true,
+    "checks": {
+      "باز شدن PDF": true,
+      "نام فایل": true,
+      "تعداد صفحات": true,
+      "تعداد شواهد صفحات محتوا": true,
+      "تعداد رندرهای مرجع محتوا": true,
+      "جهت فرست‌پیج": true,
+      "فونت Aria Regular جاسازی‌شده": true,
+      "چهار مقدار دقیق و ناتهی": true,
+      "رندر فرست‌پیج فقط در چهار ناحیه": true,
+      "فرست‌پیج بدون بوردر و برابر مرجع نوشتن": true,
+      "صفحه محتوا 1: رندر پس از مونتاژ": true,
+      "صفحه محتوا 1: اندازه و جهت و rotation": true,
+      "صفحه محتوا 1: BALATAR.GROUP": true,
+      "صفحه محتوا 1: نبود شماره متن": true,
+      "صفحه محتوا 1: متن حفظ شده": true,
+      "صفحه محتوا 1: هش تصاویر و تعداد کاربردها": true,
+      "صفحه محتوا 1: ساختار لایه بوردر": true,
+      "صفحه محتوا 1: جوهر زیر نوارها صفر": true
+    },
+    "details": [
+      {
+        "check": "رندر فرست‌پیج فقط در چهار ناحیه",
+        "detail": {
+          "outside_pixels": 0,
+          "field_pixels": {
+            "teacher": 2584,
+            "course": 2046,
+            "chapter": 2901,
+            "topic": 4480
+          }
+        }
+      },
+      {
+        "check": "صفحه محتوا 1: رندر پس از مونتاژ",
+        "detail": {
+          "different_pixels": 0,
+          "same_shape": true
+        }
+      },
+      {
+        "check": "صفحه محتوا 1: جوهر زیر نوارها صفر",
+        "detail": [
+          {
+            "strip": "header",
+            "bbox": [
+              0.0,
+              10.99489974975586,
+              595.0,
+              50.97635269165039
+            ],
+            "meaningful_ink_pixels": 0,
+            "ink_bbox": null
+          },
+          {
+            "strip": "footer",
+            "bbox": [
+              0.0,
+              803.1279907226562,
+              595.0,
+              842.0
+            ],
+            "meaningful_ink_pixels": 0,
+            "ink_bbox": null
+          }
+        ]
+      }
+    ]
+  }
+}

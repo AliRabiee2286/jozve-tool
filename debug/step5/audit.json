@@ -1,0 +1,700 @@
+{
+  "assets": {
+    "syllabus": "assets/Comprehensive_Syllabus_19 (1)(1).xlsx",
+    "template": "assets/First_Page_Template (1)(1).pdf",
+    "border": "assets/01-Olampiom-Sarbarg-1- (1)(1).pdf",
+    "font": "assets/02-Aria-Regular.otf"
+  },
+  "source_hashes_before": {
+    "input/ADAB_LNG_10 (1).pdf": "65ad1940464ac4db02a8f059092002a30c9f932208f33d1d76511669ab499ee2",
+    "input/ADAB_LNG_9.pdf": "d0740c17a069cd10a3efe5a153a8774b4ad221b5f8a41b5cc29ab711a036cb30",
+    "input/ai_par_2.pdf": "93f178787305cb064daf378127eca1b5fa0d45af50671eef0df1adb2f11b2f3b",
+    "input/ECONO  GO P 7.pdf": "1dff043910bf2f20e396fb98449adf0d116c30c09e6359bc3a60b4e6707692d8",
+    "input/ECONO EC M 12.pdf": "94964b0b1f2bdce1048a9ff12cc31210d8abc7ad78caeb2ad8298b0a44e744c9",
+    "input/ECONO EC M 15.pdf": "6ae044570268d8df3b140c1fbf82ff642f383712e76c7436e92b1bfc14f84adf",
+    "input/nojoom_astr_18.pdf": "dc9aa3b1ca932c5200895c26ddfb1d91132d5c206f6a221512d4ca1ddc44aee3",
+    "input/physics_mech_7(1).pdf": "b69fc9cbb5407f6d8aa21c0d711c36085695dd5f8322c751ab272570b1fe6098",
+    "input/physics_thermo_10.pdf": "dd541da66a2529549691e28a0bf50e5a49ca29ecff07f2399683f9f1f56e3f14",
+    "input/physics_thermo_8.pdf": "9f76b176e4b023d17bdfcdaf51d530062635f425f4173468a390d0b32fef9fd7",
+    "input/physics_thermo_9.pdf": "b1475820865a5d2c8a6eb7246966274c0e9dca83e67a5c522fd2047f93f7ae1f",
+    "input/Savad resane-ma va resane-10.pdf": "a9c65ed6472efea360a53fd7d3cb338e15257521d3e07e1eb804ec60c56434fc",
+    "input/shimi_alee_7.pdf": "e5c8fea74fbfccd4b01041ca58a6dae5e7e10395e3b9b665785300271d561a7c",
+    "assets/01-Olampiom-Sarbarg-1- (1)(1).pdf": "41497b5e0bda9b89bab146746cd8d3799736295e0f0cf3e9d1538657273cd3a4",
+    "assets/02-Aria-Regular.otf": "5fc860fb565bb3b2f5f3d349a6b78bc7f90bcf828adf12e1dc5f625881e8a078",
+    "assets/Comprehensive_Syllabus_19 (1)(1).xlsx": "6378a0e61632f164bfec386c39c52f8d71dc3d5cb5c7faa4b0bc8747b8ad344c",
+    "assets/First_Page_Template (1)(1).pdf": "31605e362644a1caf39e391d224c0542dc8d7e11aabf7f4e55b13dc1d96cab9d",
+    "samples/LessonNote_hard_ADAB_LNG_10_v01.pdf": "47739b46955ee4cbdc2ced6324d134d8bb3f2643c776bac643da8f73fce7add9",
+    "samples/LessonNote_hard_ADAB_LNG_11_v01.pdf": "e0a064f9bea13d8db1ef589652a0549b23132d0f109b7bdebb1c440441fd3d0b",
+    "samples/LessonNote_hard_ai_par_2_v01.pdf": "6645b61e9e9afd6240cf60c623d3f5e43e07856df432bc5ce72e0a2e2db55181",
+    "samples/LessonNote_hard_ECONO_EC_M_12_v01.pdf": "646510299d0e9727261889de958ddebc83018f394e5ae443fea20427451bf247",
+    "samples/LessonNote_hard_ECONO_EC_M_15_v01.pdf": "80669c1348cb0a8810ccd66ef2adaf45fc1b6a7fd881022565d99ccf15f6de43",
+    "samples/LessonNote_hard_ECONO__GO_P_7_v01.pdf": "08a0eeaa59e15202ec9d53e1af6d283d8629bfbed09d287cb42e030a0bd695ab",
+    "samples/LessonNote_hard_nojoom_astr_18_v01.pdf": "3700cd38eb6085196c247c701ab0ad465ff21faf8ae284125fa2a95303b229fd",
+    "samples/LessonNote_hard_physics_mech_7_v01.pdf": "23e0f91eb40580e9e58aaf0fb3482dfa240fe6bbeca49964ae3e3aa555e80d60",
+    "samples/LessonNote_hard_physics_thermo_10_v01.pdf": "1cce7f03778f31d2fa6d82c08f80d8d91ca5148f540a80063179f9f72c4879c5",
+    "samples/LessonNote_hard_physics_thermo_8_v01.pdf": "86f632260d7ce529cc53db589d40d161e3e4ecaa7eb64a79401765fa09b662b1",
+    "samples/LessonNote_hard_physics_thermo_9_v01.pdf": "f8bce8c221dc06b111ee2049a41e69169b288c7ab4ea7f4b5474b699062a7cba",
+    "samples/LessonNote_hard_Savad_resane-ma_va_resane-10_v01.pdf": "efc1c21f2d00cc26b49955380613924b4f681f2bc6c4d13e0f327fe1a9eaa516",
+    "samples/LessonNote_hard_shimi_alee_7_v01.pdf": "354bd6d49df5983a0f15588e7bb63e7d2634ee25e8ce761c62c27ae0f4a3ef9f"
+  },
+  "run": {
+    "seconds": 593.3882435999999,
+    "returncode": 0,
+    "stdout": "در حال پردازش: ADAB_LNG_10 (1).pdf\r\nدر حال پردازش: ADAB_LNG_9.pdf\r\nدر حال پردازش: ai_par_2.pdf\r\nدر حال پردازش: ECONO  GO P 7.pdf\r\nدر حال پردازش: ECONO EC M 12.pdf\r\nدر حال پردازش: ECONO EC M 15.pdf\r\nدر حال پردازش: nojoom_astr_18.pdf\r\nدر حال پردازش: physics_mech_7(1).pdf\r\nدر حال پردازش: physics_thermo_10.pdf\r\nدر حال پردازش: physics_thermo_8.pdf\r\nدر حال پردازش: physics_thermo_9.pdf\r\nدر حال پردازش: Savad resane-ma va resane-10.pdf\r\nدر حال پردازش: shimi_alee_7.pdf\r\nخلاصه: 13 موفق؛ 0 خطا؛ 13 مورد\r\n",
+    "stderr": ""
+  },
+  "files": 13,
+  "all_qc": true,
+  "comparisons": [
+    {
+      "namak": "physics_thermo_10",
+      "input_pages": 6,
+      "output_pages": 7,
+      "sample_pages": 7,
+      "pages": [
+        {
+          "page": 1,
+          "ours_size": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 6.832442481989309,
+          "mean_channel_difference": 2.538208700217764,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 2,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.99409763905562,
+          "mean_channel_difference": 5.693791961228936,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 3,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.084733893557424,
+          "mean_channel_difference": 5.53025988173047,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 4,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.17126850740296,
+          "mean_channel_difference": 5.903560868791962,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 5,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.928738161931438,
+          "mean_channel_difference": 6.496465808545641,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 6,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.503067893824195,
+          "mean_channel_difference": 5.514246809835045,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 7,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 16.701847405628918,
+          "mean_channel_difference": 3.179268374016273,
+          "max_channel_difference": 248
+        }
+      ]
+    },
+    {
+      "namak": "physics_thermo_8",
+      "input_pages": 5,
+      "output_pages": 6,
+      "sample_pages": 6,
+      "pages": [
+        {
+          "page": 1,
+          "ours_size": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 7.732170062230486,
+          "mean_channel_difference": 3.4832454316970933,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 2,
+          "ours_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.258724801841293,
+          "mean_channel_difference": 4.436038592997746,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 3,
+          "ours_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 17.806321683023647,
+          "mean_channel_difference": 4.295252703535608,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 4,
+          "ours_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.47013719177108,
+          "mean_channel_difference": 4.293180603505868,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 5,
+          "ours_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 17.646307718168536,
+          "mean_channel_difference": 3.354125989716005,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 6,
+          "ours_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            594.8400268554688,
+            841.5599975585938
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 15.615908297451414,
+          "mean_channel_difference": 2.128604893733487,
+          "max_channel_difference": 255
+        }
+      ]
+    },
+    {
+      "namak": "physics_thermo_9",
+      "input_pages": 4,
+      "output_pages": 5,
+      "sample_pages": 5,
+      "pages": [
+        {
+          "page": 1,
+          "ours_size": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            595.2760009765625,
+            841.8900146484375
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 7.653897797402329,
+          "mean_channel_difference": 3.400996613043441,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 2,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 18.42770441509937,
+          "mean_channel_difference": 5.367441976790716,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 3,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 16.208149926637322,
+          "mean_channel_difference": 3.4420657151749587,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 4,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 17.157696411898094,
+          "mean_channel_difference": 4.15250100040016,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 5,
+          "ours_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            611.4000244140625,
+            793.0800170898438
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 13.586267840469521,
+          "mean_channel_difference": 1.8352668845315905,
+          "max_channel_difference": 201
+        }
+      ]
+    },
+    {
+      "namak": "Savad resane-ma va resane-10",
+      "input_pages": 9,
+      "output_pages": 10,
+      "sample_pages": 10,
+      "pages": [
+        {
+          "page": 1,
+          "ours_size": [
+            0.0,
+            0.0,
+            841.8900146484375,
+            595.2760009765625
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            841.8900146484375,
+            595.2760009765625
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 6.119277248431327,
+          "mean_channel_difference": 2.918915851128842,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 2,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 6.457044673539519,
+          "mean_channel_difference": 2.7578459856294906,
+          "max_channel_difference": 248
+        },
+        {
+          "page": 3,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 7.579818806622931,
+          "mean_channel_difference": 3.452717379985421,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 4,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 7.96954076850984,
+          "mean_channel_difference": 3.6358466104342395,
+          "max_channel_difference": 248
+        },
+        {
+          "page": 5,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 19.78459856294908,
+          "mean_channel_difference": 3.0975205664896386,
+          "max_channel_difference": 248
+        },
+        {
+          "page": 6,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 32.98313027179007,
+          "mean_channel_difference": 7.201429761532855,
+          "max_channel_difference": 255
+        },
+        {
+          "page": 7,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 7.581537019681349,
+          "mean_channel_difference": 3.6046068936790587,
+          "max_channel_difference": 248
+        },
+        {
+          "page": 8,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 7.22836613558263,
+          "mean_channel_difference": 3.4253816515672186,
+          "max_channel_difference": 248
+        },
+        {
+          "page": 9,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 9.384567322711652,
+          "mean_channel_difference": 4.517245131729668,
+          "max_channel_difference": 248
+        },
+        {
+          "page": 10,
+          "ours_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "sample_size": [
+            0.0,
+            0.0,
+            960.0,
+            540.0
+          ],
+          "same_size": true,
+          "same_orientation": true,
+          "ours_rotation": 0,
+          "sample_rotation": 0,
+          "different_percent": 6.601218369259606,
+          "mean_channel_difference": 2.903730605019265,
+          "max_channel_difference": 248
+        }
+      ]
+    }
+  ],
+  "source_hashes_unchanged": true,
+  "comparison_pages": 28
+}

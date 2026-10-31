@@ -1,0 +1,8 @@
+{
+  "files": [
+    "step5_nonexistent.pdf"
+  ],
+  "status": "خطا",
+  "warnings": [],
+  "error": "نامک در سیلابس پیدا نشد؛ نام فایل یا --namak را بررسی کنید"
+}

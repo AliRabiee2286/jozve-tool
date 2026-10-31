@@ -1,0 +1,11 @@
+{
+  "files": [
+    "physics_thermo_9.pdf"
+  ],
+  "status": "خطا",
+  "warnings": [],
+  "namak": "physics_thermo_9",
+  "sheet": "فیزیک",
+  "output": "LessonNote_hard_physics_thermo_9_v01.pdf",
+  "error": "Failed to open file 'F:\\\\jozve-tool\\\\tests\\\\data\\\\step5\\\\corrupt\\\\physics_thermo_9.pdf' as type pdf."
+}

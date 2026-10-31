@@ -1,0 +1,13 @@
+{
+  "seconds": 335.3531388000001,
+  "returncode": 0,
+  "stdout": "در حال پردازش: physics_thermo_8.pdf\r\nخلاصه: 1 موفق؛ 0 خطا؛ 1 مورد\r\n",
+  "stderr": "",
+  "input_pages": 50,
+  "input_bytes": 3437209,
+  "construction": "Cycle through all five physics_thermo_8 content pages ten times; vector copy",
+  "status": "موفق",
+  "qc": true,
+  "output_pages": 51,
+  "seconds_per_page": 6.707062776000003
+}
