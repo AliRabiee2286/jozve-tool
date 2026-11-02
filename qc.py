@@ -24,9 +24,19 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
               config_path=DEFAULT_CONFIG, output_name=None, expected_content_renders=None):
     cfg=load_config(config_path); assets=discover_assets(cfg,Path(config_path).resolve().parent)
     checks={}; details=[]
+    blocking=set(cfg.get('qc',{}).get('blocking',[]))
     def check(name, passed, detail=None):
         checks[name]=bool(passed)
         if detail is not None: details.append({'check':name,'detail':detail})
+    def result():
+        def short_name(name):
+            return name.split(': ',1)[1] if name.startswith('صفحه محتوا ') and ': ' in name else name
+        blocking_failed=[name for name,passed in checks.items()
+                         if not passed and short_name(name) in blocking]
+        advisory_failed=[name for name,passed in checks.items()
+                         if not passed and short_name(name) not in blocking]
+        return {'passed':not blocking_failed,'checks':checks,'details':details,
+                'blocking_failed':blocking_failed,'advisory_failed':advisory_failed}
     try:
         with fitz.open(path) as doc:
             check('باز شدن PDF',not doc.needs_pass)
@@ -39,7 +49,7 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
             renders_complete=expected_content_renders is None or len(expected_content_renders)==len(source)
             check('تعداد رندرهای مرجع محتوا',renders_complete)
             if doc.needs_pass or len(doc)!=len(source)+1 or not evidence_complete or not renders_complete:
-                return {'passed':False,'checks':checks,'details':details}
+                return result()
             front=doc[0]; dpi=cfg['cover']['qc_dpi']
             check('جهت فرست‌پیج',effective_orientation(front)==effective_orientation(source[0]))
             font_hash=hashlib.sha256(assets['font'].read_bytes()).digest()
@@ -94,4 +104,4 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
                 check(prefix+'جوهر زیر نوارها صفر',all(r['meaningful_ink_pixels']==0 for r in ink),ink)
     except Exception as exc:
         check('خطای کنترل کیفیت',False,str(exc))
-    return {'passed':bool(checks) and all(checks.values()),'checks':checks,'details':details}
+    return result()

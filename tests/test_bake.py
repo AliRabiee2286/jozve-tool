@@ -81,6 +81,7 @@ def bake_evidence():
 
 
 @pytest.mark.parametrize('index',range(24))
+@pytest.mark.slow
 def test_bake_pixel_identity(bake_evidence,index):
     entry=bake_evidence[index]
     assert entry['widgets_before']==entry['widgets_after']

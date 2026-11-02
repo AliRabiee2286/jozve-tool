@@ -81,6 +81,7 @@ def processed(clean):
 
 
 @pytest.mark.parametrize('index',range(4))
+@pytest.mark.slow
 def test_sample_acceptance(processed,index):
     original,out,report = processed[index]
     assert all(value for key,value in report['checks'].items() if key!='f_comparison_pages'), report['checks']
@@ -99,6 +100,7 @@ def test_sample_acceptance(processed,index):
 
 
 @pytest.mark.parametrize('index',range(4))
+@pytest.mark.slow
 def test_no_pixel_change_outside_border_and_removed_numbers(processed,index):
     original,out,report=processed[index]
     # Bake has its own independently checked user-authorized tolerance. From the

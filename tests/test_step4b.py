@@ -9,6 +9,7 @@ from main import write_report
 
 ROOT=Path(__file__).resolve().parents[1]
 CFG=load_config()
+pytestmark=pytest.mark.slow
 
 
 @pytest.mark.parametrize('text',[

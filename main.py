@@ -9,6 +9,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
+from PIL import Image
 import warnings
 import numpy as np
 import pymupdf as fitz
@@ -20,6 +22,32 @@ from border import clean_border
 from qc import check_pdf
 
 ROOT=Path(__file__).resolve().parent
+
+
+def clear_review_artifacts(output):
+    (output/'REVIEW.txt').unlink(missing_ok=True)
+    review=output/'review'
+    if review.is_dir():
+        for image in review.glob('*.png'):
+            image.unlink(missing_ok=True)
+
+
+def write_review_image(pdf_path, output):
+    target_dir=output/'review';target_dir.mkdir(parents=True,exist_ok=True)
+    target=target_dir/(Path(pdf_path).stem+'.png')
+    with fitz.open(pdf_path) as document:
+        pages=[document[index] for index in range(min(len(document),4))]
+        images=[Image.fromarray(raster(page,25)).convert('RGB') for page in pages]
+    if not images:
+        raise ValueError('PDF صفحه ندارد')
+    width=max(image.width for image in images);height=max(image.height for image in images)
+    canvas=Image.new('RGB',(width*2,height*2),'white')
+    for index,image in enumerate(images):
+        x=(index%2)*width+(width-image.width)//2
+        y=(index//2)*height+(height-image.height)//2
+        canvas.paste(image,(x,y))
+    canvas.save(target)
+    return target.relative_to(output).as_posix()
 
 
 def find_soffice():
@@ -56,7 +84,7 @@ def safe_output(path,cfg):
 
 
 def process_job(paths, namak, syllabus, cfg, output, claimed):
-    item={'files':[p.name for p in paths],'status':'خطا','warnings':[]}
+    item={'files':[p.name for p in paths],'status':'خطا','status_code':'BLOCKED','warnings':[]}
     try:
         canonical=syllabus.find(namak)['namak'] if namak else resolve(paths[0].stem,syllabus)
         record=syllabus.find(canonical); name=to_output_name(canonical)
@@ -103,9 +131,15 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
             result.save(temporary,garbage=4,deflate=True)
             quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,expected_content_renders=baseline)
             item['qc']=quality
-            if not quality['passed']: raise ValueError('کنترل کیفیت رد شد؛ خروجی جدید منتشر نشد')
+            if quality.get('blocking_failed'):
+                item['error']='کنترل‌های بلاک‌کننده رد شد: '+', '.join(quality['blocking_failed'])
+                item['status_code']='BLOCKED'
+                return item
             os.replace(temporary,output/name)
-            item['status']='موفق'
+            item['status']='بازبینی' if quality.get('advisory_failed') else 'موفق'
+            item['status_code']='REVIEW' if item['status']=='بازبینی' else 'OK'
+            if item['status']=='بازبینی':
+                item['review_controls']=quality['advisory_failed']
     except NotFoundError:
         item['error']='نامک در سیلابس پیدا نشد؛ نام فایل یا --namak را بررسی کنید'
     except Exception as exc:
@@ -118,11 +152,15 @@ def write_report(output,items,global_warnings):
     lines.extend('هشدار سیلابس: '+w for w in global_warnings)
     for item in items:
         lines+=['',f"{item['status']}: {', '.join(item['files'])}"]
-        for key,label in [('namak','نامک'),('sheet','رشته'),('orientation','جهت'),('input_pages','صفحات ورودی'),('output_pages','صفحات خروجی'),('output','نام خروجی'),('error','علت خطا')]:
+        for key,label in [('namak','نامک'),('sheet','رشته'),('orientation','جهت'),('input_pages','صفحات ورودی'),('output_pages','صفحات خروجی'),('seconds','زمان (ثانیه)'),('output','نام خروجی'),('error','علت خطا')]:
             if key in item:
                 value={'portrait':'عمودی','landscape':'افقی'}.get(item[key],item[key]) if key=='orientation' else item[key]
                 lines.append(f'{label}: {value}')
         for key,passed in item.get('qc',{}).get('checks',{}).items(): lines.append(f"  {key}: {'قبول' if passed else 'رد'}")
+        if item.get('qc',{}).get('blocking_failed'):
+            lines.append('کنترل‌های بلاک‌کنندهٔ ردشده: '+', '.join(item['qc']['blocking_failed']))
+        if item.get('qc',{}).get('advisory_failed'):
+            lines.append('کنترل‌های توصیه‌ای ردشده: '+', '.join(item['qc']['advisory_failed']))
         for detail in item.get('qc',{}).get('details',[]): lines.append(json.dumps(detail,ensure_ascii=False))
         image_warnings=[w for w in item.get('warnings',[]) if w['kind']=='image_number_unknown']
         if image_warnings:
@@ -135,12 +173,29 @@ def write_report(output,items,global_warnings):
             lines.append('اثر OutputIntents (صرفاً گزارش): '+json.dumps(effect,ensure_ascii=False))
         for page in item.get('pages',[]):
             for removed in page['removed']: lines.append(f"حذف شمارهٔ متنی صفحه {page['page']}: {removed['text']}")
-        if item['status']!='موفق': lines.append('اگر خروجی قدیمی وجود دارد، نتیجهٔ این اجرا نیست و بازنویسی نشده است.')
+        if item['status']=='خطا': lines.append('اگر خروجی قدیمی وجود دارد، نتیجهٔ این اجرا نیست و بازنویسی نشده است.')
     success=sum(i['status']=='موفق' for i in items)
-    summary=f'خلاصه: {success} موفق؛ {len(items)-success} خطا؛ {len(items)} مورد'
+    review=sum(i['status']=='بازبینی' for i in items)
+    blocked=sum(i['status']=='خطا' for i in items)
+    review_items=[i for i in items if i['status']=='بازبینی']
+    if review_items:
+        review_lines=['گزارش فایل‌های نیازمند بازبینی','']
+        for item in review_items:
+            review_lines.append('فایل: '+item.get('output',', '.join(item['files'])))
+            review_lines.append('کنترل‌های ردشده:')
+            for control in item.get('qc',{}).get('advisory_failed',[]):
+                review_lines.append(f'- {control}: کنترل توصیه‌ای رد شده است؛ فایل منتشر شده و بازبینی دیداری لازم است.')
+            if item.get('review_image'):
+                review_lines.append('تصویر مرور: '+item['review_image'])
+            review_lines.append('')
+        (output/'REVIEW.txt').write_text('\n'.join(review_lines),encoding='utf-8-sig')
+    else:
+        (output/'REVIEW.txt').unlink(missing_ok=True)
+    summary=f'خلاصه: {success} موفق؛ {review} بازبینی؛ {blocked} خطا | OK={success} REVIEW={review} BLOCKED={blocked}'
     lines+=['',summary]
     (output/'report.txt').write_text('\n'.join(lines)+'\n',encoding='utf-8-sig')
-    (output/'report.json').write_text(json.dumps({'items':items,'summary':summary},ensure_ascii=False,indent=2),encoding='utf-8')
+    (output/'report.json').write_text(json.dumps({'items':items,'summary':summary,
+        'counts':{'OK':success,'REVIEW':review,'BLOCKED':blocked}},ensure_ascii=False,indent=2),encoding='utf-8')
     return summary
 
 
@@ -154,6 +209,7 @@ def main(argv=None):
     if args.merge and (not args.namak or args.input): parser.error('--merge نیازمند --namak است و با --input جمع نمی‌شود')
     if args.namak and not args.merge: parser.error('--namak فقط همراه --merge است')
     cfg=load_config();output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
+    clear_review_artifacts(output)
     logger=logging.getLogger('jozve');logger.setLevel(logging.INFO);logger.propagate=False
     handler=logging.FileHandler(output/'log.txt',encoding='utf-8');logger.addHandler(handler)
     items=[];global_warnings=[]
@@ -175,7 +231,15 @@ def main(argv=None):
         if not jobs: raise ValueError('فایل ورودی قابل پردازش وجود ندارد')
         for paths,namak in jobs:
             print('در حال پردازش: '+', '.join(p.name for p in paths),flush=True)
-            item=process_job(paths,namak,syllabus,cfg,output,claimed);items.append(item)
+            started=time.perf_counter()
+            item=process_job(paths,namak,syllabus,cfg,output,claimed)
+            item['seconds']=round(time.perf_counter()-started,2)
+            items.append(item)
+            if item.get('status')=='بازبینی' and item.get('output'):
+                try:
+                    item['review_image']=write_review_image(output/item['output'],output)
+                except Exception as exc:
+                    item.setdefault('warnings',[]).append({'kind':'review_image_error','detail':str(exc)})
             logger.info('%s: %s %s',item['status'],', '.join(item['files']),item.get('error',''))
     except Exception as exc:
         items.append({'files':['راه‌اندازی'],'status':'خطا','error':str(exc)})
@@ -183,7 +247,7 @@ def main(argv=None):
     finally:
         logger.removeHandler(handler);handler.close()
     print(write_report(output,items,global_warnings))
-    return int(any(i['status']!='موفق' for i in items))
+    return int(any(i['status']=='خطا' for i in items))
 
 
 if __name__=='__main__':

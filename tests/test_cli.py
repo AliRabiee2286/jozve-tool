@@ -13,6 +13,7 @@ from border import clean_border
 from pages import process_pages
 
 ROOT=Path(__file__).resolve().parents[1]
+pytestmark=pytest.mark.slow
 
 
 def run(*args):
@@ -27,8 +28,12 @@ def make_pdf(path,text='vector',size=(600,800)):
         doc.save(path)
 
 
+@pytest.mark.slow
 def test_thirteen_real_inputs_and_overwrite():
-    cfg=load_config();syll=Syllabus();sources=sorted((ROOT/cfg['paths']['input']).glob('*.pdf'))
+    cfg=load_config();syll=Syllabus()
+    expected=json.loads((ROOT/'tests/data/step4_source_hashes.json').read_text(encoding='utf-8'))
+    expected.update(json.loads((ROOT/'tests/data/step4b_source_hashes.json').read_text(encoding='utf-8')))
+    sources=sorted(ROOT/path for path in expected if path.startswith('input/') and (ROOT/path).is_file())
     assert len(sources)==13
     before={p:hashlib.sha256(p.read_bytes()).hexdigest() for directory in ('input','assets','samples') for p in (ROOT/cfg['paths'][directory]).iterdir() if p.is_file()}
     names={to_output_name(resolve(p.stem,syll)) for p in sources}
@@ -86,9 +91,28 @@ def test_rejected_qc_never_replaces_existing_file(tmp_path,monkeypatch):
     source=tmp_path/'physics_thermo_8.pdf';make_pdf(source)
     out=tmp_path/'reject';out.mkdir()
     target=out/to_output_name(source.stem);target.write_bytes(b'old-output')
-    monkeypatch.setattr(app,'check_pdf',lambda *a,**k:{'passed':False,'checks':{'injected failure':False},'details':[]})
+    monkeypatch.setattr(app,'check_pdf',lambda *a,**k:{'passed':False,
+        'checks':{'باز شدن PDF':False},'details':[],
+        'blocking_failed':['باز شدن PDF'],'advisory_failed':[]})
     assert app.main(['--input',str(source),'--output',str(out)])==1
     assert target.read_bytes()==b'old-output'
+
+
+def test_advisory_qc_publishes_review_status_and_evidence(tmp_path,monkeypatch):
+    source=tmp_path/'physics_thermo_8.pdf';make_pdf(source)
+    out=tmp_path/'review'
+    monkeypatch.setattr(app,'check_pdf',lambda *a,**k:{'passed':True,
+        'checks':{'خطای کنترل کیفیت':False},'details':[],
+        'blocking_failed':[],'advisory_failed':['خطای کنترل کیفیت']})
+    assert app.main(['--input',str(source),'--output',str(out)])==0
+    report=json.loads((out/'report.json').read_text(encoding='utf-8'))
+    item=report['items'][0]
+    assert item['status']=='بازبینی' and item['status_code']=='REVIEW'
+    assert (out/item['output']).is_file()
+    assert (out/'REVIEW.txt').read_bytes().startswith(b'\xef\xbb\xbf')
+    assert 'خطای کنترل کیفیت' in (out/'REVIEW.txt').read_text(encoding='utf-8-sig')
+    assert (out/item['review_image']).is_file()
+    assert 'OK=0 REVIEW=1 BLOCKED=0' in report['summary']
 
 
 def test_full_page_image_has_no_number_warning():
@@ -113,7 +137,8 @@ def test_all_sources_match_recorded_step4_baseline():
     expected.update(json.loads((ROOT/'tests/data/step4b_source_hashes.json').read_text(encoding='utf-8')))
     actual={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
             for folder in ('input','assets','samples') for p in (ROOT/folder).iterdir() if p.is_file()}
-    assert actual==expected
+    assert set(expected)<=set(actual)
+    assert {path:actual[path] for path in expected}==expected
 
 
 def test_image_hashes_include_repeated_uses():

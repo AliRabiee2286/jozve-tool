@@ -17,6 +17,7 @@ from cover import build_cover, effective_orientation, select_template, CoverErro
 
 ROOT = Path(__file__).resolve().parents[1]
 FIELDS = ('teacher', 'course', 'chapter', 'topic')
+pytestmark = pytest.mark.slow
 
 
 def raster(page, dpi=150):

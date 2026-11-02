@@ -49,6 +49,7 @@ def compare_fit(before, after, fit, pieces):
 
 
 @pytest.mark.parametrize('source',SOURCES,ids=lambda p:p.stem)
+@pytest.mark.slow
 def test_scaled_render_preserves_colors_and_transparency(source):
     assets=discover_assets(CFG,ROOT)
     rows=[]

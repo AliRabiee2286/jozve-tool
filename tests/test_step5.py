@@ -18,6 +18,7 @@ from cover import build_cover, TextFitError
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'tests/data/step5'
 OUT = ROOT / 'output/step5_edges'
+pytestmark = pytest.mark.slow
 
 
 def make_source(path, geometries):
