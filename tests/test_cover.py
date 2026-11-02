@@ -195,5 +195,7 @@ def test_full_size_first_and_invalid_values(covers):
             item=report['fields'][field]
             assert item['scale']==1
     values=dict.fromkeys(FIELDS,'متن');values['teacher']=''
-    with pytest.raises(TextFitError):build_cover(1,'portrait',values)
+    document,report=build_cover(1,'portrait',values)
+    document.close()
+    assert report['fields']['teacher']['empty']
     with pytest.raises(CoverError):build_cover(1,'portrait',{})

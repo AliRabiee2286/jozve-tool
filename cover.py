@@ -8,7 +8,7 @@ from html import escape
 import math
 import hashlib
 import pymupdf as fitz
-from syllabus import DEFAULT_CONFIG, load_config, discover_assets
+from syllabus import DEFAULT_CONFIG, load_config, discover_assets, is_empty_value
 
 
 class CoverError(ValueError):
@@ -160,6 +160,10 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
     settings = config['cover']
     if set(values) != set(settings['fields']):
         raise CoverError('Exactly the four configured fields must be supplied')
+    if all(is_empty_value(value) for value in values.values()):
+        raise CoverError('EMPTY_SYLLABUS_RECORD: نامک در سیلابس هست ولی هیچ مشخصاتی ندارد')
+    if any(not is_empty_value(value) and not isinstance(value, str) for value in values.values()):
+        raise CoverError('INVALID_SYLLABUS_VALUE: non-empty cover values must be text')
     assets = discover_assets(config, config_path.parent)
     result = None
     layers = []
@@ -177,9 +181,16 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
         regions, sizes, frame = detect_regions(page, settings)
         report = {'template_index': template_index, 'template_page': selected + 1,
                   'orientation': orientation, 'page_size': [page.rect.width, page.rect.height],
-                  'frame_bbox': list(frame), 'fields': {}}
+                  'frame_bbox': list(frame), 'fields': {},
+                  'empty_fields': [field for field in settings['fields']
+                                   if is_empty_value(values[field])]}
         # Finish all fits before modifying the base page, so a failure yields no partial cover.
         for field, limit in zip(settings['fields'], settings['max_lines']):
+            if is_empty_value(values[field]):
+                report['fields'][field] = {'value': values[field], 'empty': True,
+                    'bbox': list(regions[field]), 'line_count': 0}
+                layers.append(None)
+                continue
             layer, record = _fit_value(values[field], regions[field], sizes[field], limit,
                                        page.rect, assets['font'], settings,
                                        first_line_row_height=(
@@ -187,6 +198,8 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
                                            if field == settings['fields'][-1] else None))
             layers.append(layer); report['fields'][field] = record
         for field, layer in zip(settings['fields'], layers):
+            if layer is None:
+                continue
             page.draw_rect(regions[field], color=None, fill=(1, 1, 1), overlay=True)
             page.show_pdf_page(page.rect, layer, 0)
         return result, report
@@ -196,4 +209,5 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
         raise
     finally:
         for layer in layers:
-            layer.close()
+            if layer is not None:
+                layer.close()

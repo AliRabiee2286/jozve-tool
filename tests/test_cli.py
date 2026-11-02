@@ -1,4 +1,4 @@
-"""Steps 4/4b: thirteen-file acceptance and Windows/error-path contracts."""
+"""Batch acceptance and Windows/error-path contracts."""
 import json
 from pathlib import Path
 import subprocess
@@ -8,7 +8,7 @@ import pymupdf as fitz
 import pytest
 import main as app
 from syllabus import load_config, Syllabus
-from naamak import to_output_name, resolve
+from naamak import to_output_name, resolve_details
 from border import clean_border
 from pages import process_pages
 
@@ -29,23 +29,23 @@ def make_pdf(path,text='vector',size=(600,800)):
 
 
 @pytest.mark.slow
-def test_thirteen_real_inputs_and_overwrite():
+def test_twenty_two_real_inputs_and_overwrite():
     cfg=load_config();syll=Syllabus()
-    expected=json.loads((ROOT/'tests/data/step4_source_hashes.json').read_text(encoding='utf-8'))
-    expected.update(json.loads((ROOT/'tests/data/step4b_source_hashes.json').read_text(encoding='utf-8')))
-    sources=sorted(ROOT/path for path in expected if path.startswith('input/') and (ROOT/path).is_file())
-    assert len(sources)==13
+    sources=sorted((ROOT/cfg['paths']['input']).glob('*.pdf'))
+    assert len(sources)==22
     before={p:hashlib.sha256(p.read_bytes()).hexdigest() for directory in ('input','assets','samples') for p in (ROOT/cfg['paths'][directory]).iterdir() if p.is_file()}
-    names={to_output_name(resolve(p.stem,syll)) for p in sources}
-    output=ROOT/cfg['paths']['output']
+    names={to_output_name((match:=resolve_details(p.stem,syll))['namak'],suffix=match['suffix'])
+            for p in sources}
+    output=ROOT/cfg['paths']['output']/'step2'
     assert names <= {p.name for p in output.glob('LessonNote_*.pdf')}, 'Run python main.py first'
     mtimes={name:(output/name).stat().st_mtime_ns for name in names}
-    result=run();assert result.returncode==0,result.stdout+result.stderr
+    result=run('--input',ROOT/cfg['paths']['input'],'--output',output)
+    assert result.returncode==0,result.stdout+result.stderr
     report=json.loads((output/'report.json').read_text(encoding='utf-8'))
-    assert len(report['items'])==13
+    assert len(report['items'])==22
     for item in report['items']:
-        assert item['status']=='موفق' and item['qc']['passed'],item
-        assert all(item['qc']['checks'].values())
+        assert item['status'] in ('موفق','بازبینی') and item['qc']['passed'],item
+        assert not item['qc']['blocking_failed']
         assert (output/item['output']).stat().st_mtime_ns>mtimes[item['output']]
         assert all(not p['coverage_after_fit'][0]['meaningful_ink_pixels'] and not p['coverage_after_fit'][1]['meaningful_ink_pixels'] for p in item['pages'])
     assert {p.name for p in output.glob('LessonNote_*.pdf')}==names

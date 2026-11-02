@@ -14,8 +14,8 @@ from PIL import Image
 import warnings
 import numpy as np
 import pymupdf as fitz
-from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets
-from naamak import resolve, to_output_name
+from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets, is_empty_value
+from naamak import resolve_details, to_output_name
 from cover import build_cover, effective_orientation
 from pages import process_pages, _preserve_rendering_attributes, raster
 from border import clean_border
@@ -86,8 +86,15 @@ def safe_output(path,cfg):
 def process_job(paths, namak, syllabus, cfg, output, claimed):
     item={'files':[p.name for p in paths],'status':'خطا','status_code':'BLOCKED','warnings':[]}
     try:
-        canonical=syllabus.find(namak)['namak'] if namak else resolve(paths[0].stem,syllabus)
-        record=syllabus.find(canonical); name=to_output_name(canonical)
+        match=resolve_details(namak or paths[0].stem,syllabus)
+        canonical=match['namak']; suffix=match['suffix']
+        record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
+        item['warnings'].extend(syllabus.lookup_warnings)
+        empty=[field for field in cfg['cover']['fields'] if is_empty_value(record[field])]
+        if empty:
+            item['warnings'].append({'kind':'empty_cover_fields','fields':empty})
+        item['output_suffix']=suffix
+        item['template_index']=record['template_index']
         item.update(namak=canonical,sheet=record['sheet'],output=name)
         if name.casefold() in claimed: raise ValueError('چند ورودی در همین اجرا نام خروجی یکسان دارند؛ از --merge استفاده کنید')
         claimed.add(name.casefold())
@@ -110,7 +117,8 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
             cover,cover_report=build_cover(record['template_index'],orientation,values);stack.enter_context(cover)
             clean,_=clean_border(cache_dir=scratch)
             content,page_report=process_pages(combined,clean_path=clean);stack.enter_context(content)
-            item['warnings']=page_report['warnings'];item['pages']=page_report['pages']
+            item['warnings'].extend(page_report['warnings']);item['pages']=page_report['pages']
+            item['cover']=cover_report
             result=stack.enter_context(fitz.open(stream=cover.tobytes(),filetype='pdf'))
             result.insert_pdf(content)
             _preserve_rendering_attributes(content,result,1,preserve_catalog=False)
@@ -129,7 +137,8 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
             item['output_intents_effect']=effects
             temporary=Path(scratch)/name
             result.save(temporary,garbage=4,deflate=True)
-            quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,expected_content_renders=baseline)
+            quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,
+                              expected_content_renders=baseline,output_suffix=suffix)
             item['qc']=quality
             if quality.get('blocking_failed'):
                 item['error']='کنترل‌های بلاک‌کننده رد شد: '+', '.join(quality['blocking_failed'])
@@ -143,6 +152,7 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
     except NotFoundError:
         item['error']='نامک در سیلابس پیدا نشد؛ نام فایل یا --namak را بررسی کنید'
     except Exception as exc:
+        item['warnings'].extend(getattr(syllabus,'lookup_warnings',[]))
         item['error']=str(exc)
     return item
 
@@ -168,7 +178,15 @@ def write_report(output,items,global_warnings):
             lines.append(f'شمارهٔ تصویری نامعلوم: {len(affected)} صفحه ({", ".join(map(str,affected))})؛ '
                          'علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.')
         for warning in item.get('warnings',[]):
-            if warning['kind']!='image_number_unknown': lines.append('هشدار: '+json.dumps(warning,ensure_ascii=False))
+            if warning['kind']=='empty_cover_fields':
+                cfg=load_config()
+                names='، '.join(cfg['headers'][field][0] for field in warning['fields'])
+                lines.append('مقدار خالی در سیلابس: '+names)
+            elif warning['kind']=='syllabus_source_conflict':
+                lines.append('هشدار تعارض سیلابس: مقدار شیت رشته‌ای معتبر است؛ '+
+                             'syllabus source conflict: subject sheet takes priority')
+            elif warning['kind']!='image_number_unknown':
+                lines.append('هشدار: '+json.dumps(warning,ensure_ascii=False))
         for effect in item.get('output_intents_effect',[]):
             lines.append('اثر OutputIntents (صرفاً گزارش): '+json.dumps(effect,ensure_ascii=False))
         for page in item.get('pages',[]):
@@ -235,6 +253,13 @@ def main(argv=None):
             item=process_job(paths,namak,syllabus,cfg,output,claimed)
             item['seconds']=round(time.perf_counter()-started,2)
             items.append(item)
+            for warning in item.get('warnings',[]):
+                if warning['kind']=='empty_cover_fields':
+                    message='empty syllabus values: '+', '.join(warning['fields'])
+                    print('WARNING: '+message,flush=True);logger.warning(message)
+                elif warning['kind']=='syllabus_source_conflict':
+                    message='syllabus source conflict: subject sheet takes priority'
+                    print('WARNING: '+message,flush=True);logger.warning(message)
             if item.get('status')=='بازبینی' and item.get('output'):
                 try:
                     item['review_image']=write_review_image(output/item['output'],output)

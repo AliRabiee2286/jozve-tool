@@ -63,6 +63,11 @@ def discover_assets(config, base_dir):
     return result
 
 
+def is_empty_value(value):
+    """Treat missing and whitespace-only syllabus cells as empty."""
+    return value is None or isinstance(value, str) and not value.strip()
+
+
 def _trim(value):
     return value.strip() if isinstance(value, str) else value
 
@@ -84,8 +89,11 @@ class Syllabus:
 
     def _read(self, path, config):
         self.workbook_path = Path(path)
+        self.config = config
         self.column_map, self.warnings = {}, []
         self._index = defaultdict(list)
+        self._fallback_index = defaultdict(list)
+        self.lookup_warnings = []
         mapping = config['sheet_to_template']
         if not mapping or any(type(v) is not int or v < 1 for v in mapping.values()):
             raise SchemaError('Template indices must be positive one-based integers')
@@ -100,8 +108,12 @@ class Syllabus:
             missing = set(mapping) - set(wb.sheetnames)
             if missing:
                 raise SchemaError(f'Missing configured sheets: {sorted(missing)}')
-            self.ignored_sheets = [s for s in wb.sheetnames if s not in mapping]
-            for name, template in mapping.items():
+            fallback_sheet = config.get('fallback_sheet')
+            sources = dict(mapping)
+            if fallback_sheet and fallback_sheet in wb.sheetnames and fallback_sheet not in sources:
+                sources[fallback_sheet] = None
+            self.ignored_sheets = [s for s in wb.sheetnames if s not in sources]
+            for name, template in sources.items():
                 ws = wb[name]
                 top = list(ws.iter_rows(min_row=1, max_row=scan, values_only=True))
                 overrides = config.get('header_overrides', {}).get(name, {})
@@ -137,6 +149,8 @@ class Syllabus:
                     warnings.warn(message, UserWarning, stacklevel=3)
                 if len(set(columns.values())) != len(columns):
                     raise SchemaError(f'{name}: multiple fields share a column')
+                if template is None and header_row != 2:
+                    raise SchemaError(f'{name}: fallback header must be in row 2, found {header_row}')
                 self.column_map[name] = {'header_row': header_row, 'columns': columns,
                                          'headers': {k: header[v - 1] for k, v in columns.items()},
                                          'teacher_fallback': fallback}
@@ -151,20 +165,51 @@ class Syllabus:
                         continue
                     record = {k: _trim(row[col - 1]) for k, col in columns.items()}
                     record.update(sheet=name, template_index=template)
-                    self._index[key].append({'row': ri, 'record': record})
+                    target = self._index if template is not None else self._fallback_index
+                    target[key].append({'row': ri, 'record': record})
         finally:
             wb.close()
         self.duplicate_groups = [dict(key=k, ambiguous=self._ambiguous(rows), matches=rows)
-                                 for k, rows in sorted(self._index.items()) if len(rows) > 1]
+                                 for index in (self._index, self._fallback_index)
+                                 for k, rows in sorted(index.items()) if len(rows) > 1]
 
     @staticmethod
     def _ambiguous(rows):
         return any(item['record'] != rows[0]['record'] for item in rows[1:])
 
     def find(self, namak):
-        rows = self._index.get(normalize_key(namak), [])
+        self.lookup_warnings = []
+        key = normalize_key(namak)
+        primary = self._index.get(key, [])
+        fallback = self._fallback_index.get(key, [])
+        rows = primary or fallback
         if not rows:
             raise NotFoundError(f'No syllabus match: {namak!r}')
         if self._ambiguous(rows):
             raise AmbiguousError(namak, rows)
-        return dict(rows[0]['record'])
+        record = dict(rows[0]['record'])
+        fields = self.config['cover']['fields']
+        empty_fields=[field for field in fields if is_empty_value(record[field])]
+        if len(empty_fields)==len(fields):
+            self.lookup_warnings.append({'kind':'empty_cover_fields','fields':empty_fields})
+            raise SchemaError('EMPTY_SYLLABUS_RECORD: نامک در سیلابس هست ولی هیچ مشخصاتی ندارد')
+        if primary:
+            if fallback and any(any(row['record'][field] != record[field] for field in fields)
+                                for row in fallback):
+                self.lookup_warnings.append({'kind': 'syllabus_source_conflict',
+                    'preferred_sheet': record['sheet'],
+                    'ignored_sheet': self.config.get('fallback_sheet'),
+                    'rows': [row['row'] for row in fallback]})
+            return record
+        course = record['course']
+        aliases = {normalize_key(source): target
+                   for source, target in self.config.get('field_aliases', {}).items()}
+        subject = aliases.get(normalize_key(course), course) if isinstance(course, str) else course
+        mapping = self.config['sheet_to_template']
+        canonical = next((name for name in mapping if normalize_key(name) == normalize_key(subject)), None) \
+            if isinstance(subject, str) else None
+        if canonical is None:
+            raise SchemaError(f'UNKNOWN_VIDEO_FIELD: {record["sheet"]}!{rows[0]["row"]}: {course!r}')
+        record['sheet'] = canonical
+        record['template_index'] = mapping[canonical]
+        return record

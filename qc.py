@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib
 import numpy as np
 import pymupdf as fitz
-from syllabus import DEFAULT_CONFIG, load_config, discover_assets
+from syllabus import DEFAULT_CONFIG, load_config, discover_assets, is_empty_value
 from naamak import to_output_name
 from cover import effective_orientation, select_template, detect_regions
 from pages import raster, number_candidates, coverage
@@ -21,7 +21,8 @@ def image_signature(document,page):
 
 
 def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
-              config_path=DEFAULT_CONFIG, output_name=None, expected_content_renders=None):
+              config_path=DEFAULT_CONFIG, output_name=None, expected_content_renders=None,
+              output_suffix=''):
     cfg=load_config(config_path); assets=discover_assets(cfg,Path(config_path).resolve().parent)
     checks={}; details=[]
     blocking=set(cfg.get('qc',{}).get('blocking',[]))
@@ -40,7 +41,8 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
     try:
         with fitz.open(path) as doc:
             check('باز شدن PDF',not doc.needs_pass)
-            check('نام فایل',(output_name or Path(path).name)==to_output_name(record['namak'],config_path))
+            check('نام فایل',(output_name or Path(path).name)==to_output_name(
+                record['namak'], config_path, suffix=output_suffix))
             check('تعداد صفحات',len(doc)==len(source)+1)
             # A truncated zip would otherwise silently skip content-page QC.
             evidence=pages_report.get('pages',[])
@@ -56,8 +58,12 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
             fonts=[doc.extract_font(f[0]) for f in front.get_fonts(full=True)]
             check('فونت Aria Regular جاسازی‌شده',any(f[3] and hashlib.sha256(f[3]).digest()==font_hash for f in fonts))
             fields=cfg['cover']['fields']
-            check('چهار مقدار دقیق و ناتهی',all(isinstance(record[f],str) and record[f].strip() and
-                  cover_report['fields'][f]['value']==record[f] for f in fields))
+            empty_fields=[field for field in fields if is_empty_value(record[field])]
+            check('چهار مقدار دقیق و ناتهی',len(empty_fields)<len(fields) and all(
+                cover_report['fields'][field]['value']==record[field] and
+                (bool(cover_report['fields'][field].get('empty')) if field in empty_fields else
+                 isinstance(record[field],str) and not cover_report['fields'][field].get('empty'))
+                for field in fields), {'empty_fields':empty_fields})
             with fitz.open(assets['template']) as templates:
                 blank=templates[select_template(templates,record['template_index'],effective_orientation(source[0]))]
                 regions,_,_=detect_regions(blank,cfg['cover'])
@@ -70,7 +76,9 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
                         x0,y0,x1,y1=(rect*(dpi/72)).irect
                         mask[y0:y1,x0:x1]=True; counts[key]=int(changed[y0:y1,x0:x1].sum())
                     outside=int(changed[~mask].sum())
-                check('رندر فرست‌پیج فقط در چهار ناحیه',same and outside==0 and all(counts.values()),
+                check('رندر فرست‌پیج فقط در چهار ناحیه',same and outside==0 and all(
+                    counts[field]==0 if field in empty_fields else counts[field]>0
+                    for field in fields),
                       {'outside_pixels':outside,'field_pixels':counts})
                 reference=raster(expected_cover[0],dpi)
                 check('فرست‌پیج بدون بوردر و برابر مرجع نوشتن',a.shape==reference.shape and np.array_equal(a,reference))

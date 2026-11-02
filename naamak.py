@@ -43,15 +43,31 @@ def candidates(filename):
 
 def resolve(filename, syllabus):
     """Return the exact canonical spelling from the first successful lookup."""
-    for candidate in candidates(filename):
+    return resolve_details(filename, syllabus)['namak']
+
+
+def resolve_details(filename, syllabus):
+    """Return the canonical namak and any configured descriptive suffix."""
+    options = list(candidates(filename))
+    for candidate in options:
         try:
-            return syllabus.find(candidate)['namak']
+            return {'namak': syllabus.find(candidate)['namak'], 'suffix': ''}
         except NotFoundError:
-            continue
+            pass
+    for candidate in options:
+        for word in syllabus.config.get('ignorable_suffix_words', []):
+            match = re.search(r'[\s_-]+(' + re.escape(word) + r')$', candidate, re.I)
+            if not match:
+                continue
+            try:
+                return {'namak': syllabus.find(candidate[:match.start()])['namak'],
+                        'suffix': word}
+            except NotFoundError:
+                pass
     raise NotFoundError(f'No matching filename candidate: {filename!r}')
 
 
-def to_output_name(namak, config_path=DEFAULT_CONFIG):
+def to_output_name(namak, config_path=DEFAULT_CONFIG, *, suffix=''):
     """Build the complete output basename, preserving internal spelling/ZWNJ."""
     if not isinstance(namak, str):
         raise TypeError('namak must be a string')
@@ -60,6 +76,10 @@ def to_output_name(namak, config_path=DEFAULT_CONFIG):
     if not safe or not safe.strip('_ .'):
         raise ValueError('namak has no usable filename characters')
     config = load_config(config_path)
+    if suffix and suffix not in config.get('ignorable_suffix_words', []):
+        raise ValueError('UNSUPPORTED_OUTPUT_SUFFIX: ' + str(suffix))
+    if suffix:
+        safe += '_' + suffix
     prefix, version = config['output_prefix'], config['output_version']
     for part in (prefix, version):
         if not isinstance(part, str) or not part or re.search(r'[<>:"/\\|?*\x00-\x1f]', part):
