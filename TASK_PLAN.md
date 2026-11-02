@@ -92,8 +92,8 @@
 
 ### مرحلهٔ ۳ — run.bat
 
-- [ ] ۳.۱ مفسر را به این ترتیب بیازماید و اولین مفسری را بردارد که `pymupdf`، `openpyxl`، `yaml`، `numpy`، `PIL` را import می‌کند: `.venv\Scripts\python.exe` ، `py -3.12` ، `py -3` ، `python` . پیام‌ها انگلیسی؛ `pause` در پایان.
-- [ ] ۳.۲ تست منطقی (شبیه‌سازی با پوشهٔ موقت) و یک اجرای واقعی با یک ورودی.
+- [x] ۳.۱ مفسر را به این ترتیب بیازماید و اولین مفسری را بردارد که `pymupdf`، `openpyxl`، `yaml`، `numpy`، `PIL` را import می‌کند: `.venv\Scripts\python.exe` ، `py -3.12` ، `py -3` ، `python` . پیام‌ها انگلیسی؛ `pause` در پایان.
+- [x] ۳.۲ تست منطقی (شبیه‌سازی با پوشهٔ موقت) و یک اجرای واقعی با یک ورودی.
 - commit: «step 6c: launcher picks an interpreter that has the dependencies». گزارش بده و منتظر «ادامه» بمان.
 
 ### مرحلهٔ ۴ — corpus (شبکهٔ ایمنی)
