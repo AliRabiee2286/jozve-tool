@@ -1,0 +1,1847 @@
+{
+  "dpi": 72,
+  "files": {
+    "LessonNote_hard_ADAB_LNG_10_v01.pdf": {
+      "source": "ADAB_LNG_10 (1).pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "c43e347d100d1d90ed78fcd51da79122f4a304dc63679623d774abc863041872"
+        },
+        {
+          "page": 2,
+          "width": 595,
+          "height": 842,
+          "sha256": "fbe61d4d9b51740d6e45f97edd69e6fcd1fd7828ce73456a0aee1d58bf0bfc8e"
+        },
+        {
+          "page": 3,
+          "width": 595,
+          "height": 842,
+          "sha256": "7620916ccd1fa591d1fd57b4fab598a32fea33a375611323b7cfb15e5cb20c72"
+        },
+        {
+          "page": 4,
+          "width": 595,
+          "height": 842,
+          "sha256": "7447f6108082ddd7e563221be57cabc1d1f28bd0d42ccfd5b91e4aba73af21d5"
+        },
+        {
+          "page": 5,
+          "width": 595,
+          "height": 842,
+          "sha256": "567f4462c456395caca135f8617a981f423579f6d64cbc0982fe7a25777939cd"
+        },
+        {
+          "page": 6,
+          "width": 595,
+          "height": 842,
+          "sha256": "2144e44d149c897fbed3c920ed24871cc2860f11d6291192f480eaace7c7b908"
+        },
+        {
+          "page": 7,
+          "width": 595,
+          "height": 842,
+          "sha256": "b991282d1ad6a002548d7b8d1f3695c09c31c5d026b74a8c546200ad2c2c4635"
+        },
+        {
+          "page": 8,
+          "width": 595,
+          "height": 842,
+          "sha256": "267ca5bab810b6c05f024d2227baa30bc84510ac0b702894a259e419d07e2bda"
+        },
+        {
+          "page": 9,
+          "width": 595,
+          "height": 842,
+          "sha256": "5438c7d657047b41e7c8f8f2d9ecd0b86dab0a3842ab10863e9abf5a7bf53194"
+        },
+        {
+          "page": 10,
+          "width": 595,
+          "height": 842,
+          "sha256": "097df040d16b8c53b63d81b2d3cca2a5214e7cd775e9a446bd04a5dca3e1980f"
+        },
+        {
+          "page": 11,
+          "width": 595,
+          "height": 842,
+          "sha256": "aae180ee03176fa313c66170459b071c423aa9cd8436f5e221cad3b4c9bcbc85"
+        },
+        {
+          "page": 12,
+          "width": 595,
+          "height": 842,
+          "sha256": "dee5b162329df64321264cd9b6ec4d21c21dd141da8c5d0d63c8a1911231d025"
+        }
+      ]
+    },
+    "LessonNote_hard_ADAB_LNG_9_v01.pdf": {
+      "source": "ADAB_LNG_9.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "82e08a6abe4a01d8cb89a641693b3b6959718a9427bdbe56f879a5d4bcb6569d"
+        },
+        {
+          "page": 2,
+          "width": 595,
+          "height": 842,
+          "sha256": "96cdcfd48ba0cb7e9427519966a37e5c7adad4ce13bf5f5a753e046f1ec3267e"
+        },
+        {
+          "page": 3,
+          "width": 595,
+          "height": 842,
+          "sha256": "0aca90993b862257fd7edcc761b2aa33e77d19fbd25f15f8201799153f867e07"
+        },
+        {
+          "page": 4,
+          "width": 595,
+          "height": 842,
+          "sha256": "c16fea3157e9239dbc7352c71b22adc4740efdd6c3c29feb902e4088deb5fad4"
+        },
+        {
+          "page": 5,
+          "width": 595,
+          "height": 842,
+          "sha256": "1b71b5f0c81c16f3166c31d1c4c3dc96807115b26015f6919dc5696c4aca738c"
+        },
+        {
+          "page": 6,
+          "width": 595,
+          "height": 842,
+          "sha256": "356adebc1db09dc6c129c81c3c0e5f46d665c35b55e30773423733204741107f"
+        },
+        {
+          "page": 7,
+          "width": 595,
+          "height": 842,
+          "sha256": "7839bd2bdfa36b314782d15e7c2eeb6f0f999c53e3b9df4082486b21808e100a"
+        },
+        {
+          "page": 8,
+          "width": 595,
+          "height": 842,
+          "sha256": "f6f54b47c4d0c0c4eadf3bc29d2f765511a4eef75771521c0e0d31ace863f530"
+        },
+        {
+          "page": 9,
+          "width": 595,
+          "height": 842,
+          "sha256": "c7f301c0ef2d4e657a7f16738f67121bbadbd3aec1a27065a5aca083e8be1274"
+        }
+      ]
+    },
+    "LessonNote_hard_ADAB_SBK_14_v01.pdf": {
+      "source": "ADAB_SBK_14.pdf",
+      "status": "REVIEW",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "9a0c8e9997aaa3999c92e0a34db48ee3bda2ace7442d8d7772336dd052dcb4ed"
+        },
+        {
+          "page": 2,
+          "width": 960,
+          "height": 540,
+          "sha256": "8a15e45347b3e3955af97685c7ac3c79fef62e774efa15d9d617b1755259c56d"
+        },
+        {
+          "page": 3,
+          "width": 960,
+          "height": 540,
+          "sha256": "1f946509308bd29c12a7c4594365c2c4f08938aafcba6fbcd64c151fcce54716"
+        },
+        {
+          "page": 4,
+          "width": 960,
+          "height": 540,
+          "sha256": "369bbb77340daa1eb36a2b68732365efa127dad81c57cfd40118161b5d68b944"
+        },
+        {
+          "page": 5,
+          "width": 960,
+          "height": 540,
+          "sha256": "e67fd087b75bcbd3f824479c9457f03aac8360dffef9b6870fbdc2cd1a845b29"
+        },
+        {
+          "page": 6,
+          "width": 960,
+          "height": 540,
+          "sha256": "864564ec0c303d4cc53e1af92df3b078cbfa5aecd0faba3ec87469b99e3fb98e"
+        },
+        {
+          "page": 7,
+          "width": 960,
+          "height": 540,
+          "sha256": "eecc1cb83b87b77c676fcd87872511b87303990f910640699f7e1742f8143834"
+        },
+        {
+          "page": 8,
+          "width": 960,
+          "height": 540,
+          "sha256": "cb2fb4f27beaf5da5d0c758fe3f82bd498959446577c074c43995e10e93108d3"
+        },
+        {
+          "page": 9,
+          "width": 960,
+          "height": 540,
+          "sha256": "5a3540e1914488d74984784516738ca61f94ddf9de90e1a8ad235b10522da942"
+        },
+        {
+          "page": 10,
+          "width": 960,
+          "height": 540,
+          "sha256": "303779231722a1368d5283c1a693da1511cc1e632ce2ff48744c2a2e86c2a26e"
+        },
+        {
+          "page": 11,
+          "width": 960,
+          "height": 540,
+          "sha256": "fd0e97a44ca225d62af862b383741efaf25e3ff24bfc70aaff80306d7ebdf5b5"
+        }
+      ]
+    },
+    "LessonNote_hard_ai_par_2_v01.pdf": {
+      "source": "ai_par_2.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "978cbdd1c152280ffddca2b70dc498c25d215a4bfae06ce5493a36e7b90f139b"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "2b2bff09732b84f1967d4d3ed63866adcc853859304ca10cd35483d388cde835"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "8a91380aa459dc858fc00b9c9829522b892f7d61c3a392c6f6780c29748016c1"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "e15841568f523a7d3b08f768a16afc40e397a41d73242718924eb37d585e890a"
+        }
+      ]
+    },
+    "LessonNote_hard_Dore_22_unsolved_v01.pdf": {
+      "source": "Dore 22 unsolved.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "5a38981ff630ac1ff1ab99c63ccf5ab099314c69e8acf8973a69727fcba5e0dc"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "8f9d50ba374a75fdad65a2dec5cc8318df5e88e51a3eb8ec36b4b6923ceefa25"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "bf7c070ca9521c071a1107763f727ad7f26bb49bdcd82c2a826f08f22dd5beed"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "6b34ff86a79d112ae55aabc955c65156f4fc095b9c2933b83b46e04740dca756"
+        },
+        {
+          "page": 5,
+          "width": 596,
+          "height": 842,
+          "sha256": "de897f5581c9cc0f07425a713b0755d07ef087ae2b3163b64672c5617a10306c"
+        },
+        {
+          "page": 6,
+          "width": 596,
+          "height": 842,
+          "sha256": "47df9e61ce46069ef59b3e7ae809425aaa255c96a245f4a76edd014c9a2f8e21"
+        },
+        {
+          "page": 7,
+          "width": 596,
+          "height": 842,
+          "sha256": "bbf88d65360e145ca762bb92313f6317bc5dff37df4e07a6547864179353ee41"
+        },
+        {
+          "page": 8,
+          "width": 596,
+          "height": 842,
+          "sha256": "c3e0c8a37429c4510ac5bd7289d3a0b7beac1d0f9df4d041818ddba1f7d53e35"
+        },
+        {
+          "page": 9,
+          "width": 596,
+          "height": 842,
+          "sha256": "7d032fec857ea077b8520a4da54aee52500abd210a21e71277a16a113c67b32e"
+        },
+        {
+          "page": 10,
+          "width": 596,
+          "height": 842,
+          "sha256": "22f5c81752c160a64c8f7b7d64faf3801ea4ba3b5a57bc18f92292b484f762d3"
+        },
+        {
+          "page": 11,
+          "width": 596,
+          "height": 842,
+          "sha256": "dcbccd2240480778b5681720f7dd56e216275870ec8b9ff54d52d3094e136b42"
+        },
+        {
+          "page": 12,
+          "width": 596,
+          "height": 842,
+          "sha256": "4050a43f581f469d732b5b4172a7a86b656668f7e444d3f1ceac6d9868c0c69b"
+        },
+        {
+          "page": 13,
+          "width": 596,
+          "height": 842,
+          "sha256": "40b2d731ed04cccc5f47f4f31d6839f5b2d6441151fb7206c7c8e9591b7a5024"
+        },
+        {
+          "page": 14,
+          "width": 596,
+          "height": 842,
+          "sha256": "cdc56dc26e1f65a6f27e5aa68a6ff15edc769549992a3f9601f8687b4161a3ea"
+        },
+        {
+          "page": 15,
+          "width": 596,
+          "height": 842,
+          "sha256": "8f5b92d3bc1529de56a65bb41e147e6a11ef6eb4b482cc88552d7d85cda93262"
+        },
+        {
+          "page": 16,
+          "width": 596,
+          "height": 842,
+          "sha256": "76763d8ac0b92efc9e89a590cda585e1fcb6562658b910dd69298b55ccc77d56"
+        },
+        {
+          "page": 17,
+          "width": 596,
+          "height": 842,
+          "sha256": "c0ce917d00fef4647046ed262f09ba50d586168f65922b336ed5679cc8648dcd"
+        },
+        {
+          "page": 18,
+          "width": 596,
+          "height": 842,
+          "sha256": "981a6479077594419c01b7cee28067b58a72f9c0438349c23e20474704f4ad24"
+        },
+        {
+          "page": 19,
+          "width": 596,
+          "height": 842,
+          "sha256": "591c8f78449a9f85f07dc33893eee54b1c9812fa85401bb2c8921edc4179086e"
+        },
+        {
+          "page": 20,
+          "width": 596,
+          "height": 842,
+          "sha256": "d79191b5b3b52f1be3440a882b034dbb7c0d1ba4959eb34d354e4df302ae5ecc"
+        },
+        {
+          "page": 21,
+          "width": 596,
+          "height": 842,
+          "sha256": "8f9d50ba374a75fdad65a2dec5cc8318df5e88e51a3eb8ec36b4b6923ceefa25"
+        }
+      ]
+    },
+    "LessonNote_hard_dore_23_v01.pdf": {
+      "source": "dore 23.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "5a38981ff630ac1ff1ab99c63ccf5ab099314c69e8acf8973a69727fcba5e0dc"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "44e2acff43f2a6171bf013fb4baa3f5f21bcb134ece7593eb98c1fbd7145465f"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "7aa5d94f302840dbb3911ad5a373a21f2a96655619f020ea9aa7f0bf11831c05"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "30925e936ef81ef0150d46cb9317445f58a18d693d7d24263bc33d69da71c08e"
+        },
+        {
+          "page": 5,
+          "width": 596,
+          "height": 842,
+          "sha256": "81301d291e7a48c502d950213e4382b5854a9c01e024103c2a326376c05d7267"
+        },
+        {
+          "page": 6,
+          "width": 596,
+          "height": 842,
+          "sha256": "c35154e1d972a5a22d7c234f531c31ee6d17490bc5e1a286d898a508fa8ba6ba"
+        },
+        {
+          "page": 7,
+          "width": 596,
+          "height": 842,
+          "sha256": "5753a55bf56273dd02919a7f1bfa23531af9194b90dde107bc593d4cd9f786cc"
+        },
+        {
+          "page": 8,
+          "width": 596,
+          "height": 842,
+          "sha256": "0d1b65f126fb13f111e2403aef93a913ea31aaace19710486a1df59eec31f694"
+        },
+        {
+          "page": 9,
+          "width": 596,
+          "height": 842,
+          "sha256": "e1148b4859554e409d335a3a70a41a462a4af64311e38f1d58a97824dc6070b0"
+        },
+        {
+          "page": 10,
+          "width": 596,
+          "height": 842,
+          "sha256": "90886dee8a497f01e47f8cbef863372b3f7bce3a41c4cd792a431d94ceae1cc6"
+        },
+        {
+          "page": 11,
+          "width": 596,
+          "height": 842,
+          "sha256": "0c6d7bb8ae5ef0d26055708c4570f8ba25584bd25c50991f13568928e3cf0a94"
+        },
+        {
+          "page": 12,
+          "width": 596,
+          "height": 842,
+          "sha256": "d2e919876dd25987063e1c393cfa1a82b4a67d053e925b4bcd78ee0a10fe1c86"
+        },
+        {
+          "page": 13,
+          "width": 596,
+          "height": 842,
+          "sha256": "754e246e4dcd313c528de127b40182b795574ddf6b026199888cfbe13e24e2df"
+        },
+        {
+          "page": 14,
+          "width": 596,
+          "height": 842,
+          "sha256": "1dc79a7d0cdc55b564bb78e25226677ba3485c72bbea94d902d0574414fee3cc"
+        },
+        {
+          "page": 15,
+          "width": 596,
+          "height": 842,
+          "sha256": "b5bfb9a5b38253d24e90db1b38c3202ff4c5bc9b4cf28ad09aa030b4ec2e6b82"
+        },
+        {
+          "page": 16,
+          "width": 596,
+          "height": 842,
+          "sha256": "e33039b183d3ff460918c285074567cedd3c1988690d1ae7c56e5aaaa09bf703"
+        },
+        {
+          "page": 17,
+          "width": 596,
+          "height": 842,
+          "sha256": "8fe2e1c47de9a24ac407abb5ce801270a87848b840737cb57ccf9dda857fa973"
+        },
+        {
+          "page": 18,
+          "width": 596,
+          "height": 842,
+          "sha256": "cd9d99ab647702ff4bddc2eb175deff52a5e28e030bf402ae9bb09cb5a6ce705"
+        },
+        {
+          "page": 19,
+          "width": 596,
+          "height": 842,
+          "sha256": "456acce13e8e7bdf95cf64ea59ddd3f019a34788d3b4ae95df7ec6ed7a14e0f5"
+        },
+        {
+          "page": 20,
+          "width": 596,
+          "height": 842,
+          "sha256": "ddc9dd8f5e8aab60cc8fafa8a6db07fb5dcaf95d9d0ecaa69856b8bd2819e7cc"
+        },
+        {
+          "page": 21,
+          "width": 596,
+          "height": 842,
+          "sha256": "0f14dd0b66193327449f406e11ce95dbdb312f782790652e070968ab1c6b6353"
+        }
+      ]
+    },
+    "LessonNote_hard_dore_24_v01.pdf": {
+      "source": "dore 24.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "5a38981ff630ac1ff1ab99c63ccf5ab099314c69e8acf8973a69727fcba5e0dc"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "e71e5b05d8ee711f27346af19fe119669f6d6932638de5a7135f980823f9d22f"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "32491403ed6b5fe56ee24348482404592416f69f3d7410c749f11e7afdc6dc55"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "32cf692fdf643d9a655a1241b255b31fbe9ec61d55c3a05406b4fcb4e20c8f93"
+        },
+        {
+          "page": 5,
+          "width": 596,
+          "height": 842,
+          "sha256": "11b454758666e866eb3c00523b215193cb917c5860d19f37ceb92096894c7e4d"
+        },
+        {
+          "page": 6,
+          "width": 596,
+          "height": 842,
+          "sha256": "716e38e4c1404d82e717f2656930933175ba88b877ff191413b171bd8dfd8f58"
+        },
+        {
+          "page": 7,
+          "width": 596,
+          "height": 842,
+          "sha256": "322d5b7b6cf59fe3f661c9628cbdbf0efdef7071d0302397263d6a3735daf601"
+        },
+        {
+          "page": 8,
+          "width": 596,
+          "height": 842,
+          "sha256": "4b60a32275a2261a279a7012cbb4635aa1d107f185aebbd65a845343dd04ac86"
+        },
+        {
+          "page": 9,
+          "width": 596,
+          "height": 842,
+          "sha256": "cea67417011f4f55dcaccfaf31a329b8888f2e18f39d7a3fb8e8dab5ed38f764"
+        },
+        {
+          "page": 10,
+          "width": 596,
+          "height": 842,
+          "sha256": "70b0c30b725edb68301d893233974a260a6059cd523d94a71b9b5a10bb291d84"
+        },
+        {
+          "page": 11,
+          "width": 596,
+          "height": 842,
+          "sha256": "7182104dc14003344c63c1c92c2fc837b5670de6d57495199579e287a9982af1"
+        },
+        {
+          "page": 12,
+          "width": 596,
+          "height": 842,
+          "sha256": "f75cae2c3ce31ce99bad2d3e18252a2de3914de8a2a814e53dde3d4c4e04ce7c"
+        },
+        {
+          "page": 13,
+          "width": 596,
+          "height": 842,
+          "sha256": "c3de7347076bd4821c872b44a622394348176e0b8820c685ecba723785b124bb"
+        },
+        {
+          "page": 14,
+          "width": 596,
+          "height": 842,
+          "sha256": "5410b57394fd96cca0bc7a139e72a7c7717a6f9b173f6575aa30883f182e9986"
+        },
+        {
+          "page": 15,
+          "width": 596,
+          "height": 842,
+          "sha256": "e954c50d6ee582897435e9ceed29dc833a425c9fa812edbfda12df69ba334d67"
+        },
+        {
+          "page": 16,
+          "width": 596,
+          "height": 842,
+          "sha256": "e1f5d85c14ded409f34d89fe78a84717fcd691217fab719ef890ac57d80e61b4"
+        }
+      ]
+    },
+    "LessonNote_hard_ECONO_GO_P_7_v01.pdf": {
+      "source": "ECONO  GO P 7.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "c6763a8c0853803d670dfb4482255d1aed4d2ddf718286ddc95eadb4ef93ae08"
+        },
+        {
+          "page": 2,
+          "width": 960,
+          "height": 540,
+          "sha256": "6c4311e9df1289a00d987fbd08c0212dc2965b3477037741b54e8a716be14c1c"
+        },
+        {
+          "page": 3,
+          "width": 960,
+          "height": 540,
+          "sha256": "5f8181d7c7a23dac42d5ba8c9086b91bb24b7233daf9e1a376b515ab1127e67e"
+        },
+        {
+          "page": 4,
+          "width": 960,
+          "height": 540,
+          "sha256": "16718cc886a7cd42aabfe29fe61a39050a10ee34a45a20d284947a41624f8de9"
+        },
+        {
+          "page": 5,
+          "width": 960,
+          "height": 540,
+          "sha256": "91ac761186071f4d51d264c696a4e9904859a40a814f243bc3b6e303df703254"
+        },
+        {
+          "page": 6,
+          "width": 960,
+          "height": 540,
+          "sha256": "ff365f05283934438e2dd14c98a62831943e6c9fa412aacd9b54fbb1be83b58b"
+        },
+        {
+          "page": 7,
+          "width": 960,
+          "height": 540,
+          "sha256": "a8a11e379ce67715ab5d71725e6e6a3e15d3ae29e7f30b9857dd635c59681aee"
+        },
+        {
+          "page": 8,
+          "width": 960,
+          "height": 540,
+          "sha256": "b2bcc913727e8d9dd9e071760f9a1e93e1e649bdf0a6429b93eb00a81fbb23ea"
+        },
+        {
+          "page": 9,
+          "width": 960,
+          "height": 540,
+          "sha256": "f13221b73768b25db5d78d8968041c05e43f699abe02b566b191cdc77c2ffc63"
+        },
+        {
+          "page": 10,
+          "width": 960,
+          "height": 540,
+          "sha256": "b2a4fe9f267b1bc364f421e7c76c3a22b8f34b5f87a346f7882b32c43c3e5a6e"
+        },
+        {
+          "page": 11,
+          "width": 960,
+          "height": 540,
+          "sha256": "7250731cee47a301796b47c7a655933f1f36ff08d004560ba5c1512b4997bca2"
+        },
+        {
+          "page": 12,
+          "width": 960,
+          "height": 540,
+          "sha256": "70421d2eae4ba98630a472249286054c9841502581aed040e15a7f34e985e141"
+        },
+        {
+          "page": 13,
+          "width": 960,
+          "height": 540,
+          "sha256": "8b06ad972020061702db12f8bf8e7f973d8b42f286871c0e347eb83680aefd97"
+        },
+        {
+          "page": 14,
+          "width": 960,
+          "height": 540,
+          "sha256": "b66c6b3fe109c460f97afd015bbb775f8dc14f08947fbeaf04de83a48d017b3b"
+        }
+      ]
+    },
+    "LessonNote_hard_ECONO_EC_M_12_v01.pdf": {
+      "source": "ECONO EC M 12.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "7be32ac4a581662e91471711356480034124661784041481a3e04ea40cdd85ab"
+        },
+        {
+          "page": 2,
+          "width": 1376,
+          "height": 768,
+          "sha256": "d24f82ef1003626dbd2d610810cbbfabc32f844543f37aaa61242d67e1072bbb"
+        },
+        {
+          "page": 3,
+          "width": 1376,
+          "height": 768,
+          "sha256": "b48dab2fa1ffb9ad576186146c0f426991e83159df6f338bdd2d8a52a5852b32"
+        },
+        {
+          "page": 4,
+          "width": 1376,
+          "height": 768,
+          "sha256": "4807f87adb167353c9a8dc3bed0d759acbcbf991dfa677492c74960dcceed592"
+        },
+        {
+          "page": 5,
+          "width": 1376,
+          "height": 768,
+          "sha256": "fecdfb4bd48aa5ff413ebf26568739ff35d7b6ac462addc4c8910f23b8a00e06"
+        },
+        {
+          "page": 6,
+          "width": 1376,
+          "height": 768,
+          "sha256": "3419f59a4b79e2af574c78a37ea6fa714158cb3cec680464c69822ede0ebbccb"
+        },
+        {
+          "page": 7,
+          "width": 1376,
+          "height": 768,
+          "sha256": "2bef7936b5216de1de6c256d54a3d0b048b9a4814924a9f6862310c95f13782f"
+        },
+        {
+          "page": 8,
+          "width": 1376,
+          "height": 768,
+          "sha256": "5f3aca31239aea72dbcdda64a35dd371eec3e86343778648164b104b9f6e61ae"
+        }
+      ]
+    },
+    "LessonNote_hard_ECONO_EC_M_15_v01.pdf": {
+      "source": "ECONO EC M 15.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "6097a7ca1284de9fab2187e07bf6f272d8cdbde696db5f1786f8ff1f7bf4ef2b"
+        },
+        {
+          "page": 2,
+          "width": 960,
+          "height": 540,
+          "sha256": "dc28e5bcceb5bc9b63637c6464443883992b8bd1b990d6595ad2565a042498d8"
+        },
+        {
+          "page": 3,
+          "width": 960,
+          "height": 540,
+          "sha256": "7b35f031b9723ff01019b3301fdf1751cf653ebcc771c7304dccc52b1a907e85"
+        },
+        {
+          "page": 4,
+          "width": 960,
+          "height": 540,
+          "sha256": "477cf126863e2ed686e392f268826d6bf57b96e3142f57795ffb39c230956aa9"
+        },
+        {
+          "page": 5,
+          "width": 960,
+          "height": 540,
+          "sha256": "2291ce5ad77d6ce916f4f75c18523aeb6a799de73685ddffdd2bda0c88ddb868"
+        },
+        {
+          "page": 6,
+          "width": 960,
+          "height": 540,
+          "sha256": "ba1cb62a65abaab4776f676b5b386ffc809551d40006a8e10d9c4763edad3eae"
+        }
+      ]
+    },
+    "LessonNote_hard_nojoom_astr_18_v01.pdf": {
+      "source": "nojoom_astr_18.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "347d0b1fe48877dd91710cd999ce1b8fe0e40de59dffd1ffd8b73e7c8ed4df4a"
+        },
+        {
+          "page": 2,
+          "width": 612,
+          "height": 794,
+          "sha256": "857069fe27b51f89adfce59bee25af1b2eba3f85fe80918e923fa983c070aae7"
+        },
+        {
+          "page": 3,
+          "width": 612,
+          "height": 794,
+          "sha256": "861393884f1a3b64fa002b4ecbfb5d5793be1af6894b57ec0e7a18b3a0aeaba4"
+        },
+        {
+          "page": 4,
+          "width": 612,
+          "height": 794,
+          "sha256": "e55de7d8a4314c787a101be94ece4080f7fb5abc745038f57ae7d3afabbf6fde"
+        }
+      ]
+    },
+    "LessonNote_hard_physics_mech_7_v01.pdf": {
+      "source": "physics_mech_7(1).pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "ce9856657c00c219b8755869440d524b73a1d75044eabe1daa747feccf3f653f"
+        },
+        {
+          "page": 2,
+          "width": 600,
+          "height": 848,
+          "sha256": "acb3448c22a6220cc9a795a7d68c6ea66fb6589437b38ade1590ce123ba932d4"
+        },
+        {
+          "page": 3,
+          "width": 600,
+          "height": 848,
+          "sha256": "80f595889a1e2be0d77aaf5a51458fde6528c5e8aec6667a6b40010dc56acf00"
+        },
+        {
+          "page": 4,
+          "width": 600,
+          "height": 848,
+          "sha256": "10e4d8fadf3014b5de7028bfec98b77bfa59fcd8f3f31802510f168b9fb29a2c"
+        },
+        {
+          "page": 5,
+          "width": 600,
+          "height": 848,
+          "sha256": "f0c2ae9da34e5721b4230a83162707f65a57705088cc95e214e8158b291bb5b7"
+        },
+        {
+          "page": 6,
+          "width": 600,
+          "height": 848,
+          "sha256": "8312926d9b2c846c332a47bb7f7e426a9b1f7bd0a9b62488fed28c85dc9ae3fc"
+        }
+      ]
+    },
+    "LessonNote_hard_physics_thermo_10_v01.pdf": {
+      "source": "physics_thermo_10.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "9fd6e737a2fb30569380ca0d0fae5e017ce0583c605c24e3dcb7ef154d45a5a0"
+        },
+        {
+          "page": 2,
+          "width": 612,
+          "height": 794,
+          "sha256": "cc0c2a18f67932a2995506ab4be1300bfd00d58a382d6401a8baa431a1616eea"
+        },
+        {
+          "page": 3,
+          "width": 612,
+          "height": 794,
+          "sha256": "1cf40a5b62ee75d5df67657904789b9ccff628e0da4672f012375ce7e330b490"
+        },
+        {
+          "page": 4,
+          "width": 612,
+          "height": 794,
+          "sha256": "3ff14db7bba86ba2ec98cfead73d7920826b5fad4db37b73912a000112a1d9e0"
+        },
+        {
+          "page": 5,
+          "width": 612,
+          "height": 794,
+          "sha256": "f1956761f06ffa842954b0070c10c08398eeecdb327dc68277c76a76181406cc"
+        },
+        {
+          "page": 6,
+          "width": 612,
+          "height": 794,
+          "sha256": "96a361b088e6ebf9168c4dfb29c557616f91b38b4e9bb8a310782f429d8f7237"
+        },
+        {
+          "page": 7,
+          "width": 612,
+          "height": 794,
+          "sha256": "ce023b41b9237257e4122f15f995480fe266511d6dc4a58724a425e26fa808b7"
+        }
+      ]
+    },
+    "LessonNote_hard_physics_thermo_8_v01.pdf": {
+      "source": "physics_thermo_8.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "1568f64cb52a416260b50d5454ebf9518507f57fa79b92e197444edab0f856ac"
+        },
+        {
+          "page": 2,
+          "width": 595,
+          "height": 842,
+          "sha256": "396bcf015acb01e8f43ab781ac14677fc857960e97243963a89b4335e3b5e66b"
+        },
+        {
+          "page": 3,
+          "width": 595,
+          "height": 842,
+          "sha256": "baafce9b8d0dc8f9ae21fbf78478370abdf9594d76dc220a7c61084b2b5c7efe"
+        },
+        {
+          "page": 4,
+          "width": 595,
+          "height": 842,
+          "sha256": "6285feb45b29658e209b2d95fd77ce23157e3c74437e8408f356a8de3505e5fb"
+        },
+        {
+          "page": 5,
+          "width": 595,
+          "height": 842,
+          "sha256": "b56d4ae41f138f672312f7daff7d31abc793843ac45a5dd177837cf956eed98e"
+        },
+        {
+          "page": 6,
+          "width": 595,
+          "height": 842,
+          "sha256": "672408eb82e79142408769f4b24750c76092ff671bba165451b7fdcb01a2e735"
+        }
+      ]
+    },
+    "LessonNote_hard_physics_thermo_9_v01.pdf": {
+      "source": "physics_thermo_9.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "29f71b176a6afc37cc853b7724804150662d88e265a3fb57ea4e90d0afbb92ea"
+        },
+        {
+          "page": 2,
+          "width": 612,
+          "height": 794,
+          "sha256": "2fa375027ce1df929f8e2a4c3de0ff05dec780e0419027e62a0471ce4459d886"
+        },
+        {
+          "page": 3,
+          "width": 612,
+          "height": 794,
+          "sha256": "8f894d7b3b10936c74c6fbe5b31d66fbb00652eb7c9c80b956b3d26a31a0c711"
+        },
+        {
+          "page": 4,
+          "width": 612,
+          "height": 794,
+          "sha256": "fd02e6a2dce219d3cfc5e202822a555b154bebeb292f6157c5e4a2188747932b"
+        },
+        {
+          "page": 5,
+          "width": 612,
+          "height": 794,
+          "sha256": "b1574de0adf8e1c835f5b5fa0cb293bc8f295aac3a6bc77377d8c0ecdd1820ba"
+        }
+      ]
+    },
+    "LessonNote_hard_Savad_resane-ma_va_resane-10_v01.pdf": {
+      "source": "Savad resane-ma va resane-10.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "c07473734456d75fb56805a3fedd46590e78ecfa9c7a129e396244714c8ad359"
+        },
+        {
+          "page": 2,
+          "width": 960,
+          "height": 540,
+          "sha256": "d7c0140d33c6d461b4b669dbe0703b81c4ac311578cc07e7c9a612b650aa6dfd"
+        },
+        {
+          "page": 3,
+          "width": 960,
+          "height": 540,
+          "sha256": "c82bfd50692844ce8154beed45dd203e8720caf03406f45a428d8b5f366ba3aa"
+        },
+        {
+          "page": 4,
+          "width": 960,
+          "height": 540,
+          "sha256": "3d424e2a6868f948aa17da68908f2d8c39efabc343738b1687be3d747e4dad14"
+        },
+        {
+          "page": 5,
+          "width": 960,
+          "height": 540,
+          "sha256": "0710dd264fabaf14e15b95ebad078b735cddae3583d1f5450f50d9b58abc7491"
+        },
+        {
+          "page": 6,
+          "width": 960,
+          "height": 540,
+          "sha256": "2e47b1ab27702637624afa107a388e751cb2fc7c634a955a37579cb70f3ad1b2"
+        },
+        {
+          "page": 7,
+          "width": 960,
+          "height": 540,
+          "sha256": "21980eb15440e4efa9221cf56893e87d02b8efb194b5113e21e4ea90e666351b"
+        },
+        {
+          "page": 8,
+          "width": 960,
+          "height": 540,
+          "sha256": "f1a762136579bcdfa64fff22f83fd1ea7fd88340c0074ad22ba6ec29b80de154"
+        },
+        {
+          "page": 9,
+          "width": 960,
+          "height": 540,
+          "sha256": "f99569c7701bdd64c48bd36df84e1438c5789a0faca6a2071b06dbdbf1fe52f1"
+        },
+        {
+          "page": 10,
+          "width": 960,
+          "height": 540,
+          "sha256": "6d9f6470912fe577aad16db08124d041dda41927748bbee576f6a75e01fed67e"
+        }
+      ]
+    },
+    "LessonNote_hard_SCELL_AD_2_3_v01.pdf": {
+      "source": "SCELL_AD_2_3.pdf",
+      "status": "REVIEW",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "450c0e45c65771c4ab862f4d319ace5a7a1e8bc3f44276f560fe09dba7b72c8b"
+        },
+        {
+          "page": 2,
+          "width": 960,
+          "height": 540,
+          "sha256": "77aa98d7565d816862ebcca2b967e2b98bf85f4701a802ca7a8796836caba565"
+        },
+        {
+          "page": 3,
+          "width": 960,
+          "height": 540,
+          "sha256": "b97b98f5df8c19e58a8599a34ccc7d75bfadc65f5efc46f9c21636ca8e6d8750"
+        },
+        {
+          "page": 4,
+          "width": 960,
+          "height": 540,
+          "sha256": "b4171333adc470178b839e4507ff05d018f9faaf1f127a7a54339d9015c9da0c"
+        },
+        {
+          "page": 5,
+          "width": 960,
+          "height": 540,
+          "sha256": "7d7b3a2e0572b24383db1a6f75f12383191179cc742fdeb1bc90810eb648f6a4"
+        },
+        {
+          "page": 6,
+          "width": 960,
+          "height": 540,
+          "sha256": "f3fc630a1a2bc39ffeb7abdb896585fe8f5f07b3b0994d6de6d018adbdebbe7d"
+        },
+        {
+          "page": 7,
+          "width": 960,
+          "height": 540,
+          "sha256": "47c0bcfca03186d19e26768655399e058306f51301ac0623057bd9786f5522c1"
+        },
+        {
+          "page": 8,
+          "width": 960,
+          "height": 540,
+          "sha256": "a2e6f96cd35ed0b04d18b8af364a5d29cfc2dfd1ebdee345c30789856c4b2dd8"
+        },
+        {
+          "page": 9,
+          "width": 960,
+          "height": 540,
+          "sha256": "c87dc87a54183de9a6ece314ea1877bf536034a69643f298349fa910d85b651f"
+        },
+        {
+          "page": 10,
+          "width": 960,
+          "height": 540,
+          "sha256": "c78c794106ee8fba95b0b803539cc5d105bc83dfad5e9fcc42c416ade2a47936"
+        },
+        {
+          "page": 11,
+          "width": 960,
+          "height": 540,
+          "sha256": "352d35ddc48a40794a5076ea160458b94ed3675c5f1f4b8286637d36613e89e6"
+        },
+        {
+          "page": 12,
+          "width": 960,
+          "height": 540,
+          "sha256": "90b7dc7d31ebb145679dd12919c3c8aa0652b0629c7aa7ffe1a2f083eacd17eb"
+        },
+        {
+          "page": 13,
+          "width": 960,
+          "height": 540,
+          "sha256": "09ab66bec893a9e82dfbf270e56039a7984f1ca32c21f0541e63e0440b9cd280"
+        },
+        {
+          "page": 14,
+          "width": 960,
+          "height": 540,
+          "sha256": "c8a208b69c803d272a7f83ebede19403d5974b0c80b70c926b6d05844db5b0ae"
+        },
+        {
+          "page": 15,
+          "width": 960,
+          "height": 540,
+          "sha256": "63ca4e0cff24d927273972276c7c778d442d953ae35f819c3a7e356049016b27"
+        },
+        {
+          "page": 16,
+          "width": 960,
+          "height": 540,
+          "sha256": "1b8b0b9eab265ca27b6978f5917a2bccbb4a5250945e88cb8cd194d0070f34a8"
+        },
+        {
+          "page": 17,
+          "width": 960,
+          "height": 540,
+          "sha256": "4d11e87d7a2ff62e31f11da7e673d158b0111ad0389e2291d251289268cff05b"
+        },
+        {
+          "page": 18,
+          "width": 960,
+          "height": 540,
+          "sha256": "0c03516cfc946194411968565d8f932163573b996662ead2fc5299c160ad6292"
+        },
+        {
+          "page": 19,
+          "width": 960,
+          "height": 540,
+          "sha256": "64666d5847a236175349b13a9df449117426d4a1e4465417b219132ac69dd6d6"
+        },
+        {
+          "page": 20,
+          "width": 960,
+          "height": 540,
+          "sha256": "1bfe57fe5d6f32244e05ed19c6dd0aed59fdb4887f0c64d86f51ca062534a3c5"
+        }
+      ]
+    },
+    "LessonNote_hard_SCELL_AD_2_4_v01.pdf": {
+      "source": "SCELL_AD_2_4.pdf",
+      "status": "REVIEW",
+      "pages": [
+        {
+          "page": 1,
+          "width": 842,
+          "height": 596,
+          "sha256": "450c0e45c65771c4ab862f4d319ace5a7a1e8bc3f44276f560fe09dba7b72c8b"
+        },
+        {
+          "page": 2,
+          "width": 960,
+          "height": 540,
+          "sha256": "ee175e642693f822b263d7e76f7efe3c6c50117d1a1928fe9ae210ba50894f03"
+        },
+        {
+          "page": 3,
+          "width": 960,
+          "height": 540,
+          "sha256": "5b7adcc56fa42a5985674b627b27f18f1bd0cf744ea09392fcea2b714030dfc1"
+        },
+        {
+          "page": 4,
+          "width": 960,
+          "height": 540,
+          "sha256": "8ccf1bffa4a72754401c4803b0665dae885e30c84b0e2b6fe505103f13662286"
+        },
+        {
+          "page": 5,
+          "width": 960,
+          "height": 540,
+          "sha256": "8afb7a020234319a4921eff7ac71209b01eb3e98aa14e1185a289a645a8a8006"
+        },
+        {
+          "page": 6,
+          "width": 960,
+          "height": 540,
+          "sha256": "d8ff5791a04a0ed834153fcb42edf31a6deaffc6a369812be0321de4bf150d1f"
+        },
+        {
+          "page": 7,
+          "width": 960,
+          "height": 540,
+          "sha256": "b44ecb2a38ea5963b6510fd778e95b4ecf8e65a63ee3cd26d62ad26ccbd53cfd"
+        },
+        {
+          "page": 8,
+          "width": 960,
+          "height": 540,
+          "sha256": "0f2503123336a7a2b7b525bc95d1989b91e39309a44758f54787754e6fdb2dbe"
+        },
+        {
+          "page": 9,
+          "width": 960,
+          "height": 540,
+          "sha256": "e0035e824026f82cb879b493ff02cb17aec5fef98e1f66ef895d4d29be4db6cc"
+        },
+        {
+          "page": 10,
+          "width": 960,
+          "height": 540,
+          "sha256": "d040624acb1761b7d07e6f5b64268f6a2d5a70974e223d30de48117b1a641f21"
+        },
+        {
+          "page": 11,
+          "width": 960,
+          "height": 540,
+          "sha256": "0bd2972f94e9a5a96d2d35f345d9624abd75600427d85bb7bc1f05bef5178435"
+        },
+        {
+          "page": 12,
+          "width": 960,
+          "height": 540,
+          "sha256": "a808481675954b118785543da6aaed91eb69b23648d54a2c95365655e3530b4c"
+        },
+        {
+          "page": 13,
+          "width": 960,
+          "height": 540,
+          "sha256": "0d0d58eb983ff84c9516ac9a62d017448b4c82dec5715de4b158ec455eabd03d"
+        },
+        {
+          "page": 14,
+          "width": 960,
+          "height": 540,
+          "sha256": "108da6e1c8769e7f0c611c16f9ddef6091538652d72959d464058908414405ad"
+        },
+        {
+          "page": 15,
+          "width": 960,
+          "height": 540,
+          "sha256": "35842207b62fdc2d187952805aaac8c99528bfa385cec9aecc06ce3a4b45c83f"
+        },
+        {
+          "page": 16,
+          "width": 960,
+          "height": 540,
+          "sha256": "cbbbb5aaf5dd397fff9a551e036e6ed7b9bfcfcb5e35f31723b413229f18ed5e"
+        },
+        {
+          "page": 17,
+          "width": 960,
+          "height": 540,
+          "sha256": "6e1d91b73bb0ca7073ccac9a6dc5690677182197166c32955d512c01dc496a91"
+        },
+        {
+          "page": 18,
+          "width": 960,
+          "height": 540,
+          "sha256": "8f9c5bd7f697f1c6af52447e762e29207be3418d81719c57c7482c8e0f94a6a2"
+        },
+        {
+          "page": 19,
+          "width": 960,
+          "height": 540,
+          "sha256": "42950d4170b5e9fbb2173badc765fe64b71d4fb0cafdb57db6b5f5583ae374b8"
+        },
+        {
+          "page": 20,
+          "width": 960,
+          "height": 540,
+          "sha256": "2701744d05f4fa590299dfde5f658115abcd7837be07dd5eb747ce529fcc701c"
+        },
+        {
+          "page": 21,
+          "width": 960,
+          "height": 540,
+          "sha256": "66e1bb5554e697de315ebc9e521baf656cbb2607cdd35668e45cd0b02582145d"
+        },
+        {
+          "page": 22,
+          "width": 960,
+          "height": 540,
+          "sha256": "9615e5b363421a8a585227868b670ce26f5a9e20908f2cc100ad65bbe76d62a7"
+        },
+        {
+          "page": 23,
+          "width": 960,
+          "height": 540,
+          "sha256": "248e76b8220ac442d675e0c775e32d0b44e7ebad278963d0fea056a0c65a578a"
+        },
+        {
+          "page": 24,
+          "width": 960,
+          "height": 540,
+          "sha256": "954a4495c12aff5cadfb4bfd6544d7bfc1ed687952ab9429eb5e1c9074c8c467"
+        },
+        {
+          "page": 25,
+          "width": 960,
+          "height": 540,
+          "sha256": "1bfe57fe5d6f32244e05ed19c6dd0aed59fdb4887f0c64d86f51ca062534a3c5"
+        }
+      ]
+    },
+    "LessonNote_hard_SCELL_BQ_1_v01.pdf": {
+      "source": "SCELL_BQ_1.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "44593eadb292279d2872aa0735dd76bdeee796b3bcd2e3fca90d0f6acd4f4371"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "209a6a285f0af104b4449e01aa80365aaabfa0b4e04d5ac7c7826624b4f42a25"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "19fa9cf1801f2c9ef32a434f40a948299657ea84c66ad49babc629e5a1109ce4"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "401dafe2036dc0e7a30603ce648eb8228fe7963e4e0c55f26123cb164713b71f"
+        },
+        {
+          "page": 5,
+          "width": 596,
+          "height": 842,
+          "sha256": "a85648ba4ae4b7b9a21325b37fe1f52c69e126575b0d5a45917067e475db71b4"
+        },
+        {
+          "page": 6,
+          "width": 596,
+          "height": 842,
+          "sha256": "e5b409c43ce0f6447e51981d1d39b6eb64840895211d6bd35846457813faefd4"
+        },
+        {
+          "page": 7,
+          "width": 596,
+          "height": 842,
+          "sha256": "b73d918a0384c1a8d36a6b6d4b416d51dad99d700b8fda84a2fb6136878515ba"
+        },
+        {
+          "page": 8,
+          "width": 596,
+          "height": 842,
+          "sha256": "f3270fb7687438d79d4f73af705b818f47e644cb8d40acc29cd9ef79c81f0736"
+        },
+        {
+          "page": 9,
+          "width": 596,
+          "height": 842,
+          "sha256": "1e3f8b2c712575c01d2f4720b5d63b6ee5f5d62caa5a10467816b2cd4e82a0c1"
+        },
+        {
+          "page": 10,
+          "width": 596,
+          "height": 842,
+          "sha256": "a7b8b5ef74608b5797afda1711d851e21448a721488b788720f2ccc92842e9f2"
+        },
+        {
+          "page": 11,
+          "width": 596,
+          "height": 842,
+          "sha256": "45e2dab259451d8f22867d249e8c80d8bfd7ab2503a78f3dc2cd3a70fcfb07e2"
+        },
+        {
+          "page": 12,
+          "width": 596,
+          "height": 842,
+          "sha256": "dc4fd9d1ba536869d80b48ed67245012b0b6c5e683f0deafe9656d6f44af2fd2"
+        },
+        {
+          "page": 13,
+          "width": 596,
+          "height": 842,
+          "sha256": "b6e30eb3dd27ca15ae084886139c1b1cc5e4a0c41305f13e45da67d9b3e18529"
+        },
+        {
+          "page": 14,
+          "width": 596,
+          "height": 842,
+          "sha256": "1999029a0584091fca093cce84c1654a943a725ed180638d0933f29c34297804"
+        },
+        {
+          "page": 15,
+          "width": 596,
+          "height": 842,
+          "sha256": "3b4da254656d444393c2a8e4bed6fd022ac07c56dfbb11f7d0b94a07f37c91e6"
+        },
+        {
+          "page": 16,
+          "width": 596,
+          "height": 842,
+          "sha256": "af4d3121308a6e3ddd47da4e6763a87721714ab9fceae4e03bc2df3a1a6c94f9"
+        },
+        {
+          "page": 17,
+          "width": 596,
+          "height": 842,
+          "sha256": "dcf38b1616a3f4454e5271ef8a331c9e510101368adc89f5debe851e59493637"
+        },
+        {
+          "page": 18,
+          "width": 596,
+          "height": 842,
+          "sha256": "eb053608d01f37ba506aa1f4368fe40b066af1f246b47a241e7f6c7208f2fd4e"
+        },
+        {
+          "page": 19,
+          "width": 596,
+          "height": 842,
+          "sha256": "e0cb39db523848ec29b652ffb558510e2b20bfc1ec939ee2397c02bc69a791a3"
+        },
+        {
+          "page": 20,
+          "width": 596,
+          "height": 842,
+          "sha256": "1508b2228ce2441483033d47418dad92afcfa5825afc00f0accbbabce1ab6827"
+        },
+        {
+          "page": 21,
+          "width": 596,
+          "height": 842,
+          "sha256": "2864bad3d7bec91bf6df01895c98109b636b78a4fadd6a4fed70b1c59c530121"
+        },
+        {
+          "page": 22,
+          "width": 596,
+          "height": 842,
+          "sha256": "15fdc3e77fb64f2e2fbd96d607a0bc98a0ed382032d4292c7eed136babba958e"
+        },
+        {
+          "page": 23,
+          "width": 596,
+          "height": 842,
+          "sha256": "2b0f0134db1148056b27bd86385dda674b254d74dea86607107f80e3e03bf5e3"
+        }
+      ]
+    },
+    "LessonNote_hard_SCELL_BQ_2_v01.pdf": {
+      "source": "SCELL_BQ_2.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "44593eadb292279d2872aa0735dd76bdeee796b3bcd2e3fca90d0f6acd4f4371"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "209a6a285f0af104b4449e01aa80365aaabfa0b4e04d5ac7c7826624b4f42a25"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "19fa9cf1801f2c9ef32a434f40a948299657ea84c66ad49babc629e5a1109ce4"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "401dafe2036dc0e7a30603ce648eb8228fe7963e4e0c55f26123cb164713b71f"
+        },
+        {
+          "page": 5,
+          "width": 596,
+          "height": 842,
+          "sha256": "a85648ba4ae4b7b9a21325b37fe1f52c69e126575b0d5a45917067e475db71b4"
+        },
+        {
+          "page": 6,
+          "width": 596,
+          "height": 842,
+          "sha256": "e5b409c43ce0f6447e51981d1d39b6eb64840895211d6bd35846457813faefd4"
+        },
+        {
+          "page": 7,
+          "width": 596,
+          "height": 842,
+          "sha256": "b73d918a0384c1a8d36a6b6d4b416d51dad99d700b8fda84a2fb6136878515ba"
+        },
+        {
+          "page": 8,
+          "width": 596,
+          "height": 842,
+          "sha256": "f3270fb7687438d79d4f73af705b818f47e644cb8d40acc29cd9ef79c81f0736"
+        },
+        {
+          "page": 9,
+          "width": 596,
+          "height": 842,
+          "sha256": "1e3f8b2c712575c01d2f4720b5d63b6ee5f5d62caa5a10467816b2cd4e82a0c1"
+        },
+        {
+          "page": 10,
+          "width": 596,
+          "height": 842,
+          "sha256": "a7b8b5ef74608b5797afda1711d851e21448a721488b788720f2ccc92842e9f2"
+        },
+        {
+          "page": 11,
+          "width": 596,
+          "height": 842,
+          "sha256": "45e2dab259451d8f22867d249e8c80d8bfd7ab2503a78f3dc2cd3a70fcfb07e2"
+        },
+        {
+          "page": 12,
+          "width": 596,
+          "height": 842,
+          "sha256": "dc4fd9d1ba536869d80b48ed67245012b0b6c5e683f0deafe9656d6f44af2fd2"
+        },
+        {
+          "page": 13,
+          "width": 596,
+          "height": 842,
+          "sha256": "b6e30eb3dd27ca15ae084886139c1b1cc5e4a0c41305f13e45da67d9b3e18529"
+        },
+        {
+          "page": 14,
+          "width": 596,
+          "height": 842,
+          "sha256": "1999029a0584091fca093cce84c1654a943a725ed180638d0933f29c34297804"
+        },
+        {
+          "page": 15,
+          "width": 596,
+          "height": 842,
+          "sha256": "3b4da254656d444393c2a8e4bed6fd022ac07c56dfbb11f7d0b94a07f37c91e6"
+        },
+        {
+          "page": 16,
+          "width": 596,
+          "height": 842,
+          "sha256": "af4d3121308a6e3ddd47da4e6763a87721714ab9fceae4e03bc2df3a1a6c94f9"
+        },
+        {
+          "page": 17,
+          "width": 596,
+          "height": 842,
+          "sha256": "dcf38b1616a3f4454e5271ef8a331c9e510101368adc89f5debe851e59493637"
+        },
+        {
+          "page": 18,
+          "width": 596,
+          "height": 842,
+          "sha256": "eb053608d01f37ba506aa1f4368fe40b066af1f246b47a241e7f6c7208f2fd4e"
+        },
+        {
+          "page": 19,
+          "width": 596,
+          "height": 842,
+          "sha256": "e0cb39db523848ec29b652ffb558510e2b20bfc1ec939ee2397c02bc69a791a3"
+        },
+        {
+          "page": 20,
+          "width": 596,
+          "height": 842,
+          "sha256": "1508b2228ce2441483033d47418dad92afcfa5825afc00f0accbbabce1ab6827"
+        },
+        {
+          "page": 21,
+          "width": 596,
+          "height": 842,
+          "sha256": "2864bad3d7bec91bf6df01895c98109b636b78a4fadd6a4fed70b1c59c530121"
+        },
+        {
+          "page": 22,
+          "width": 596,
+          "height": 842,
+          "sha256": "15fdc3e77fb64f2e2fbd96d607a0bc98a0ed382032d4292c7eed136babba958e"
+        },
+        {
+          "page": 23,
+          "width": 596,
+          "height": 842,
+          "sha256": "2b0f0134db1148056b27bd86385dda674b254d74dea86607107f80e3e03bf5e3"
+        }
+      ]
+    },
+    "LessonNote_hard_SCELL_BQ_3_v01.pdf": {
+      "source": "SCELL_BQ_3.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "44593eadb292279d2872aa0735dd76bdeee796b3bcd2e3fca90d0f6acd4f4371"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "235a9a07c99de2f113fa925a674894375f11a9c38c0ba5a79ec48284573d21eb"
+        },
+        {
+          "page": 3,
+          "width": 596,
+          "height": 842,
+          "sha256": "2cd0c518d1c6b395e39ffdaaa6f5f0f7c8379d17cb717ffded5a9a954d4dd752"
+        },
+        {
+          "page": 4,
+          "width": 596,
+          "height": 842,
+          "sha256": "8874cf37b3684357fc0409dd9f231c3090bdfd0bf525fa7dd9610220a05f5262"
+        },
+        {
+          "page": 5,
+          "width": 596,
+          "height": 842,
+          "sha256": "da77a7d984ac3fe3e45bf2087c0a7e78ab7745557cbb9ec4d7c55584e4ea0ed2"
+        },
+        {
+          "page": 6,
+          "width": 596,
+          "height": 842,
+          "sha256": "0f8bdea03526a315ecc7566c962fdcc6f2a0fcc5b25d5589900db281cf33808c"
+        },
+        {
+          "page": 7,
+          "width": 596,
+          "height": 842,
+          "sha256": "09e48b74bef5e88851b9a1a8e876a3298a2c11abf1cfc835440afce5f363b59b"
+        },
+        {
+          "page": 8,
+          "width": 596,
+          "height": 842,
+          "sha256": "3752e38994671dd8fc62c29e16bfb390396c2617adcf0e77b10fc785deee754b"
+        },
+        {
+          "page": 9,
+          "width": 596,
+          "height": 842,
+          "sha256": "0179508b4322969df04fa1813a515cf66c69eaee83998a3feea0acd81194aeb2"
+        },
+        {
+          "page": 10,
+          "width": 596,
+          "height": 842,
+          "sha256": "744532d60add41f79b5342370552e1d8fbcf9ff0ba2415bc1371ae8380ae4f18"
+        },
+        {
+          "page": 11,
+          "width": 596,
+          "height": 842,
+          "sha256": "035248bd837715c37ad9183f552c93bf0c71514ed4212b933cd2cd5fb19e5b8d"
+        },
+        {
+          "page": 12,
+          "width": 596,
+          "height": 842,
+          "sha256": "73df40770332d736104884f1f3cd410bebf7dabd40a6afaae1ffd74d816f6a92"
+        },
+        {
+          "page": 13,
+          "width": 596,
+          "height": 842,
+          "sha256": "7b28096735318b38d010ebdcca4c403c4aa90be82c468e7e71e83cecd7358cc9"
+        },
+        {
+          "page": 14,
+          "width": 596,
+          "height": 842,
+          "sha256": "8d622e88aae76cf71014a02d2c5473582c604c9ebd7383ba681c6768e5f1dd3e"
+        },
+        {
+          "page": 15,
+          "width": 596,
+          "height": 842,
+          "sha256": "882b2b2d13e825c240fd466634b9c38d8c2622d3d9d9027f78a42286cb6988d4"
+        },
+        {
+          "page": 16,
+          "width": 596,
+          "height": 842,
+          "sha256": "7a1312f4b4087de6981583390fa887c3dfd01cc5812df874f35619a2c95eee72"
+        },
+        {
+          "page": 17,
+          "width": 596,
+          "height": 842,
+          "sha256": "cb113ef992278a1ed759e3c4eec82edf3da61ec71afbbe58c2ff9f65a32490c3"
+        },
+        {
+          "page": 18,
+          "width": 596,
+          "height": 842,
+          "sha256": "ce1dbb7721f66abb3487a84182f1942e39216a7e2ca18c5425a4edf632ccbd4e"
+        },
+        {
+          "page": 19,
+          "width": 596,
+          "height": 842,
+          "sha256": "8d28633ed5b0e21bc70696b12650adbd95c7811fd19080005cc79ba88a3f7c0c"
+        },
+        {
+          "page": 20,
+          "width": 596,
+          "height": 842,
+          "sha256": "61137223f1801ca4eb57838aa39c1c6a1f60535975a35f3eee4d3b54b9af255e"
+        },
+        {
+          "page": 21,
+          "width": 596,
+          "height": 842,
+          "sha256": "ed69585c26172c5f9d5b827273d67477e8022922dd8da7d0ef6af3bfe1c9345d"
+        },
+        {
+          "page": 22,
+          "width": 596,
+          "height": 842,
+          "sha256": "baafffcf3bae3289cb722852175bdff4290244f919a1c8f92944e051b9c0d186"
+        }
+      ]
+    },
+    "LessonNote_hard_shimi_alee_7_v01.pdf": {
+      "source": "shimi_alee_7.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "756cc4fab8b86269f288c79296106c5a0f908a51ca2d33210905debdd34d3692"
+        },
+        {
+          "page": 2,
+          "width": 612,
+          "height": 792,
+          "sha256": "65fef6ff6926fc1520fe186aaac43e3f1e3f5bca2b26d96c0ef2c96e439710a3"
+        },
+        {
+          "page": 3,
+          "width": 612,
+          "height": 792,
+          "sha256": "19a4d0b333516ee3b5d3e77f794aff0fcde7bd3ee920c15a856646d3ac8565b9"
+        },
+        {
+          "page": 4,
+          "width": 612,
+          "height": 792,
+          "sha256": "b8be7cf16d8197e3785a2305cb2759bf70d026cec25805f9d29353eee377af09"
+        },
+        {
+          "page": 5,
+          "width": 612,
+          "height": 792,
+          "sha256": "c0dcf13ee7ea57b9b356244edd135450c1ee26ac479e42bc3ac6a264487d4acc"
+        },
+        {
+          "page": 6,
+          "width": 612,
+          "height": 792,
+          "sha256": "97310353d1325888f3ef4ad0d11d4e5b16b4f015609dfa1e9d671cbe92ba451d"
+        },
+        {
+          "page": 7,
+          "width": 612,
+          "height": 792,
+          "sha256": "a09b428745d77202903c51a93a146c8b9641c9bd17ded2aa701f0e1d1a04d464"
+        },
+        {
+          "page": 8,
+          "width": 612,
+          "height": 792,
+          "sha256": "0bd57377a940b8ff0d16e4975aa272ac726ebf5e630ac5c1f69cf77038232bf4"
+        },
+        {
+          "page": 9,
+          "width": 612,
+          "height": 792,
+          "sha256": "0bd57377a940b8ff0d16e4975aa272ac726ebf5e630ac5c1f69cf77038232bf4"
+        },
+        {
+          "page": 10,
+          "width": 612,
+          "height": 792,
+          "sha256": "0bd57377a940b8ff0d16e4975aa272ac726ebf5e630ac5c1f69cf77038232bf4"
+        },
+        {
+          "page": 11,
+          "width": 612,
+          "height": 792,
+          "sha256": "0bd57377a940b8ff0d16e4975aa272ac726ebf5e630ac5c1f69cf77038232bf4"
+        },
+        {
+          "page": 12,
+          "width": 612,
+          "height": 792,
+          "sha256": "0bd57377a940b8ff0d16e4975aa272ac726ebf5e630ac5c1f69cf77038232bf4"
+        }
+      ]
+    }
+  }
+}
