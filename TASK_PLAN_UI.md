@@ -51,12 +51,12 @@
 
 ### مرحلهٔ ۱ — رویدادها، لاگ استاندارد، جابه‌جایی گزارش متنی
 
-- [ ] ۱.۱ `events.py`: pub/sub ساده برای `run_started`، `file_started`، `stage_started`، `stage_progress`، `stage_finished`، `warning`، `error`، `file_done`، `run_finished`.
-- [ ] ۱.۲ `pages.process_pages`: فقط پارامتر اختیاری `progress=None` که در حلقهٔ صفحه‌ها `progress(index, total)` را صدا می‌زند. هیچ منطق دیگری عوض نشود.
-- [ ] ۱.۳ `main.py` (`process_job`): دور فراخوانی‌های موجود رویدادها را بفرستد (مرحله‌ها: resolve، cover، pages، border، qc، write) و زمان هر مرحله را بسنجد. منطق عوض نشود.
-- [ ] ۱.۴ `logging_setup.py`: لاگ فارسی `output/log.txt` با قالب «زمان | سطح | شناسهٔ اجرا | فایل | مرحله | پیام»، همراه `output/log.jsonl`. ثبت نسخه‌ها و assets با SHA کوتاه، زمان هر مرحله، هشدارها (یکسان‌ها خلاصه شوند).
-- [ ] ۱.۵ `report_text.py`: منطق گزارش متنی را از `main.py` **فقط جابه‌جا** کن. برای همان داده، `report.txt` باید بایت‌به‌بایت مثل قبل باشد (تست بساز).
-- [ ] ۱.۶ تست‌ها: رویدادها، قالب لاگ، سازگاری `report.txt`. تست پیش‌فرض سریع و سبز.
+- [x] ۱.۱ `events.py`: pub/sub ساده برای `run_started`، `file_started`، `stage_started`، `stage_progress`، `stage_finished`، `warning`، `error`، `file_done`، `run_finished`.
+- [x] ۱.۲ `pages.process_pages`: فقط پارامتر اختیاری `progress=None` که در حلقهٔ صفحه‌ها `progress(index, total)` را صدا می‌زند. هیچ منطق دیگری عوض نشود.
+- [x] ۱.۳ `main.py` (`process_job`): دور فراخوانی‌های موجود رویدادها را بفرستد (مرحله‌ها: resolve، cover، pages، border، qc، write) و زمان هر مرحله را بسنجد. منطق عوض نشود.
+- [x] ۱.۴ `logging_setup.py`: لاگ فارسی `output/log.txt` با قالب «زمان | سطح | شناسهٔ اجرا | فایل | مرحله | پیام»، همراه `output/log.jsonl`. ثبت نسخه‌ها و assets با SHA کوتاه، زمان هر مرحله، هشدارها (یکسان‌ها خلاصه شوند).
+- [x] ۱.۵ `report_text.py`: منطق گزارش متنی را از `main.py` **فقط جابه‌جا** کن. برای همان داده، `report.txt` باید بایت‌به‌بایت مثل قبل باشد (تست بساز).
+- [x] ۱.۶ تست‌ها: رویدادها، قالب لاگ، سازگاری `report.txt`. تست پیش‌فرض سریع و سبز.
 - commit: «step 7a: events, standard Persian log, report_text move». گزارش بده و منتظر «ادامه» بمان.
 
 ### مرحلهٔ ۲ — رابط ترمینال (`ui.py`)

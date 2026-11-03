@@ -1,8 +1,6 @@
 """Offline Windows CLI. Publish an output only after the saved PDF passes QC."""
 import argparse
-from contextlib import ExitStack
-import json
-import logging
+from contextlib import contextmanager, ExitStack
 import os
 from pathlib import Path
 import shutil
@@ -20,6 +18,9 @@ from cover import build_cover, effective_orientation
 from pages import process_pages, _preserve_rendering_attributes, raster
 from border import clean_border
 from qc import check_pdf
+from events import EventBus
+from logging_setup import setup_logging
+from report_text import write_report
 
 ROOT=Path(__file__).resolve().parent
 
@@ -83,12 +84,31 @@ def safe_output(path,cfg):
     return path
 
 
-def process_job(paths, namak, syllabus, cfg, output, claimed):
+@contextmanager
+def _timed_stage(event_bus, stage, file_name):
+    started = time.perf_counter()
+    event_bus.emit('stage_started', file=file_name, stage=stage)
+    try:
+        yield
+    except BaseException as exc:
+        event_bus.emit('stage_finished', file=file_name, stage=stage,
+                       seconds=round(time.perf_counter()-started, 4), ok=False,
+                       error=str(exc))
+        raise
+    else:
+        event_bus.emit('stage_finished', file=file_name, stage=stage,
+                       seconds=round(time.perf_counter()-started, 4), ok=True)
+
+
+def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
+    event_bus = event_bus or EventBus()
+    file_name = ', '.join(p.name for p in paths)
     item={'files':[p.name for p in paths],'status':'خطا','status_code':'BLOCKED','warnings':[]}
     try:
-        match=resolve_details(namak or paths[0].stem,syllabus)
-        canonical=match['namak']; suffix=match['suffix']
-        record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
+        with _timed_stage(event_bus, 'resolve', file_name):
+            match=resolve_details(namak or paths[0].stem,syllabus)
+            canonical=match['namak']; suffix=match['suffix']
+            record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
         item['warnings'].extend(syllabus.lookup_warnings)
         empty=[field for field in cfg['cover']['fields'] if is_empty_value(record[field])]
         if empty:
@@ -114,9 +134,18 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
             orientation=effective_orientation(combined[0])
             item.update(orientation=orientation,input_pages=len(combined),output_pages=len(combined)+1)
             values={key:record[key] for key in cfg['cover']['fields']}
-            cover,cover_report=build_cover(record['template_index'],orientation,values);stack.enter_context(cover)
-            clean,_=clean_border(cache_dir=scratch)
-            content,page_report=process_pages(combined,clean_path=clean);stack.enter_context(content)
+            with _timed_stage(event_bus, 'cover', file_name):
+                cover,cover_report=build_cover(record['template_index'],orientation,values)
+            stack.enter_context(cover)
+            with _timed_stage(event_bus, 'border', file_name):
+                clean,_=clean_border(cache_dir=scratch)
+            with _timed_stage(event_bus, 'pages', file_name):
+                content,page_report=process_pages(
+                    combined, clean_path=clean,
+                    progress=lambda index, total: event_bus.emit(
+                        'stage_progress', file=file_name, stage='pages',
+                        index=index, total=total))
+            stack.enter_context(content)
             item['warnings'].extend(page_report['warnings']);item['pages']=page_report['pages']
             item['cover']=cover_report
             result=stack.enter_context(fitz.open(stream=cover.tobytes(),filetype='pdf'))
@@ -136,85 +165,30 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
                     'max_channel_difference':int(delta.max())})
             item['output_intents_effect']=effects
             temporary=Path(scratch)/name
-            result.save(temporary,garbage=4,deflate=True)
-            quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,
-                              expected_content_renders=baseline,output_suffix=suffix)
+            with _timed_stage(event_bus, 'qc', file_name):
+                result.save(temporary,garbage=4,deflate=True)
+                quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,
+                                  expected_content_renders=baseline,output_suffix=suffix)
             item['qc']=quality
             if quality.get('blocking_failed'):
                 item['error']='کنترل‌های بلاک‌کننده رد شد: '+', '.join(quality['blocking_failed'])
                 item['status_code']='BLOCKED'
+                event_bus.emit('error', file=file_name, stage='qc', message=item['error'])
                 return item
-            os.replace(temporary,output/name)
+            with _timed_stage(event_bus, 'write', file_name):
+                os.replace(temporary,output/name)
             item['status']='بازبینی' if quality.get('advisory_failed') else 'موفق'
             item['status_code']='REVIEW' if item['status']=='بازبینی' else 'OK'
             if item['status']=='بازبینی':
                 item['review_controls']=quality['advisory_failed']
     except NotFoundError:
         item['error']='نامک در سیلابس پیدا نشد؛ نام فایل یا --namak را بررسی کنید'
+        event_bus.emit('error', file=file_name, stage='resolve', message=item['error'])
     except Exception as exc:
         item['warnings'].extend(getattr(syllabus,'lookup_warnings',[]))
         item['error']=str(exc)
+        event_bus.emit('error', file=file_name, stage='run', message=item['error'])
     return item
-
-
-def write_report(output,items,global_warnings):
-    lines=['گزارش پردازش جزوه‌ها','']
-    lines.extend('هشدار سیلابس: '+w for w in global_warnings)
-    for item in items:
-        lines+=['',f"{item['status']}: {', '.join(item['files'])}"]
-        for key,label in [('namak','نامک'),('sheet','رشته'),('orientation','جهت'),('input_pages','صفحات ورودی'),('output_pages','صفحات خروجی'),('seconds','زمان (ثانیه)'),('output','نام خروجی'),('error','علت خطا')]:
-            if key in item:
-                value={'portrait':'عمودی','landscape':'افقی'}.get(item[key],item[key]) if key=='orientation' else item[key]
-                lines.append(f'{label}: {value}')
-        for key,passed in item.get('qc',{}).get('checks',{}).items(): lines.append(f"  {key}: {'قبول' if passed else 'رد'}")
-        if item.get('qc',{}).get('blocking_failed'):
-            lines.append('کنترل‌های بلاک‌کنندهٔ ردشده: '+', '.join(item['qc']['blocking_failed']))
-        if item.get('qc',{}).get('advisory_failed'):
-            lines.append('کنترل‌های توصیه‌ای ردشده: '+', '.join(item['qc']['advisory_failed']))
-        for detail in item.get('qc',{}).get('details',[]): lines.append(json.dumps(detail,ensure_ascii=False))
-        image_warnings=[w for w in item.get('warnings',[]) if w['kind']=='image_number_unknown']
-        if image_warnings:
-            affected=sorted({w['page'] for w in image_warnings})
-            lines.append(f'شمارهٔ تصویری نامعلوم: {len(affected)} صفحه ({", ".join(map(str,affected))})؛ '
-                         'علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.')
-        for warning in item.get('warnings',[]):
-            if warning['kind']=='empty_cover_fields':
-                cfg=load_config()
-                names='، '.join(cfg['headers'][field][0] for field in warning['fields'])
-                lines.append('مقدار خالی در سیلابس: '+names)
-            elif warning['kind']=='syllabus_source_conflict':
-                lines.append('هشدار تعارض سیلابس: مقدار شیت رشته‌ای معتبر است؛ '+
-                             'syllabus source conflict: subject sheet takes priority')
-            elif warning['kind']!='image_number_unknown':
-                lines.append('هشدار: '+json.dumps(warning,ensure_ascii=False))
-        for effect in item.get('output_intents_effect',[]):
-            lines.append('اثر OutputIntents (صرفاً گزارش): '+json.dumps(effect,ensure_ascii=False))
-        for page in item.get('pages',[]):
-            for removed in page['removed']: lines.append(f"حذف شمارهٔ متنی صفحه {page['page']}: {removed['text']}")
-        if item['status']=='خطا': lines.append('اگر خروجی قدیمی وجود دارد، نتیجهٔ این اجرا نیست و بازنویسی نشده است.')
-    success=sum(i['status']=='موفق' for i in items)
-    review=sum(i['status']=='بازبینی' for i in items)
-    blocked=sum(i['status']=='خطا' for i in items)
-    review_items=[i for i in items if i['status']=='بازبینی']
-    if review_items:
-        review_lines=['گزارش فایل‌های نیازمند بازبینی','']
-        for item in review_items:
-            review_lines.append('فایل: '+item.get('output',', '.join(item['files'])))
-            review_lines.append('کنترل‌های ردشده:')
-            for control in item.get('qc',{}).get('advisory_failed',[]):
-                review_lines.append(f'- {control}: کنترل توصیه‌ای رد شده است؛ فایل منتشر شده و بازبینی دیداری لازم است.')
-            if item.get('review_image'):
-                review_lines.append('تصویر مرور: '+item['review_image'])
-            review_lines.append('')
-        (output/'REVIEW.txt').write_text('\n'.join(review_lines),encoding='utf-8-sig')
-    else:
-        (output/'REVIEW.txt').unlink(missing_ok=True)
-    summary=f'خلاصه: {success} موفق؛ {review} بازبینی؛ {blocked} خطا | OK={success} REVIEW={review} BLOCKED={blocked}'
-    lines+=['',summary]
-    (output/'report.txt').write_text('\n'.join(lines)+'\n',encoding='utf-8-sig')
-    (output/'report.json').write_text(json.dumps({'items':items,'summary':summary,
-        'counts':{'OK':success,'REVIEW':review,'BLOCKED':blocked}},ensure_ascii=False,indent=2),encoding='utf-8')
-    return summary
 
 
 def main(argv=None):
@@ -228,15 +202,19 @@ def main(argv=None):
     if args.namak and not args.merge: parser.error('--namak فقط همراه --merge است')
     cfg=load_config();output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
     clear_review_artifacts(output)
-    logger=logging.getLogger('jozve');logger.setLevel(logging.INFO);logger.propagate=False
-    handler=logging.FileHandler(output/'log.txt',encoding='utf-8');logger.addHandler(handler)
+    event_bus=EventBus()
+    logger=setup_logging(output,event_bus=event_bus)
     items=[];global_warnings=[]
+    event_bus.emit('run_started',stage='run',files=0)
     try:
         assets=discover_assets(cfg,ROOT)
-        logger.info('شروع اجرا؛ منابع یکتا: %s',', '.join(assets))
+        logger.record_versions()
+        logger.record_assets(assets)
         with warnings.catch_warnings():
             warnings.simplefilter('ignore',UserWarning);syllabus=Syllabus()
         global_warnings=syllabus.warnings
+        for warning in global_warnings:
+            event_bus.emit('warning',stage='resolve',kind='syllabus',message=warning)
         (ROOT/cfg['paths']['cache']).mkdir(parents=True,exist_ok=True)
         claimed=set()
         if args.merge: jobs=[([p.resolve() for p in args.merge],args.namak)]
@@ -247,31 +225,51 @@ def main(argv=None):
                 p.suffix.lower() in ['.pdf',*cfg['cli']['office_extensions']] and not p.name.lower().startswith(cfg['cli']['ignore_prefix'].lower()))
             jobs=[([p],None) for p in files if not p.name.lower().startswith(cfg['cli']['ignore_prefix'].lower())]
         if not jobs: raise ValueError('فایل ورودی قابل پردازش وجود ندارد')
-        for paths,namak in jobs:
+        for index,(paths,namak) in enumerate(jobs,1):
+            file_name=', '.join(p.name for p in paths)
+            event_bus.emit('file_started',file=file_name,index=index,total=len(jobs))
             print('در حال پردازش: '+', '.join(p.name for p in paths),flush=True)
             started=time.perf_counter()
-            item=process_job(paths,namak,syllabus,cfg,output,claimed)
+            item=process_job(paths,namak,syllabus,cfg,output,claimed,event_bus=event_bus)
             item['seconds']=round(time.perf_counter()-started,2)
             items.append(item)
             for warning in item.get('warnings',[]):
+                kind=warning.get('kind','unknown')
                 if warning['kind']=='empty_cover_fields':
                     message='empty syllabus values: '+', '.join(warning['fields'])
-                    print('WARNING: '+message,flush=True);logger.warning(message)
+                    print('WARNING: '+message,flush=True)
+                    stage='resolve'
                 elif warning['kind']=='syllabus_source_conflict':
                     message='syllabus source conflict: subject sheet takes priority'
-                    print('WARNING: '+message,flush=True);logger.warning(message)
+                    print('WARNING: '+message,flush=True)
+                    stage='resolve'
+                else:
+                    message=f'{kind}: {warning}'
+                    stage='pages'
+                event_bus.emit('warning',file=file_name,stage=stage,kind=kind,message=message)
             if item.get('status')=='بازبینی' and item.get('output'):
                 try:
                     item['review_image']=write_review_image(output/item['output'],output)
                 except Exception as exc:
-                    item.setdefault('warnings',[]).append({'kind':'review_image_error','detail':str(exc)})
-            logger.info('%s: %s %s',item['status'],', '.join(item['files']),item.get('error',''))
+                    warning={'kind':'review_image_error','detail':str(exc)}
+                    item.setdefault('warnings',[]).append(warning)
+                    event_bus.emit('warning',file=file_name,stage='write',kind=warning['kind'],
+                                   message=warning['detail'])
+            event_bus.emit('file_done',file=file_name,status=item['status'],
+                           status_code=item.get('status_code'),seconds=item['seconds'])
     except Exception as exc:
         items.append({'files':['راه‌اندازی'],'status':'خطا','error':str(exc)})
-        logger.error('خطای راه‌اندازی: %s',exc)
+        event_bus.emit('error',file='راه‌اندازی',stage='run',message=str(exc))
+    try:
+        summary=write_report(output,items,global_warnings)
+        counts={'OK':sum(i['status']=='موفق' for i in items),
+                'REVIEW':sum(i['status']=='بازبینی' for i in items),
+                'BLOCKED':sum(i['status']=='خطا' for i in items)}
+        logger.flush_warnings()
+        event_bus.emit('run_finished',summary=summary,counts=counts)
     finally:
-        logger.removeHandler(handler);handler.close()
-    print(write_report(output,items,global_warnings))
+        logger.close()
+    print(summary)
     return int(any(i['status']=='خطا' for i in items))
 
 

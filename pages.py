@@ -203,7 +203,7 @@ def fit_content(page, pieces, settings):
             'pdf_matrix': list(transform)}
 
 
-def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
+def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None, progress=None):
     """Copy pages, bake, remove footer text, fit uniformly, overlay vector border.
 
     source is a path or an open Document (never mutated). Dimensions, boxes and
@@ -222,6 +222,8 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
         baked = bake_annotations(out, config['pages'])
         with fitz.open(clean_path) as clean:
             for i, page in enumerate(out):
+                if progress is not None:
+                    progress(i + 1, len(out))
                 pieces = placements(page.rect, clean[0].rect, config['border'])
                 before = coverage(original[i], pieces, config['pages'])
                 removed = remove_numbers(page, config['pages'])
