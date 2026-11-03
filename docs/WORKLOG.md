@@ -7,3 +7,18 @@
 - tag `v1.1-lean` ساخته و push شد و روی commit `b4ab426` قرار دارد.
 - علت REVIEWها: `ADAB_SBK_14` یک کنترل توصیه‌ای هش/تعداد تصویر؛ `SCELL_AD_2_3` تعداد ۳۶ کنترل توصیه‌ای متن/هش تصویر؛ `SCELL_AD_2_4` تعداد ۴۶ کنترل توصیه‌ای متن/هش تصویر. هر سه خروجی منتشر شدند و بازبینی دیداری لازم دارند.
 - محدودیت: در `input/` فایل Office برای آزمون مسیر LibreOffice وجود نداشت؛ baseline فقط هش رندر ۷۲ dpi است.
+- تاریخ: ۱۴۰۵/۰۸/۱۲ (2026-11-03)، مرحلهٔ ۰ کار UI، شاخهٔ `ui-step7`.
+- commit پایه: `1daa12e02cf57b1fe71144cbc15fc389b81d41e6` از `origin/main`؛ برچسب `v1.1-lean` موجود است.
+- `git fetch origin` موفق شد؛ پنج commit آخر origin از `1daa12e docs: finalize integration report` شروع می‌شود.
+- وضعیت اولیهٔ git شامل تغییرات و ورودی‌ها/خروجی‌های untracked قبلی بود؛ هیچ‌کدام دست‌کاری نشدند.
+- `git checkout -b ui-step7 origin/main` موفق شد و فقط فایل‌های مستندات این مرحله برای commit آماده می‌شوند.
+- خلاصهٔ ساختار فعلی (۱۰ خط):
+- `main.py` نقطهٔ ورود CLI است و `main()` آرگومان‌ها، config، ورودی‌ها و اجرای jobها را مدیریت می‌کند.
+- `process_job()` تطبیق سیلابس، ساخت cover، پردازش صفحات، بوردر، QC و انتشار PDF را انجام می‌دهد.
+- `clear_review_artifacts()` آثار مرور قبلی را پاک می‌کند و `write_review_image()` تصویر مرور فایل‌های REVIEW را می‌سازد.
+- `find_soffice()` و `convert_office()` برای ورودی‌های Office، LibreOffice را پیدا و تبدیل را اجرا می‌کنند.
+- `safe_output()` مسیرهای قابل‌نوشتن را به `output`، `cache`، `debug` و `tests` محدود می‌کند.
+- چاپ‌های فعلی شامل «در حال پردازش»، هشدارهای انگلیسی و خلاصهٔ فارسی در stdout است.
+- `write_report()` گزارش فارسی را در `output/report.txt` و دادهٔ JSON را در `output/report.json` می‌نویسد.
+- لاگ فعلی با `logging.FileHandler` در `output/log.txt` ثبت می‌شود و پیام‌های شروع/نتیجه/خطا را دارد.
+- `run.bat` کدگذاری UTF-8 را تنظیم، مفسر دارای وابستگی‌ها را پیدا، `main.py` را اجرا و در پایان pause می‌کند.
