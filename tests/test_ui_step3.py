@@ -194,6 +194,17 @@ def test_report_failure_does_not_change_pdf_success(tmp_path, items, monkeypatch
     assert 'test HTML failure' in (out / 'log.txt').read_text(encoding='utf-8')
 
 
+def test_report_failure_does_not_advertise_a_report_link(tmp_path, items, monkeypatch, capsys):
+    monkeypatch.setattr(app, 'Syllabus', lambda: SimpleNamespace(warnings=[]))
+    monkeypatch.setattr(app, 'discover_assets', lambda *args: {})
+    monkeypatch.setattr(app, 'process_job', lambda *args, **kw: deepcopy(items[0]))
+    monkeypatch.setattr(app, 'write_html_report', lambda *args, **kwargs: (_ for _ in ()).throw(OSError('HTML unavailable')))
+    out = tmp_path / 'result'
+    assert app.main(['--input', str(tmp_path / 'review.pdf'), '--output', str(out),
+                     '--ui', 'plain', '--no-thumbs']) == 0
+    assert 'Report:' not in capsys.readouterr().out
+
+
 def test_failed_html_publish_keeps_previous_report_and_cleans_own_temp(tmp_path, items, monkeypatch):
     import report_html
     previous = tmp_path / 'report.html'

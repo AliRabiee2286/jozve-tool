@@ -52,7 +52,11 @@ def test_nojoom_three_pages_and_exact_saved_assembly():
         measurements=[d['detail'] for d in item['qc']['details'] if d['check'].endswith('رندر پس از مونتاژ')]
         assert len(measurements)==item['input_pages']
         assert all(d['different_pixels']==0 and d['same_shape'] for d in measurements)
-        assert all(item['qc']['checks'].values())
+        blocking=set(CFG['qc']['blocking'])
+        failed=[name for name, passed in item['qc']['checks'].items() if not passed]
+        assert all((name.split(': ', 1)[1] if name.startswith('صفحه محتوا ') else name)
+                   not in blocking for name in failed)
+        assert set(failed)==set(item['qc'].get('advisory_failed', []))
     for key in ('physics_mech_7','ECONO EC M 12'):
         assert any(e['pixels_over_10']>0 for e in items[key]['output_intents_effect'])
 

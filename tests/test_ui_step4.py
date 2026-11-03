@@ -1,6 +1,7 @@
 """Stage 4: diagnostic startup, read-only dry runs, CLI switches, and exit codes."""
 from copy import deepcopy
 from io import StringIO
+import json
 from pathlib import Path
 import re
 import subprocess
@@ -164,6 +165,27 @@ def test_open_report_uses_current_html_uri_without_affecting_result(local_run, m
     assert not ARABIC.search(capsys.readouterr().out)
 
 
+def test_terminal_summary_uses_configured_report_path():
+    stream = StringIO()
+    ui = app.TerminalUI('plain', stream=stream, report_path='tests/custom/report.html')
+    ui.emit_summary({'OK': 1, 'REVIEW': 0, 'BLOCKED': 0}, total_seconds=.1)
+    assert 'Report: tests/custom/report.html' in stream.getvalue()
+    assert not ARABIC.search(stream.getvalue())
+
+
+def test_final_run_record_is_copied_into_html_archive(local_run, capsys):
+    source, output, _, _ = local_run
+    assert app.main(['--input', str(source), '--output', str(output), '--plain']) == 0
+    archives = sorted((output / 'reports').iterdir())
+    assert archives
+    records = [json.loads(line) for line in
+               (archives[-1] / 'log.jsonl').read_text(encoding='utf-8').splitlines()]
+    assert records[-1]['stage'] == 'run'
+    assert records[-1]['message'].startswith('پایان اجرا:')
+    expected_report = str(output.relative_to(ROOT)).replace('/', '\\') + '\\report.html'
+    assert 'Report: ' + expected_report in capsys.readouterr().out
+
+
 def test_argument_errors_remain_english_even_for_persian_user_text(capsys):
     with pytest.raises(SystemExit) as error:
         app.main(['--گزینه-نامعتبر'])
@@ -295,3 +317,16 @@ def test_report_write_failure_or_interrupt_exits_cleanly(local_run, monkeypatch,
     assert app.main(['--input', str(source), '--output', str(output), '--plain']) == code
     captured = capsys.readouterr()
     assert 'Traceback' not in captured.err and not ARABIC.search(captured.out + captured.err)
+
+
+def test_report_interrupt_emits_interrupted_summary(local_run, monkeypatch, capsys):
+    source, output, _, _ = local_run
+
+    def interrupt(*args, **kwargs):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(app, 'write_report', interrupt)
+    assert app.main(['--input', str(source), '--output', str(output), '--plain']) == 130
+    text = capsys.readouterr().out
+    assert 'Interrupted: OK=1 REVIEW=0 BLOCKED=0' in text
+    assert not ARABIC.search(text)

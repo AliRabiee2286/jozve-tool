@@ -295,13 +295,14 @@ def main(argv=None):
     except Exception:
         print('E201  startup failed - check configuration and output permissions',file=sys.stderr)
         return 2
+    report_display_path=(output.relative_to(ROOT)/'report.html').as_posix().replace('/','\\')
     ui=TerminalUI('plain' if args.plain else args.ui, quiet=args.quiet, verbose=args.verbose,
-                  no_color=args.no_color,config=cfg)
+                  no_color=args.no_color,config=cfg,report_path=report_display_path)
     ui.attach(event_bus)
     ui.start()
     items=[];global_warnings=[]
     run_started=time.perf_counter()
-    interrupted=False;startup_failed=False;report_path=None
+    interrupted=False;startup_failed=False;report_path=None;run_finished_emitted=False
     event_bus.emit('run_started',stage='run',files=0)
     try:
         assets=discover_assets(cfg,ROOT)
@@ -361,6 +362,10 @@ def main(argv=None):
                 'REVIEW':sum(i['status']=='بازبینی' for i in items),
                 'BLOCKED':sum(i['status']=='خطا' for i in items)}
         logger.flush_warnings()
+        event_bus.emit('run_finished',summary=summary,counts=counts,
+                       total_seconds=time.perf_counter()-run_started,
+                       interrupted=interrupted,report_available=False)
+        run_finished_emitted=True
         try:
             report_path=write_html_report(output,items,global_warnings,thumbs=args.thumbs,config=cfg,
                                           elapsed=time.perf_counter()-run_started,interrupted=interrupted)
@@ -369,9 +374,8 @@ def main(argv=None):
             event_bus.emit('warning',stage='report',kind='html_report_error',
                            message='ساخت گزارش HTML ناموفق بود',
                            public_message='HTML report unavailable - see log.txt')
-        event_bus.emit('run_finished',summary=summary,counts=counts,
-                       total_seconds=time.perf_counter()-run_started,
-                       interrupted=interrupted)
+        if report_path is not None:
+            ui.set_report_available(report_display_path)
         if args.open_report and report_path is not None:
             try:
                 if not webbrowser.open(report_path.resolve().as_uri()):
@@ -382,6 +386,13 @@ def main(argv=None):
     except KeyboardInterrupt:
         event_bus.emit('error',stage='report',code='E130',message='ثبت گزارش متوقف شد',
                        public_message='Interrupted - report writing stopped')
+        counts={'OK':sum(i['status']=='موفق' for i in items),
+                'REVIEW':sum(i['status']=='بازبینی' for i in items),
+                'BLOCKED':sum(i['status']=='خطا' for i in items)}
+        if not run_finished_emitted:
+            event_bus.emit('run_finished',summary='Interrupted',counts=counts,
+                           total_seconds=time.perf_counter()-run_started,
+                           interrupted=True,report_available=False)
         return 130
     except Exception as exc:
         logger.error('ثبت گزارش ناموفق بود: '+str(exc),stage='report')

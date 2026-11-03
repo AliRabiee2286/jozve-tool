@@ -59,7 +59,7 @@ def test_launcher_real_one_input(tmp_path):
     assert result.returncode==0,result.stdout+result.stderr
     assert 'Summary: OK=1 REVIEW=0 BLOCKED=0' in result.stdout
     assert list(output.glob('LessonNote_*.pdf'))
-    assert 'Report: output\\report.html' in result.stdout
+    assert 'Report: output\\step3_launcher\\report.html' in result.stdout
 
 
 @pytest.mark.skipif(sys.platform!='win32',reason='Windows batch launcher')

@@ -95,7 +95,8 @@ class TerminalUI:
     """Event subscriber that never raises into the PDF processing path."""
 
     def __init__(self, requested='auto', stream=None, quiet=False, environ=None,
-                 rich_available=None, no_color=False, config=None, verbose=False):
+                 rich_available=None, no_color=False, config=None, verbose=False,
+                 report_path='output\\report.html'):
         self.stream = stream or sys.stdout
         self.environ = os.environ if environ is None else environ
         self.mode = select_mode(requested, self.stream, self.environ,
@@ -105,6 +106,8 @@ class TerminalUI:
         self.quiet = quiet
         self.verbose = verbose
         self.config = config or {}
+        self.report_path = _ascii(report_path)
+        self.report_available = False
         self.files = {}
         self.current_file = ''
         self.current_stage = 'run'
@@ -227,22 +230,36 @@ class TerminalUI:
                 self._write(f"{status} {_ascii(file_name)} ({payload.get('seconds', 0)}s)")
         elif name == 'run_finished':
             self.emit_summary(payload.get('counts', {}), payload.get('total_seconds'),
-                              interrupted=payload.get('interrupted', False))
+                              interrupted=payload.get('interrupted', False),
+                              report_available=payload.get('report_available', True))
         self._refresh_fancy()
 
-    def emit_summary(self, counts, total_seconds=None, interrupted=False):
+    def set_report_available(self, report_path=None):
+        """Publish the report link only after HTML publication succeeds."""
+        self.report_available = report_path is not None
+        if report_path is not None:
+            self.report_path = _ascii(report_path)
+        if self.finished and self.report_available and self.mode != 'fancy':
+            self._write('Report: ' + self.report_path)
+        self._refresh_fancy()
+
+    def emit_summary(self, counts, total_seconds=None, interrupted=False,
+                     report_available=True):
         self.summary = dict(counts or {})
         self.summary.setdefault('OK', 0)
         self.summary.setdefault('REVIEW', 0)
         self.summary.setdefault('BLOCKED', 0)
         self.finished = True
+        if report_available is not None:
+            self.report_available = bool(report_available)
         total_seconds = total_seconds if total_seconds is not None else (
             time.perf_counter() - self.started if self.started else 0)
         if self.mode != 'fancy':
             prefix = 'Interrupted' if interrupted else 'Summary'
             self._write(f'{prefix}: OK={self.summary["OK"]} REVIEW={self.summary["REVIEW"]} '
                         f'BLOCKED={self.summary["BLOCKED"]} | Total: {total_seconds:.2f}s')
-            self._write('Report: output\\report.html')
+            if self.report_available:
+                self._write('Report: ' + self.report_path)
             for row in self.files.values():
                 if row.get('status') == 'REVIEW' and row.get('item', {}).get('review_image'):
                     self._write('Review image: ' + _ascii(row['item']['review_image']))
@@ -287,7 +304,8 @@ class TerminalUI:
         reviews = [f"Review image: {_ascii(row['item']['review_image'])}"
                    for row in self.files.values()
                    if row.get('status') == 'REVIEW' and row.get('item', {}).get('review_image')]
-        summary_text = 'Report: output\\report.html' + ('\n' + '\n'.join(reviews) if reviews else '')
+        summary_text = (('Report: ' + self.report_path) if self.report_available
+                        else 'Report unavailable') + ('\n' + '\n'.join(reviews) if reviews else '')
         summary = Panel(summary_text, title='Complete' if self.finished else 'Running')
         return Group(top, table, page, summary)
 
