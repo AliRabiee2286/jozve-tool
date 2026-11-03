@@ -92,9 +92,10 @@
 
 ### مرحلهٔ ۵ — تأیید
 
-- [ ] ۵.۱ تست سریع (`python tests/run_tests.py`) سبز.
+- [x] ۵.۱ تست سریع (`python tests/run_tests.py`) سبز.
 - [ ] ۵.۲ `python tests/run_corpus.py` روی همهٔ ورودی‌ها: **هیچ صفحهٔ تغییرکرده** و هیچ BLOCKED. زمان کل را با اجرای قبل (حدود ۸۶۵ ثانیه برای ۲۲ فایل) مقایسه کن؛ سربار زیر ۵٪.
-- [ ] ۵.۳ فهرست «مواردی که کاربر باید روی ویندوز ببیند» را بنویس: Windows Terminal (fancy)، cmd قدیمی (compat)، `--ui plain`، `python main.py doctor`، `python main.py --dry-run`، یک فایل با نام اشتباه، `report.html` در مرورگر.
+  - نتیجهٔ 2026-11-03: ۱۹ OK، سه REVIEW، صفر BLOCKED و صفر صفحهٔ تغییرکرده در ۲۸۵ صفحهٔ ۷۲ dpi؛ زمان ۱۰۹۸٫۸۹ ثانیه، یعنی ۲۷٫۰۴٪ بیشتر از مرجع ۸۶۵ ثانیه. معیار زمان تأمین نشد و مرحلهٔ ۵ باز می‌ماند؛ جزئیات در `docs/WORKLOG.md`.
+- [x] ۵.۳ فهرست «مواردی که کاربر باید روی ویندوز ببیند» را بنویس: Windows Terminal (fancy)، cmd قدیمی (compat)، `--ui plain`، `python main.py doctor`، `python main.py --dry-run`، یک فایل با نام اشتباه، `report.html` در مرورگر.
 - commit (فقط مستندات): «step 7e: verification notes». گزارش بده و منتظر «ادامه» بمان.
 
 ### مرحلهٔ ۶ — ادغام (فقط با تأیید صریح کاربر)
