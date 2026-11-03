@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>گزارش پردازش جزوه‌ها | جزوه‌تول</title>
+<style>
+:root{--bg:#f4f5f1;--surface:#fff;--soft:#eef2ed;--ink:#203b36;--muted:#5f726b;--line:#dbe3dc;--brand:#176a53;--brand-soft:#e1efe5;--ok:#176844;--ok-bg:#e6f2e8;--review:#805819;--review-bg:#fff1d3;--blocked:#a23535;--blocked-bg:#fbe8e6;--shadow:0 10px 38px #243d3210;--radius:20px;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;font-size:15px;line-height:1.9}
+button,input,select{font:inherit}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button,summary,select{cursor:pointer}button{color:inherit}a{color:var(--brand);text-decoration-thickness:1px;text-underline-offset:4px}a:hover{text-decoration:none}bdi,code{overflow-wrap:anywhere}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--brand);outline-offset:4px}[hidden]{display:none!important}
+.topbar{border-bottom:1px solid var(--line);background:var(--surface)}.topbar-inner{max-width:1184px;padding:20px 24px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--brand);color:var(--surface);display:grid;place-items:center;font:700 24px Georgia,serif}.brand strong{font-size:13px;letter-spacing:2px}.brand small{display:block;color:var(--muted);font-size:12px}.print-button{background:transparent;border:1px solid var(--line);border-radius:10px;padding:7px 16px}.print-button:hover{background:var(--soft)}
+main{max-width:1184px;padding:42px 24px 64px;margin:auto}.eyebrow{color:var(--brand);font-size:12px;letter-spacing:1px;font-weight:700}.hero{display:grid;grid-template-columns:1fr 295px;gap:40px;align-items:center;margin-bottom:30px}.hero h1{font-size:clamp(30px,4vw,48px);font-weight:750;line-height:1.55;letter-spacing:-1.3px;margin:12px 0}.hero p{color:var(--muted);font-size:16px;margin:8px 0}.run-meta{display:flex;gap:10px 24px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:20px}.run-meta span{display:flex;align-items:center;gap:7px}.local-dot{display:inline-block;width:7px;height:7px;background:var(--ok);border-radius:50%}
+.completion{display:flex;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}.ring{--percent:67;width:110px;height:110px;flex-shrink:0;border-radius:50%;background:conic-gradient(var(--brand) calc(var(--percent)*1%),var(--soft) 0);padding:9px;position:relative;transform:rotate(0deg)}.ring-inside{width:100%;height:100%;border-radius:50%;background:var(--surface);display:grid;place-content:center;text-align:center}.ring-inside strong{font:700 28px "Segoe UI",sans-serif;line-height:1.2}.ring-inside small{font-size:10px;color:var(--muted)}.completion-title{font-weight:700;font-size:14px}.completion-caption{font-size:12px;color:var(--muted);line-height:1.7;margin-top:6px}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 40px}.metric{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:22px 25px;text-align:right;display:grid;grid-template-columns:1fr auto;column-gap:12px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s}.metric::before{content:"";position:absolute;inset:23px 0 23px auto;width:4px;border-radius:8px;background:currentColor}.metric:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.metric[aria-pressed="true"]{border-color:currentColor;box-shadow:inset 0 0 0 1px currentColor}.metric.ok{color:var(--ok)}.metric.review{color:var(--review)}.metric.blocked{color:var(--blocked)}.metric-label{font-weight:700}.metric strong{grid-column:2;grid-row:1/3;align-self:center;font-size:38px;line-height:1.3;font-variant-numeric:tabular-nums}.metric-caption{font-size:12px;color:var(--muted)}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.section-heading h2{font-size:21px;margin:0}.section-heading p{font-size:12px;color:var(--muted);margin:0}.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px}.search-box{flex:1;min-width:220px}.toolbar label{display:block;color:var(--muted);font-size:12px;margin:0 3px 5px}.toolbar input,.toolbar select{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:10px 14px;min-height:46px}.toolbar input::placeholder{color:var(--muted)}.filter-box{min-width:185px}
+.table-shell{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:auto;box-shadow:var(--shadow);margin-bottom:30px}table{width:100%;border-collapse:collapse;white-space:nowrap;text-align:right}caption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}th{font-size:12px;font-weight:600;color:var(--muted);background:var(--soft);padding:13px 18px}td{border-top:1px solid var(--line);padding:16px 18px;font-size:13px}tbody tr:hover{background:var(--soft)}td:first-child{font-weight:600;max-width:360px;white-space:normal}td a{display:block;min-width:160px}.badge{display:inline-flex;align-items:center;gap:8px;padding:4px 11px;border-radius:8px;white-space:nowrap;font-size:11px;font-weight:650}.badge::before{content:"";width:6px;height:6px;background:currentColor;border-radius:50%}.badge.ok{color:var(--ok);background:var(--ok-bg)}.badge.review{color:var(--review);background:var(--review-bg)}.badge.blocked{color:var(--blocked);background:var(--blocked-bg)}.badge bdi{font-size:10px;font-weight:500}
+.global-warnings{border:1px solid var(--line);border-radius:14px;padding:16px 22px;margin-bottom:28px;font-size:13px}.global-warnings h2{font-size:14px;margin:0}.global-warnings ul{margin:6px 0 0;padding-right:20px}.file-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);margin-bottom:14px;overflow:hidden}.file-card>summary{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;list-style:none}.file-card>summary::-webkit-details-marker{display:none}.file-title{display:flex;align-items:center;gap:14px;min-width:0;font-weight:650;font-size:14px}.file-title::after{content:"+";color:var(--muted);font:400 20px monospace}.file-card[open]>.file-title::after{content:"−"}.file-card[open]>summary .file-title::after{content:"−"}.ordinal{font-size:11px;color:var(--muted);font-weight:500;font-variant-numeric:tabular-nums}.file-card.review{border-right:4px solid var(--review)}.file-card.blocked{border-right:4px solid var(--blocked)}.file-body{padding:0 24px 24px;border-top:1px solid var(--line)}.file-body h3{font-size:14px;margin:24px 0 12px}.file-body h4{font-size:12px;color:var(--muted);margin:10px 0}.properties{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:24px 0}.properties>div{min-width:0}.properties dt{font-size:11px;color:var(--muted);margin-bottom:5px}.properties dd{margin:0;font-size:13px;line-height:1.9}.properties dd bdi{white-space:pre-wrap}.notice{border-radius:12px;padding:15px 20px;margin-top:20px;font-size:13px}.notice h3{margin:0 0 6px}.notice p{margin:5px 0}.notice.review{background:var(--review-bg);color:var(--review)}.notice.blocked{background:var(--blocked-bg);color:var(--blocked)}
+.thumbnails{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;background:var(--soft);padding:20px;border-radius:14px}.thumbnails figure{margin:0;min-width:0;text-align:center}.thumbnails img{display:block;max-width:100%;max-height:340px;width:auto;height:auto;margin:auto;object-fit:contain;box-shadow:0 4px 18px #0002;border-radius:4px;background:#fff}.thumbnails figcaption{font-size:11px;color:var(--muted);margin-top:12px}.qc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.checks{list-style:none;padding:0;margin:0;max-height:350px;overflow:auto;border:1px solid var(--line);border-radius:12px}.checks li{display:flex;align-items:baseline;gap:10px;padding:9px 12px;font-size:12px;border-bottom:1px solid var(--line)}.checks li:last-child{border:0}.check{font-size:10px;padding:1px 7px;border-radius:5px;flex-shrink:0}.check.passed{color:var(--ok);background:var(--ok-bg)}.check.failed{color:var(--blocked);background:var(--blocked-bg)}.technical{grid-column:1/-1;font-size:12px;color:var(--muted)}pre{direction:ltr;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--soft);padding:16px;border-radius:10px;max-height:350px;overflow:auto;font-size:11px}.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}.detail-grid section{min-width:0}.detail-grid ul{font-size:12px;padding-right:18px}.timings{list-style:none;padding:0!important}.timings li{display:flex;justify-content:space-between;gap:15px;border-bottom:1px dotted var(--line);padding:5px 0}.muted{color:var(--muted);font-size:12px}.empty{text-align:center;padding:35px;border:1px dashed var(--line);border-radius:14px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding-top:25px;margin-top:35px;color:var(--muted);font-size:11px;display:grid;grid-template-columns:1.5fr 1fr;gap:24px}footer h2{font-size:12px;color:var(--ink);margin:0 0 8px}footer p{margin:5px 0}.assets{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 22px}.assets li{display:flex;justify-content:space-between;gap:8px}.assets code{font-size:10px}.footer-note{margin-top:18px!important}
+@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}.hero,.metrics,.results{animation:appear .5s both}.metrics{animation-delay:.06s}.results{animation-delay:.12s}
+@media(prefers-color-scheme:dark){:root{--bg:#121e1b;--surface:#1b2a25;--soft:#24382f;--ink:#e0ebe3;--muted:#b2c3b7;--line:#385043;--brand:#93d4b0;--brand-soft:#293e31;--ok:#a5d9b6;--ok-bg:#223f30;--review:#eac382;--review-bg:#463823;--blocked:#f1aaaa;--blocked-bg:#472a2a;--shadow:0 10px 38px #0002;color-scheme:dark}.brand-mark{color:var(--bg)}}
+@media(max-width:800px){main{padding-top:28px}.hero{grid-template-columns:1fr;gap:20px}.completion{max-width:none;justify-content:center}.metrics{gap:10px}.metric{padding:18px}.metric strong{font-size:30px}.metric-caption{font-size:10px}.properties{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr}.section-heading{align-items:flex-start}footer{grid-template-columns:1fr}}
+@media(max-width:520px){.topbar-inner,main{padding-right:16px;padding-left:16px}.metrics{grid-template-columns:1fr}.metric{grid-template-columns:1fr auto;padding:15px 22px}.metric strong{font-size:32px}.metric-caption{font-size:12px}.toolbar{display:block}.filter-box{margin-top:12px}.qc-grid{grid-template-columns:1fr}.thumbnails{grid-template-columns:1fr}.file-card>summary{padding:18px 14px;gap:10px}.file-body{padding:0 16px 20px}.file-title{font-size:12px;gap:8px}.badge{font-size:10px;padding:4px 8px}.badge bdi{display:none}.section-heading{display:block}.assets{grid-template-columns:1fr}}
+@media print{:root{--bg:#fff;--surface:#fff;--soft:#f4f4f4;--ink:#111;--muted:#444;--line:#ccc;--brand:#176a53;--ok:#176844;--ok-bg:#f4f4f4;--review:#805819;--review-bg:#f4f4f4;--blocked:#a23535;--blocked-bg:#f4f4f4}body{background:#fff!important;color:#111!important;font-size:11px}.topbar,.toolbar,.print-button,.ring,.technical{display:none!important}main{max-width:none;padding:0}.hero{display:block;margin-bottom:12px}.hero h1{font-size:22px}.completion{display:none}.metrics{margin-bottom:14px}.metric{padding:10px 16px;box-shadow:none}.metric strong{font-size:24px}.file-card,.table-shell{box-shadow:none;border-color:#ccc}.file-body{display:block!important}.checks{max-height:none;overflow:visible}.checks li{break-inside:avoid}.thumbnails{background:#fff;break-inside:avoid}.thumbnails img{max-height:180px}.detail-grid{gap:12px}.badge{border:1px solid #999}.hero,.results{animation:none}footer{break-inside:avoid}.file-title::after{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><div class="brand"><span class="brand-mark" aria-hidden="true">J</span><div><strong dir="ltr">JOZVE TOOL</strong><small>گزارش پردازش جزوه‌ها</small></div></div><button type="button" class="print-button" id="print-report">چاپ گزارش</button></div></header>
+<main>
+<section class="hero" aria-labelledby="report-heading"><div><div class="eyebrow">گزارش اجرا / آفلاین</div><h1 id="report-heading">گزارش آماده است.</h1><p>از نتیجهٔ اجرا تا جزئیات هر جزوه؛ همه در یک نگاه.</p><div class="run-meta"><span><i class="local-dot" aria-hidden="true"></i>ذخیره‌شده روی دستگاه</span><span><time dir="ltr">2026/11/03 · 13:57:28 +0330</time></span><span>3 فایل · 119.78 ثانیه</span></div></div><div class="completion"><div class="ring" role="img" aria-label="67 درصد فایل‌ها بدون نیاز به بازبینی موفق شدند"><div class="ring-inside"><strong><span data-count="67">67</span>٪</strong><small>موفق بدون بازبینی</small></div></div><div><div class="completion-title">وضعیت این اجرا</div><div class="completion-caption">خلاصه را ببینید؛<br>جزئیات هر فایل پایین‌تر است.</div></div></div></section>
+<section class="metrics" aria-label="خلاصه و فیلتر وضعیت"><button class="metric ok" data-filter="OK" aria-pressed="false"><span class="metric-label">موفق</span><strong data-count="2">2</strong><span class="metric-caption">آمادهٔ تحویل</span></button><button class="metric review" data-filter="REVIEW" aria-pressed="false"><span class="metric-label">بازبینی</span><strong data-count="1">1</strong><span class="metric-caption">منتشرشده؛ نیازمند مرور</span></button><button class="metric blocked" data-filter="BLOCKED" aria-pressed="false"><span class="metric-label">خطا</span><strong data-count="0">0</strong><span class="metric-caption">منتشرنشده</span></button></section>
+<aside class="global-warnings"><h2>هشدارهای سیلابس</h2><ul><li>اقتصاد: teacher fallback to column 3, header &#x27;اطلاعات عمومی&#x27;</li></ul></aside>
+<section class="results" aria-labelledby="results-heading"><div class="section-heading"><h2 id="results-heading">نتیجهٔ فایل‌ها</h2><p id="results-count" aria-live="polite">3 فایل در این اجرا</p></div>
+<div class="toolbar"><div class="search-box"><label for="search">جست‌وجو در فایل‌ها و اطلاعات جزوه</label><input id="search" type="search" placeholder="نامک، درس یا نام استاد…" autocomplete="off"></div><div class="filter-box"><label for="status-filter">وضعیت فایل</label><select id="status-filter"><option value="all">همهٔ فایل‌ها</option><option value="OK">موفق</option><option value="REVIEW">نیازمند بازبینی</option><option value="BLOCKED">خطا</option></select></div></div>
+<div class="table-shell"><table><caption>خلاصهٔ نتیجهٔ پردازش هر فایل؛ برای جزئیات روی نامک بزنید</caption><thead><tr><th scope="col">نامک / فایل</th><th scope="col">رشته</th><th scope="col">جهت</th><th scope="col">ورودی ← خروجی</th><th scope="col">زمان</th><th scope="col">وضعیت</th></tr></thead><tbody><tr data-status="REVIEW" data-file="file-1"><td><a href="#file-1" data-open="file-1"><bdi>ADAB_SBK_14</bdi></a></td><td>ادبی</td><td>افقی</td><td>10 ← 11</td><td>16.62 ثانیه</td><td><span class="badge review">بازبینی <bdi>REVIEW</bdi></span></td></tr><tr data-status="OK" data-file="file-2"><td><a href="#file-2" data-open="file-2"><bdi>physics_thermo_8</bdi></a></td><td>فیزیک</td><td>عمودی</td><td>5 ← 6</td><td>56.75 ثانیه</td><td><span class="badge ok">موفق <bdi>OK</bdi></span></td></tr><tr data-status="OK" data-file="file-3"><td><a href="#file-3" data-open="file-3"><bdi>physics_thermo_9</bdi></a></td><td>فیزیک</td><td>عمودی</td><td>4 ← 5</td><td>46.41 ثانیه</td><td><span class="badge ok">موفق <bdi>OK</bdi></span></td></tr></tbody></table></div>
+<p class="empty" id="empty" hidden>فایلی برای نمایش وجود ندارد.</p>
+<div class="section-heading"><h2>جزئیات و بازبینی</h2><p>روی عنوان هر فایل بزنید</p></div>
+<div id="file-details"><details class="file-card review" id="file-1" data-status="REVIEW" open><summary><span class="file-title"><span class="ordinal">01</span><bdi>ADAB_SBK_14</bdi></span><span class="badge review">بازبینی <bdi>REVIEW</bdi></span></summary><div class="file-body"><aside class="notice review"><h3>چه کنم؟</h3><p>فایل منتشر شده است. کنترل‌های توصیه‌ای ردشده و پیش‌نمایش‌ها را ببینید و صفحات مربوط را در PDF بازبینی کنید.</p></aside><dl class="properties"><div><dt>نامک</dt><dd><bdi>ADAB_SBK_14</bdi></dd></div><div><dt>فایل ورودی</dt><dd><bdi>ADAB_SBK_14.pdf</bdi></dd></div><div><dt>رشته</dt><dd><bdi>ادبی</bdi></dd></div><div><dt>استاد</dt><dd><bdi>ریحانه باقری</bdi></dd></div><div><dt>درس</dt><dd><bdi>سبک شناسی</bdi></dd></div><div><dt>فصل</dt><dd><bdi>سبک شناسی /  جمع بندی</bdi></dd></div><div><dt>مبحث</dt><dd><bdi>مقایسۀ تطبیقی سه سبک</bdi></dd></div><div><dt>جهت</dt><dd><bdi>افقی</bdi></dd></div><div><dt>صفحات ورودی ← خروجی</dt><dd><bdi>10 ← 11</bdi></dd></div><div><dt>فایل خروجی</dt><dd><bdi>LessonNote_hard_ADAB_SBK_14_v01.pdf</bdi></dd></div><div><dt>زمان پردازش</dt><dd><bdi>16.62 ثانیه</bdi></dd></div></dl><section><h3>مرور صفحات</h3><div class="thumbnails"><figure><img src="data:image/jpeg;base64,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" width="320" height="227" loading="lazy" alt="فرست‌پیج"><figcaption>فرست‌پیج</figcaption></figure><figure><img src="data:image/jpeg;base64,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" width="320" height="180" loading="lazy" alt="صفحهٔ محتوای 1"><figcaption>صفحهٔ محتوای 1</figcaption></figure><figure><img src="data:image/jpeg;base64,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" width="320" height="180" loading="lazy" alt="صفحهٔ محتوای 2"><figcaption>صفحهٔ محتوای 2</figcaption></figure></div></section><section><h3>کنترل کیفیت</h3><div class="qc-grid"><div><h4>بلاک‌کننده</h4><ul class="checks"><li><span class="check passed">قبول</span><span>باز شدن PDF</span></li><li><span class="check passed">قبول</span><span>نام فایل</span></li><li><span class="check passed">قبول</span><span>تعداد صفحات</span></li><li><span class="check passed">قبول</span><span>جهت فرست‌پیج</span></li><li><span class="check passed">قبول</span><span>فونت Aria Regular جاسازی‌شده</span></li><li><span class="check passed">قبول</span><span>چهار مقدار دقیق و ناتهی</span></li><li><span class="check passed">قبول</span><span>رندر فرست‌پیج فقط در چهار ناحیه</span></li><li><span class="check passed">قبول</span><span>فرست‌پیج بدون بوردر و برابر مرجع نوشتن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: اندازه و جهت و rotation</span></li></ul></div><div><h4>توصیه‌ای</h4><ul class="checks"><li><span class="check passed">قبول</span><span>تعداد شواهد صفحات محتوا</span></li><li><span class="check passed">قبول</span><span>تعداد رندرهای مرجع محتوا</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: متن حفظ شده</span></li><li><span class="check failed">رد</span><span>صفحه محتوا 5: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 6: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 7: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 8: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 9: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 10: جوهر زیر نوارها صفر</span></li></ul></div><details class="technical"><summary>جزئیات فنی QC</summary><pre>[
+  {
+    &quot;check&quot;: &quot;چهار مقدار دقیق و ناتهی&quot;,
+    &quot;detail&quot;: {
+      &quot;empty_fields&quot;: []
+    }
+  },
+  {
+    &quot;check&quot;: &quot;رندر فرست‌پیج فقط در چهار ناحیه&quot;,
+    &quot;detail&quot;: {
+      &quot;outside_pixels&quot;: 0,
+      &quot;field_pixels&quot;: {
+        &quot;teacher&quot;: 4136,
+        &quot;course&quot;: 3967,
+        &quot;chapter&quot;: 4353,
+        &quot;topic&quot;: 4716
+      }
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 1: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 1: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 2: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 2: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 3: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 3: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 4: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 4: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 5: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 5: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 6: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 6: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 7: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 7: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 8: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 8: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 9: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 9: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 10: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 10: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          7.055553436279297,
+          960.0,
+          32.71211242675781
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          515.055419921875,
+          960.0,
+          540.0
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  }
+]</pre></details></div></section><div class="detail-grid"><section><h3>هشدارها</h3><p class="muted">هشداری ثبت نشده است.</p></section><section><h3>شماره‌های حذف‌شده</h3><p class="muted">شمارهٔ متنی حذف‌شده‌ای ثبت نشده است.</p></section><section><h3>زمان مرحله‌ها</h3><ul class="timings"><li><span>تطبیق سیلابس</span><bdi>0.0488 ثانیه</bdi></li><li><span>فرست‌پیج</span><bdi>0.7388 ثانیه</bdi></li><li><span>بوردر</span><bdi>0.0869 ثانیه</bdi></li><li><span>صفحات</span><bdi>6.3890 ثانیه</bdi></li><li><span>کنترل کیفیت</span><bdi>4.9617 ثانیه</bdi></li><li><span>انتشار</span><bdi>0.0013 ثانیه</bdi></li></ul></section></div></div></details><details class="file-card ok" id="file-2" data-status="OK"><summary><span class="file-title"><span class="ordinal">02</span><bdi>physics_thermo_8</bdi></span><span class="badge ok">موفق <bdi>OK</bdi></span></summary><div class="file-body"><dl class="properties"><div><dt>نامک</dt><dd><bdi>physics_thermo_8</bdi></dd></div><div><dt>فایل ورودی</dt><dd><bdi>physics_thermo_8.pdf</bdi></dd></div><div><dt>رشته</dt><dd><bdi>فیزیک</bdi></dd></div><div><dt>استاد</dt><dd><bdi>احسان اردشیری</bdi></dd></div><div><dt>درس</dt><dd><bdi>ترمودینامیک</bdi></dd></div><div><dt>فصل</dt><dd><bdi>قوانین ترمودینامیک</bdi></dd></div><div><dt>مبحث</dt><dd><bdi>بررسى فرآیند های کاز كامل، انرزی درونی، قانون صفرم و اول، ظرفيت گرمایى فشار ثابت و حجم ثابت</bdi></dd></div><div><dt>جهت</dt><dd><bdi>عمودی</bdi></dd></div><div><dt>صفحات ورودی ← خروجی</dt><dd><bdi>5 ← 6</bdi></dd></div><div><dt>فایل خروجی</dt><dd><bdi>LessonNote_hard_physics_thermo_8_v01.pdf</bdi></dd></div><div><dt>زمان پردازش</dt><dd><bdi>56.75 ثانیه</bdi></dd></div></dl><section><h3>کنترل کیفیت</h3><div class="qc-grid"><div><h4>بلاک‌کننده</h4><ul class="checks"><li><span class="check passed">قبول</span><span>باز شدن PDF</span></li><li><span class="check passed">قبول</span><span>نام فایل</span></li><li><span class="check passed">قبول</span><span>تعداد صفحات</span></li><li><span class="check passed">قبول</span><span>جهت فرست‌پیج</span></li><li><span class="check passed">قبول</span><span>فونت Aria Regular جاسازی‌شده</span></li><li><span class="check passed">قبول</span><span>چهار مقدار دقیق و ناتهی</span></li><li><span class="check passed">قبول</span><span>رندر فرست‌پیج فقط در چهار ناحیه</span></li><li><span class="check passed">قبول</span><span>فرست‌پیج بدون بوردر و برابر مرجع نوشتن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: اندازه و جهت و rotation</span></li></ul></div><div><h4>توصیه‌ای</h4><ul class="checks"><li><span class="check passed">قبول</span><span>تعداد شواهد صفحات محتوا</span></li><li><span class="check passed">قبول</span><span>تعداد رندرهای مرجع محتوا</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 5: جوهر زیر نوارها صفر</span></li></ul></div><details class="technical"><summary>جزئیات فنی QC</summary><pre>[
+  {
+    &quot;check&quot;: &quot;چهار مقدار دقیق و ناتهی&quot;,
+    &quot;detail&quot;: {
+      &quot;empty_fields&quot;: []
+    }
+  },
+  {
+    &quot;check&quot;: &quot;رندر فرست‌پیج فقط در چهار ناحیه&quot;,
+    &quot;detail&quot;: {
+      &quot;outside_pixels&quot;: 0,
+      &quot;field_pixels&quot;: {
+        &quot;teacher&quot;: 2803,
+        &quot;course&quot;: 2422,
+        &quot;chapter&quot;: 3024,
+        &quot;topic&quot;: 12351
+      }
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 1: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 1: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.991943359375,
+          594.8400268554688,
+          50.962646484375
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          802.698486328125,
+          594.8400268554688,
+          841.5599975585938
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 2: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 2: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.991943359375,
+          594.8400268554688,
+          50.962646484375
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          802.698486328125,
+          594.8400268554688,
+          841.5599975585938
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 3: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 3: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.991943359375,
+          594.8400268554688,
+          50.962646484375
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          802.698486328125,
+          594.8400268554688,
+          841.5599975585938
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 4: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 4: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.991943359375,
+          594.8400268554688,
+          50.962646484375
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          802.698486328125,
+          594.8400268554688,
+          841.5599975585938
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 5: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 5: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.991943359375,
+          594.8400268554688,
+          50.962646484375
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          802.698486328125,
+          594.8400268554688,
+          841.5599975585938
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  }
+]</pre></details></div></section><div class="detail-grid"><section><h3>هشدارها</h3><p class="muted">هشداری ثبت نشده است.</p></section><section><h3>شماره‌های حذف‌شده</h3><ul><li>صفحهٔ 1: <bdi>New Section 1 Page 1</bdi></li><li>صفحهٔ 2: <bdi>New Section 1 Page 2</bdi></li><li>صفحهٔ 3: <bdi>New Section 1 Page 3</bdi></li><li>صفحهٔ 4: <bdi>New Section 1 Page 4</bdi></li><li>صفحهٔ 5: <bdi>New Section 1 Page 5</bdi></li></ul></section><section><h3>زمان مرحله‌ها</h3><ul class="timings"><li><span>تطبیق سیلابس</span><bdi>0.1092 ثانیه</bdi></li><li><span>فرست‌پیج</span><bdi>0.5083 ثانیه</bdi></li><li><span>بوردر</span><bdi>0.0903 ثانیه</bdi></li><li><span>صفحات</span><bdi>40.2002 ثانیه</bdi></li><li><span>کنترل کیفیت</span><bdi>10.7797 ثانیه</bdi></li><li><span>انتشار</span><bdi>0.0011 ثانیه</bdi></li></ul></section></div></div></details><details class="file-card ok" id="file-3" data-status="OK"><summary><span class="file-title"><span class="ordinal">03</span><bdi>physics_thermo_9</bdi></span><span class="badge ok">موفق <bdi>OK</bdi></span></summary><div class="file-body"><dl class="properties"><div><dt>نامک</dt><dd><bdi>physics_thermo_9</bdi></dd></div><div><dt>فایل ورودی</dt><dd><bdi>physics_thermo_9.pdf</bdi></dd></div><div><dt>رشته</dt><dd><bdi>فیزیک</bdi></dd></div><div><dt>استاد</dt><dd><bdi>احسان اردشیری</bdi></dd></div><div><dt>درس</dt><dd><bdi>ترمودینامیک</bdi></dd></div><div><dt>فصل</dt><dd><bdi>قوانین ترمودینامیک</bdi></dd></div><div><dt>مبحث</dt><dd><bdi>چرخه ى كارنو، بازده و ضريب عملكرد، اشین ها و یخچال های گَرمایى، قانون دوم ترمودینامیک</bdi></dd></div><div><dt>جهت</dt><dd><bdi>عمودی</bdi></dd></div><div><dt>صفحات ورودی ← خروجی</dt><dd><bdi>4 ← 5</bdi></dd></div><div><dt>فایل خروجی</dt><dd><bdi>LessonNote_hard_physics_thermo_9_v01.pdf</bdi></dd></div><div><dt>زمان پردازش</dt><dd><bdi>46.41 ثانیه</bdi></dd></div></dl><section><h3>کنترل کیفیت</h3><div class="qc-grid"><div><h4>بلاک‌کننده</h4><ul class="checks"><li><span class="check passed">قبول</span><span>باز شدن PDF</span></li><li><span class="check passed">قبول</span><span>نام فایل</span></li><li><span class="check passed">قبول</span><span>تعداد صفحات</span></li><li><span class="check passed">قبول</span><span>جهت فرست‌پیج</span></li><li><span class="check passed">قبول</span><span>فونت Aria Regular جاسازی‌شده</span></li><li><span class="check passed">قبول</span><span>چهار مقدار دقیق و ناتهی</span></li><li><span class="check passed">قبول</span><span>رندر فرست‌پیج فقط در چهار ناحیه</span></li><li><span class="check passed">قبول</span><span>فرست‌پیج بدون بوردر و برابر مرجع نوشتن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: اندازه و جهت و rotation</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: اندازه و جهت و rotation</span></li></ul></div><div><h4>توصیه‌ای</h4><ul class="checks"><li><span class="check passed">قبول</span><span>تعداد شواهد صفحات محتوا</span></li><li><span class="check passed">قبول</span><span>تعداد رندرهای مرجع محتوا</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 1: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 2: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 3: جوهر زیر نوارها صفر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: رندر پس از مونتاژ</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: BALATAR.GROUP</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: نبود شماره متن</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: متن حفظ شده</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: هش تصاویر و تعداد کاربردها</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: ساختار لایه بوردر</span></li><li><span class="check passed">قبول</span><span>صفحه محتوا 4: جوهر زیر نوارها صفر</span></li></ul></div><details class="technical"><summary>جزئیات فنی QC</summary><pre>[
+  {
+    &quot;check&quot;: &quot;چهار مقدار دقیق و ناتهی&quot;,
+    &quot;detail&quot;: {
+      &quot;empty_fields&quot;: []
+    }
+  },
+  {
+    &quot;check&quot;: &quot;رندر فرست‌پیج فقط در چهار ناحیه&quot;,
+    &quot;detail&quot;: {
+      &quot;outside_pixels&quot;: 0,
+      &quot;field_pixels&quot;: {
+        &quot;teacher&quot;: 2803,
+        &quot;course&quot;: 2422,
+        &quot;chapter&quot;: 3024,
+        &quot;topic&quot;: 11799
+      }
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 1: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 1: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.362256050109863,
+          611.4000244140625,
+          48.043190002441406
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          756.4447021484375,
+          611.4000244140625,
+          793.0800170898438
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 2: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 2: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.362256050109863,
+          611.4000244140625,
+          48.043190002441406
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          756.4447021484375,
+          611.4000244140625,
+          793.0800170898438
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 3: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 3: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.362256050109863,
+          611.4000244140625,
+          48.043190002441406
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          756.4447021484375,
+          611.4000244140625,
+          793.0800170898438
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 4: رندر پس از مونتاژ&quot;,
+    &quot;detail&quot;: {
+      &quot;different_pixels&quot;: 0,
+      &quot;same_shape&quot;: true
+    }
+  },
+  {
+    &quot;check&quot;: &quot;صفحه محتوا 4: جوهر زیر نوارها صفر&quot;,
+    &quot;detail&quot;: [
+      {
+        &quot;strip&quot;: &quot;header&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          10.362256050109863,
+          611.4000244140625,
+          48.043190002441406
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      },
+      {
+        &quot;strip&quot;: &quot;footer&quot;,
+        &quot;bbox&quot;: [
+          0.0,
+          756.4447021484375,
+          611.4000244140625,
+          793.0800170898438
+        ],
+        &quot;meaningful_ink_pixels&quot;: 0,
+        &quot;ink_bbox&quot;: null
+      }
+    ]
+  }
+]</pre></details></div></section><div class="detail-grid"><section><h3>هشدارها</h3><p class="muted">هشداری ثبت نشده است.</p></section><section><h3>شماره‌های حذف‌شده</h3><ul><li>صفحهٔ 1: <bdi>New Section 1 Page 1</bdi></li><li>صفحهٔ 2: <bdi>New Section 1 Page 2</bdi></li><li>صفحهٔ 3: <bdi>New Section 1 Page 3</bdi></li><li>صفحهٔ 4: <bdi>New Section 1 Page 4</bdi></li></ul></section><section><h3>زمان مرحله‌ها</h3><ul class="timings"><li><span>تطبیق سیلابس</span><bdi>0.0369 ثانیه</bdi></li><li><span>فرست‌پیج</span><bdi>0.5723 ثانیه</bdi></li><li><span>بوردر</span><bdi>0.1373 ثانیه</bdi></li><li><span>صفحات</span><bdi>33.1956 ثانیه</bdi></li><li><span>کنترل کیفیت</span><bdi>9.6851 ثانیه</bdi></li><li><span>انتشار</span><bdi>0.0010 ثانیه</bdi></li></ul></section></div></div></details></div></section>
+<footer><div><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi>v1.1-lean+ui</bdi></p><p>شناسهٔ اجرا: <bdi>20261103-135113-725924</bdi></p><p>زمان پردازش و آماده‌سازی: 119.78 ثانیه</p><p><bdi>Pillow 12.0.0</bdi> · <bdi>numpy 1.26.4</bdi> · <bdi>openpyxl 3.1.5</bdi> · <bdi>pymupdf 1.28.2</bdi> · <bdi>python 3.12.10</bdi> · <bdi>pyyaml 6.0.3</bdi></p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets"><li><bdi>border</bdi><code>41497b5e0bda</code></li><li><bdi>font</bdi><code>5fc860fb565b</code></li><li><bdi>syllabus</bdi><code>6378a0e61632</code></li><li><bdi>template</bdi><code>31605e362644</code></li></ul></div></footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const search = document.getElementById('search');
+  const filter = document.getElementById('status-filter');
+  const rows = Array.from(document.querySelectorAll('tbody tr[data-file]'));
+  const cards = Array.from(document.querySelectorAll('[data-filter]'));
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const number = new Intl.NumberFormat('fa-IR');
+  const normalize = value => value.normalize('NFKC').toLowerCase().replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/\u200c/g,'').replace(/[\s_-]+/g,' ').trim();
+  const entries = rows.map(row => {
+    const detail = document.getElementById(row.dataset.file);
+    return {row, detail, search: normalize(row.textContent + ' ' + detail.textContent)};
+  });
+  function applyFilter() {
+    const query = normalize(search.value);
+    let visible = 0;
+    entries.forEach(entry => {
+      const show = (filter.value === 'all' || entry.row.dataset.status === filter.value) && entry.search.includes(query);
+      entry.row.hidden = entry.detail.hidden = !show;
+      if (show) visible += 1;
+    });
+    cards.forEach(card => card.setAttribute('aria-pressed', String(filter.value === card.dataset.filter)));
+    document.getElementById('results-count').textContent = number.format(visible) + ' فایل از ' + number.format(entries.length);
+    document.getElementById('empty').hidden = visible !== 0;
+  }
+  search.addEventListener('input', applyFilter);
+  filter.addEventListener('change', applyFilter);
+  cards.forEach(card => card.addEventListener('click', () => {
+    filter.value = filter.value === card.dataset.filter ? 'all' : card.dataset.filter;
+    applyFilter();
+  }));
+  document.querySelectorAll('[data-open]').forEach(link => link.addEventListener('click', () => {
+    const detail = document.getElementById(link.dataset.open);
+    detail.open = true;
+    detail.querySelector('summary').focus();
+  }));
+  document.getElementById('print-report').addEventListener('click', () => window.print());
+  const printState = new Map();
+  window.addEventListener('beforeprint', () => {
+    entries.forEach(entry => { printState.set(entry.detail, entry.detail.open); entry.detail.open = true; });
+  });
+  window.addEventListener('afterprint', () => {
+    printState.forEach((open, detail) => { detail.open = open; });
+    printState.clear();
+  });
+  const counters = Array.from(document.querySelectorAll('[data-count]'));
+  if (reducedMotion) {
+    counters.forEach(counter => { counter.textContent = number.format(Number(counter.dataset.count)); });
+  } else {
+    const start = performance.now();
+    function animate(now) {
+      const progress = Math.min((now - start) / 700, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      counters.forEach(counter => { counter.textContent = number.format(Math.round(Number(counter.dataset.count) * eased)); });
+      document.querySelector('.ring').style.setProperty('--percent', String(67 * eased));
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+  applyFilter();
+})();
+</script>
+</body>
+</html>

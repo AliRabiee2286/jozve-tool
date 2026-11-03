@@ -21,6 +21,7 @@ from qc import check_pdf
 from events import EventBus
 from logging_setup import setup_logging
 from report_text import write_report
+from report_html import write_html_report
 from ui import TerminalUI
 
 ROOT=Path(__file__).resolve().parent
@@ -207,6 +208,11 @@ def main(argv=None):
     parser.add_argument('--ui',choices=('auto','fancy','compat','plain'),default='auto')
     parser.add_argument('--plain',action='store_true',help='Use plain English terminal output')
     parser.add_argument('--quiet',action='store_true',help='Hide per-file terminal updates')
+    thumbnails=parser.add_mutually_exclusive_group()
+    thumbnails.add_argument('--thumbs',choices=('review','all'),default='review',
+                            help='Include HTML thumbnails for REVIEW files or all published files')
+    thumbnails.add_argument('--no-thumbs',dest='thumbs',action='store_const',const='none',
+                            help='Do not render any HTML thumbnails')
     args=parser.parse_args(argv)
     if args.merge and (not args.namak or args.input): parser.error('--merge requires --namak and cannot be combined with --input')
     if args.namak and not args.merge: parser.error('--namak requires --merge')
@@ -285,6 +291,14 @@ def main(argv=None):
                 'REVIEW':sum(i['status']=='بازبینی' for i in items),
                 'BLOCKED':sum(i['status']=='خطا' for i in items)}
         logger.flush_warnings()
+        try:
+            write_html_report(output,items,global_warnings,thumbs=args.thumbs,config=cfg,
+                              elapsed=time.perf_counter()-run_started,interrupted=interrupted)
+        except Exception as exc:
+            logger.error('ساخت گزارش HTML ناموفق بود: '+str(exc),stage='report')
+            event_bus.emit('warning',stage='report',kind='html_report_error',
+                           message='ساخت گزارش HTML ناموفق بود',
+                           public_message='HTML report unavailable - see log.txt')
         event_bus.emit('run_finished',summary=summary,counts=counts,
                        total_seconds=time.perf_counter()-run_started,
                        interrupted=interrupted)

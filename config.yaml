@@ -17,6 +17,11 @@ resolved_assets: # نام‌های کشف‌شده؛ کشف مجدد با الگ
   font: assets/02-Aria-Regular.otf # فونت موجود
 output_version: v01 # نسخه نام خروجی
 output_prefix: LessonNote_hard # پیشوند نام خروجی
+tool_version: v1.1-lean+ui # نسخهٔ پایهٔ ابزار همراه با توسعهٔ رابط؛ مستقل از نسخهٔ نام PDF
+reports: # فقط نمایش و بایگانی؛ هیچ اثری بر PDF یا QC ندارد
+  thumbnail_width: 320 # عرض بندانگشتی JPEG خروجی بر حسب پیکسل
+  jpeg_quality: 70 # کیفیت بندانگشتی، نه کیفیت PDF
+  retain_runs: 20 # تعداد اجراهای اخیر در output/reports
 cli:
   ignore_prefix: LessonNote_ # خروجی‌های قبلی ورودی محسوب نشوند
   office_extensions: [.doc, .docx, .ppt, .pptx] # تبدیل آفلاین با LibreOffice در صورت وجود
