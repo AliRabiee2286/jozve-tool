@@ -14,7 +14,7 @@ if not errorlevel 1 goto use_py
 call python -c "import pymupdf, openpyxl, yaml, numpy, PIL" >nul 2>&1
 if not errorlevel 1 goto use_python
 echo Python 3 or required packages are unavailable. See README.md.
-set result=1
+set result=2
 goto finish
 :use_venv
 call ".venv\Scripts\python.exe" main.py %*
@@ -32,6 +32,7 @@ goto finish
 call python main.py %*
 set result=%errorlevel%
 :finish
-echo Report: output\report.html
-pause
+echo Finished. Reports, when generated, are in the selected output folder.
+echo Press any key to close.
+pause >nul
 exit /b %result%

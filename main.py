@@ -1,5 +1,4 @@
 """Offline Windows CLI. Publish an output only after the saved PDF passes QC."""
-import argparse
 from contextlib import contextmanager, ExitStack
 import os
 from pathlib import Path
@@ -8,23 +7,35 @@ import subprocess
 import sys
 import tempfile
 import time
-from PIL import Image
+import webbrowser
 import warnings
-import numpy as np
-import pymupdf as fitz
-from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets, is_empty_value
-from naamak import resolve_details, to_output_name
-from cover import build_cover, effective_orientation
-from pages import process_pages, _preserve_rendering_attributes, raster
-from border import clean_border
-from qc import check_pdf
-from events import EventBus
-from logging_setup import setup_logging
-from report_text import write_report
-from report_html import write_html_report
-from ui import TerminalUI
+from doctor import EnglishParser, english, run_doctor
 
 ROOT=Path(__file__).resolve().parent
+
+if __name__ == '__main__' and sys.argv[1:2] == ['doctor']:
+    raise SystemExit(run_doctor(ROOT, sys.argv[2:]))
+
+try:
+    from PIL import Image
+    import numpy as np
+    import pymupdf as fitz
+    from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets, is_empty_value
+    from naamak import resolve_details, to_output_name
+    from cover import build_cover, effective_orientation
+    from pages import process_pages, _preserve_rendering_attributes, raster
+    from border import clean_border
+    from qc import check_pdf
+    from events import EventBus
+    from logging_setup import setup_logging
+    from report_text import write_report
+    from report_html import write_html_report
+    from ui import TerminalUI
+except Exception:
+    if __name__ != '__main__':
+        raise
+    print('E200  required package unavailable - run python main.py doctor', file=sys.stderr)
+    raise SystemExit(2)
 
 
 def clear_review_artifacts(output):
@@ -199,15 +210,66 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
     return item
 
 
+def _jobs(args, cfg):
+    if args.merge:
+        return [([path.resolve() for path in args.merge], args.namak)]
+    input_path=(args.input or ROOT/cfg['paths']['input']).resolve()
+    if not input_path.exists(): raise FileNotFoundError('مسیر ورودی پیدا نشد')
+    files=[input_path] if input_path.is_file() else sorted(path for path in input_path.iterdir() if path.is_file() and
+        path.suffix.lower() in ['.pdf',*cfg['cli']['office_extensions']] and not path.name.lower().startswith(cfg['cli']['ignore_prefix'].lower()))
+    jobs=[([path],None) for path in files if not path.name.lower().startswith(cfg['cli']['ignore_prefix'].lower())]
+    if not jobs: raise ValueError('فایل ورودی قابل پردازش وجود ندارد')
+    return jobs
+
+
+def _dry_run(args, cfg):
+    try:
+        jobs=_jobs(args,cfg)
+        discover_assets(cfg,ROOT)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore',UserWarning);syllabus=Syllabus()
+        blocked=0
+        print('Dry run: filename/syllabus mapping only; no PDFs or reports will be created')
+        for paths,namak in jobs:
+            files=', '.join(path.name for path in paths)
+            try:
+                match=resolve_details(namak or paths[0].stem,syllabus)
+                record=syllabus.find(match['namak'])
+                field=cfg.get('field_labels_en',{}).get(record['sheet'],f"field #{record['template_index']}")
+                print(english(f"MATCH | {files} | {match['namak']} | {field}"))
+            except NotFoundError:
+                blocked+=1
+                print(english(f'E101  {files}: namak not found in syllabus - check the input file name'))
+            except Exception:
+                blocked+=1
+                print(english(f'E199  {files}: mapping failed - check the syllabus record'))
+        return int(bool(blocked))
+    except KeyboardInterrupt:
+        print('Interrupted')
+        return 130
+    except Exception:
+        print('E201  dry-run startup failed - check configuration, assets and input path')
+        return 2
+
+
 def main(argv=None):
     for stream in (sys.stdout,sys.stderr):
         if hasattr(stream,'reconfigure'): stream.reconfigure(encoding='utf-8',errors='replace')
-    parser=argparse.ArgumentParser(description='Offline lesson note processor')
+    argv=sys.argv[1:] if argv is None else argv
+    if argv[:1] == ['doctor']:
+        return run_doctor(ROOT,argv[1:])
+    parser=EnglishParser(description='Offline lesson note processor',epilog='Diagnostics: python main.py doctor')
     parser.add_argument('--input',type=Path);parser.add_argument('--output',type=Path)
     parser.add_argument('--merge',nargs='+',type=Path);parser.add_argument('--namak')
     parser.add_argument('--ui',choices=('auto','fancy','compat','plain'),default='auto')
     parser.add_argument('--plain',action='store_true',help='Use plain English terminal output')
-    parser.add_argument('--quiet',action='store_true',help='Hide per-file terminal updates')
+    verbosity=parser.add_mutually_exclusive_group()
+    verbosity.add_argument('--quiet',action='store_true',help='Hide per-file terminal updates')
+    verbosity.add_argument('--verbose',action='store_true',help='Show stage timing updates in plain/compat mode')
+    parser.add_argument('--no-color',action='store_true',help='Disable color and use plain output')
+    parser.add_argument('--open-report',action='store_true',help='Open the current HTML report after processing')
+    parser.add_argument('--dry-run',action='store_true',help='List filename/syllabus matches without writing output')
+    parser.add_argument('--version',action='store_true',help='Print the configured tool version and exit')
     thumbnails=parser.add_mutually_exclusive_group()
     thumbnails.add_argument('--thumbs',choices=('review','all'),default='review',
                             help='Include HTML thumbnails for REVIEW files or all published files')
@@ -216,16 +278,30 @@ def main(argv=None):
     args=parser.parse_args(argv)
     if args.merge and (not args.namak or args.input): parser.error('--merge requires --namak and cannot be combined with --input')
     if args.namak and not args.merge: parser.error('--namak requires --merge')
-    cfg=load_config();output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
-    clear_review_artifacts(output)
-    event_bus=EventBus()
-    logger=setup_logging(output,event_bus=event_bus)
-    ui=TerminalUI('plain' if args.plain else args.ui, quiet=args.quiet, config=cfg)
+    try:
+        cfg=load_config()
+        if args.version:
+            print(english('jozve-tool '+cfg['tool_version']))
+            return 0
+        if args.dry_run:
+            return _dry_run(args,cfg)
+        output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
+        clear_review_artifacts(output)
+        event_bus=EventBus()
+        logger=setup_logging(output,event_bus=event_bus)
+    except KeyboardInterrupt:
+        print('Interrupted')
+        return 130
+    except Exception:
+        print('E201  startup failed - check configuration and output permissions',file=sys.stderr)
+        return 2
+    ui=TerminalUI('plain' if args.plain else args.ui, quiet=args.quiet, verbose=args.verbose,
+                  no_color=args.no_color,config=cfg)
     ui.attach(event_bus)
     ui.start()
     items=[];global_warnings=[]
     run_started=time.perf_counter()
-    interrupted=False
+    interrupted=False;startup_failed=False;report_path=None
     event_bus.emit('run_started',stage='run',files=0)
     try:
         assets=discover_assets(cfg,ROOT)
@@ -239,14 +315,7 @@ def main(argv=None):
                            public_message='syllabus configuration warning - see output/report.txt')
         (ROOT/cfg['paths']['cache']).mkdir(parents=True,exist_ok=True)
         claimed=set()
-        if args.merge: jobs=[([p.resolve() for p in args.merge],args.namak)]
-        else:
-            input_path=(args.input or ROOT/cfg['paths']['input']).resolve()
-            if not input_path.exists(): raise FileNotFoundError('مسیر ورودی پیدا نشد')
-            files=[input_path] if input_path.is_file() else sorted(p for p in input_path.iterdir() if p.is_file() and
-                p.suffix.lower() in ['.pdf',*cfg['cli']['office_extensions']] and not p.name.lower().startswith(cfg['cli']['ignore_prefix'].lower()))
-            jobs=[([p],None) for p in files if not p.name.lower().startswith(cfg['cli']['ignore_prefix'].lower())]
-        if not jobs: raise ValueError('فایل ورودی قابل پردازش وجود ندارد')
+        jobs=_jobs(args,cfg)
         for index,(paths,namak) in enumerate(jobs,1):
             file_name=', '.join(p.name for p in paths)
             event_bus.emit('file_started',file=file_name,index=index,total=len(jobs))
@@ -282,6 +351,7 @@ def main(argv=None):
         event_bus.emit('error',file='',stage='run',code='E130',message='اجرای کاربر متوقف شد',
                        public_message='interrupted - no partial file was published')
     except Exception as exc:
+        startup_failed=True
         items.append({'files':['راه‌اندازی'],'status':'خطا','error':str(exc)})
         event_bus.emit('error',file='',stage='run',code='E201',message=str(exc),
                        public_message='startup failed - check output/report.txt')
@@ -292,8 +362,8 @@ def main(argv=None):
                 'BLOCKED':sum(i['status']=='خطا' for i in items)}
         logger.flush_warnings()
         try:
-            write_html_report(output,items,global_warnings,thumbs=args.thumbs,config=cfg,
-                              elapsed=time.perf_counter()-run_started,interrupted=interrupted)
+            report_path=write_html_report(output,items,global_warnings,thumbs=args.thumbs,config=cfg,
+                                          elapsed=time.perf_counter()-run_started,interrupted=interrupted)
         except Exception as exc:
             logger.error('ساخت گزارش HTML ناموفق بود: '+str(exc),stage='report')
             event_bus.emit('warning',stage='report',kind='html_report_error',
@@ -302,10 +372,26 @@ def main(argv=None):
         event_bus.emit('run_finished',summary=summary,counts=counts,
                        total_seconds=time.perf_counter()-run_started,
                        interrupted=interrupted)
+        if args.open_report and report_path is not None:
+            try:
+                if not webbrowser.open(report_path.resolve().as_uri()):
+                    raise OSError('Browser did not accept the report')
+            except Exception:
+                logger.warning('بازکردن گزارش در مرورگر ناموفق بود',stage='report')
+                event_bus.emit('warning',stage='report',public_message='Cannot open report - open report.html manually')
+    except KeyboardInterrupt:
+        event_bus.emit('error',stage='report',code='E130',message='ثبت گزارش متوقف شد',
+                       public_message='Interrupted - report writing stopped')
+        return 130
+    except Exception as exc:
+        logger.error('ثبت گزارش ناموفق بود: '+str(exc),stage='report')
+        event_bus.emit('error',stage='report',code='E202',message=str(exc),
+                       public_message='report writing failed - check output permissions')
+        return 2
     finally:
         logger.close()
         ui.close()
-    return 130 if interrupted else int(any(i['status']=='خطا' for i in items))
+    return 130 if interrupted else 2 if startup_failed else int(any(i['status']=='خطا' for i in items))
 
 
 if __name__=='__main__':

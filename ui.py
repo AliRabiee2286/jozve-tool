@@ -95,12 +95,15 @@ class TerminalUI:
     """Event subscriber that never raises into the PDF processing path."""
 
     def __init__(self, requested='auto', stream=None, quiet=False, environ=None,
-                 rich_available=None, no_color=False, config=None):
+                 rich_available=None, no_color=False, config=None, verbose=False):
         self.stream = stream or sys.stdout
         self.environ = os.environ if environ is None else environ
         self.mode = select_mode(requested, self.stream, self.environ,
                                 rich_available, no_color)
+        if quiet:
+            self.mode = 'plain'
         self.quiet = quiet
+        self.verbose = verbose
         self.config = config or {}
         self.files = {}
         self.current_file = ''
@@ -196,6 +199,11 @@ class TerminalUI:
         elif name == 'stage_started':
             self.current_stage = payload.get('stage', 'run')
             self.files.setdefault(file_name, {})['stage'] = self.current_stage
+            if self.verbose and self.mode != 'fancy':
+                self._write(f'Stage {_stage(self.current_stage)}: started')
+        elif name == 'stage_finished':
+            if self.verbose and self.mode != 'fancy':
+                self._write(f"Stage {_stage(payload.get('stage'))}: {payload.get('seconds', 0):.4f}s")
         elif name == 'stage_progress':
             self.current_stage = payload.get('stage', 'pages')
             self.current_progress = (payload.get('index', 0), payload.get('total', 0))

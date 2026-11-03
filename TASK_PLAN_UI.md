@@ -83,11 +83,11 @@
 
 ### مرحلهٔ ۴ — دستورها و گزینه‌ها
 
-- [ ] ۴.۱ `doctor.py`: بررسی پایتون و نسخه‌ها، کتابخانه‌ها (`pymupdf`، `openpyxl`، `pyyaml`، `numpy`، `Pillow`، `rich`)، یافتن فایل‌های assets، فونت، LibreOffice، دسترسی نوشتن به `output`؛ هر مورد `OK` یا `FAIL` با راهنما (انگلیسی). زیرفرمان `python main.py doctor`.
-- [ ] ۴.۲ گزینه‌ها: `--quiet`، `--verbose`، `--ui`، `--no-color`، `--open-report`، `--dry-run` (فهرست فایل‌ها با نامک و رشته بدون ساخت خروجی)، `--version`، `--thumbs`، `--no-thumbs`.
-- [ ] ۴.۳ کد خروج: ۰ بدون BLOCKED؛ ۱ دست‌کم یک BLOCKED؛ ۲ خطای راه‌اندازی؛ ۱۳۰ توقف با Ctrl+C.
-- [ ] ۴.۴ `run.bat`: همهٔ پیام‌ها انگلیسی (بدون فارسی)، انتخاب مفسر مثل قبل، `pause` در پایان.
-- [ ] ۴.۵ تست‌ها: `doctor`، `--dry-run`، کدهای خروج، گزینه‌ها.
+- [x] ۴.۱ `doctor.py`: بررسی پایتون و نسخه‌ها، کتابخانه‌ها (`pymupdf`، `openpyxl`، `pyyaml`، `numpy`، `Pillow`، `rich`)، یافتن فایل‌های assets، فونت، LibreOffice، دسترسی نوشتن به `output`؛ هر مورد `OK` یا `FAIL` با راهنما (انگلیسی). زیرفرمان `python main.py doctor`.
+- [x] ۴.۲ گزینه‌ها: `--quiet`، `--verbose`، `--ui`، `--no-color`، `--open-report`، `--dry-run` (فهرست فایل‌ها با نامک و رشته بدون ساخت خروجی)، `--version`، `--thumbs`، `--no-thumbs`.
+- [x] ۴.۳ کد خروج: ۰ بدون BLOCKED؛ ۱ دست‌کم یک BLOCKED؛ ۲ خطای راه‌اندازی؛ ۱۳۰ توقف با Ctrl+C.
+- [x] ۴.۴ `run.bat`: همهٔ پیام‌ها انگلیسی (بدون فارسی)، انتخاب مفسر مثل قبل، `pause` در پایان.
+- [x] ۴.۵ تست‌ها: `doctor`، `--dry-run`، کدهای خروج، گزینه‌ها.
 - commit: «step 7d: doctor, dry-run and CLI options». گزارش بده و منتظر «ادامه» بمان.
 
 ### مرحلهٔ ۵ — تأیید

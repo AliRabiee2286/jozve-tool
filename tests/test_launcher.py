@@ -43,7 +43,8 @@ def test_launcher_order_and_fallback_simulation(tmp_path):
     assert any(line.startswith('py -3 -c ') for line in calls)
     assert all(not line.startswith('python ') for line in calls)
     assert (tmp_path/'selected.txt').read_text(encoding='utf-8').strip()=='py -3'
-    assert 'Report: output\\report.html' in result.stdout
+    assert 'Reports, when generated, are in the selected output folder.' in result.stdout
+    assert 'Press any key to close.' in result.stdout
 
 
 @pytest.mark.skipif(sys.platform!='win32',reason='Windows batch launcher')
@@ -59,3 +60,15 @@ def test_launcher_real_one_input(tmp_path):
     assert 'Summary: OK=1 REVIEW=0 BLOCKED=0' in result.stdout
     assert list(output.glob('LessonNote_*.pdf'))
     assert 'Report: output\\report.html' in result.stdout
+
+
+@pytest.mark.skipif(sys.platform!='win32',reason='Windows batch launcher')
+def test_launcher_missing_dependencies_returns_setup_error_two(tmp_path):
+    shutil.copyfile(LAUNCHER,tmp_path/'run.bat')
+    for name in ('py.cmd','python.cmd'):
+        (tmp_path/name).write_text('@echo off\nexit /b 1\n',encoding='ascii')
+    result=run_launcher(tmp_path)
+    assert result.returncode==2,result.stdout+result.stderr
+    assert 'required packages are unavailable' in result.stdout
+    assert 'Press any key to close.' in result.stdout
+    assert not any('\u0600'<=char<='\u06ff' for char in result.stdout+result.stderr)

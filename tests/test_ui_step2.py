@@ -120,7 +120,7 @@ def test_main_plain_startup_error_has_no_persian_on_terminal(tmp_path, capsys):
         code = app.main(['--ui', 'plain', '--input', str(tmp_path / 'missing.pdf'),
                          '--output', str(output)])
         captured = capsys.readouterr()
-        assert code == 1
+        assert code == 2
         assert not ARABIC.search(captured.out + captured.err)
         assert 'E201' in captured.out
     finally:

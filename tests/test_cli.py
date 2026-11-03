@@ -160,5 +160,5 @@ def test_windows_batch_launcher(tmp_path):
     result=subprocess.run(['cmd','/c',str(ROOT/'run.bat'),'--input',str(source),'--output',str(out)],
                           cwd=ROOT,input='\n',capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=120)
     assert result.returncode==0,result.stdout+result.stderr
-    assert '1 موفق' in result.stdout
+    assert 'Summary: OK=1 REVIEW=0 BLOCKED=0' in result.stdout
     assert (out/to_output_name(source.stem)).is_file()
