@@ -100,26 +100,56 @@ def ink_bbox(page, dpi):
     return fitz.Rect(*(v * 72 / dpi for v in bounds))
 
 
-def _story(value, size, font_path, settings):
+def _font_markup(value, font_path, math_font_path):
+    """Keep ordinary text in Aria and route missing math glyphs explicitly."""
+    primary = fitz.Font(fontfile=str(font_path))
+    math = fitz.Font(fontfile=str(math_font_path))
+    runs=[]
+    family=None
+    text=[]
+    for character in value:
+        if character.isspace() or primary.has_glyph(ord(character)):
+            selected='coveraria'
+        elif math.has_glyph(ord(character)):
+            selected='covermath'
+        else:
+            raise CoverError(f'No configured font contains U+{ord(character):04X}')
+        if family != selected and text:
+            runs.append((family,''.join(text)))
+            text=[]
+        family=selected
+        text.append(character)
+    if text:
+        runs.append((family,''.join(text)))
+    return ''.join(escape(text) if family == 'coveraria' else
+                   '<span class="covermath">' + escape(text) + '</span>'
+                   for family,text in runs)
+
+
+def _story(value, size, font_path, math_font_path, settings):
+    markup = _font_markup(value, font_path, math_font_path)
     css = ('@font-face {font-family: coveraria; src:url("' + font_path.name + '");}'
+           '@font-face {font-family: covermath; src:url("' + math_font_path.name + '");}'
            'body {margin:0;padding:0;} p {margin:0;padding:0;font-family:coveraria;'
            f'font-size:{size:.8f}pt;line-height:{settings["line_height"]};'
-           'text-align:center;direction:rtl;color:#000000;white-space:pre-wrap;}')
-    return fitz.Story(html='<p id="value" dir="rtl">' + escape(value) + '</p>',
+           'text-align:center;direction:rtl;color:#000000;white-space:pre-wrap;}'
+           'span.covermath {font-family:covermath;}')
+    return fitz.Story(html='<p id="value" dir="rtl">' + markup + '</p>',
                       user_css=css, archive=fitz.Archive(str(font_path.parent)))
 
 
-def _fit_value(value, region, label_size, max_lines, page_rect, font_path, settings,
+def _fit_value(value, region, label_size, max_lines, page_rect, font_path, math_font_path, settings,
                first_line_row_height=None):
     if not isinstance(value, str) or not value.strip():
         raise TextFitError('Cover values must be nonempty strings')
     minimum = settings['min_scale']
     scales = [max(minimum, 1 - i * settings['scale_step'])
               for i in range(math.ceil((1 - minimum) / settings['scale_step']) + 1)]
-    font_hash = hashlib.sha256(font_path.read_bytes()).digest()
+    allowed_font_hashes = {hashlib.sha256(path.read_bytes()).digest()
+                           for path in (font_path, math_font_path)}
     for scale in dict.fromkeys(scales):
         size = label_size * scale
-        story = _story(value, size, font_path, settings)
+        story = _story(value, size, font_path, math_font_path, settings)
         more, filled = story.place(fitz.Rect(0, 0, region.width, page_rect.height))
         height = fitz.Rect(filled).height
         count = int(round(height / (size * settings['line_height'])))
@@ -136,13 +166,15 @@ def _fit_value(value, region, label_size, max_lines, page_rect, font_path, setti
         draw_box = fitz.Rect(region.x0, y, region.x1, y + height + size * settings['guard_em'])
         layer = fitz.open()
         p = layer.new_page(width=page_rect.width, height=page_rect.height)
-        spare, applied = p.insert_htmlbox(draw_box, _story(value, size, font_path, settings), scale_low=1)
+        spare, applied = p.insert_htmlbox(
+            draw_box, _story(value, size, font_path, math_font_path, settings), scale_low=1)
         if spare < 0 or applied != 1:
             layer.close(); continue
         fonts = p.get_fonts(full=True)
-        if not fonts or any(hashlib.sha256(layer.extract_font(f[0])[3]).digest() != font_hash for f in fonts):
+        if not fonts or any(hashlib.sha256(layer.extract_font(f[0])[3]).digest()
+                            not in allowed_font_hashes for f in fonts):
             layer.close()
-            raise CoverError('Text used a font other than the configured Aria file')
+            raise CoverError('Text used a font outside the configured cover fonts')
         ink = ink_bbox(p, settings['qc_dpi'])
         if ink is None or not region.contains(ink):
             layer.close(); continue
@@ -192,7 +224,7 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
                 layers.append(None)
                 continue
             layer, record = _fit_value(values[field], regions[field], sizes[field], limit,
-                                       page.rect, assets['font'], settings,
+                                       page.rect, assets['font'], assets['math_font'], settings,
                                        first_line_row_height=(
                                            regions[settings['fields'][-2]].height
                                            if field == settings['fields'][-1] else None))

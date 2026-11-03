@@ -10,11 +10,13 @@ asset_patterns: # هر الگو باید دقیقاً یک فایل پیدا ک�
   template: '*First_Page_Template*.pdf' # تمپلیت فرست‌پیج
   border: '*Sarbarg*.pdf' # بوردر دو نواری مرحله ۳
   font: '*Aria-Regular*.otf' # فونت متن فارسی فرست‌پیج
+  math_font: '*DejaVuMathTeXGyre*.ttf' # فونت کمکی نمادهای ریاضی
 resolved_assets: # نام‌های کشف‌شده؛ کشف مجدد با الگو مرجع اجراست
   syllabus: assets/Comprehensive_Syllabus_19 (1)(1).xlsx # سیلابس موجود
   template: assets/First_Page_Template (1)(1).pdf # تمپلیت موجود
   border: assets/01-Olampiom-Sarbarg-1- (1)(1).pdf # بوردر موجود
   font: assets/02-Aria-Regular.otf # فونت موجود
+  math_font: assets/DejaVuMathTeXGyre.ttf # فونت کمکی موجود
 output_version: v01 # نسخه نام خروجی
 output_prefix: LessonNote_hard # پیشوند نام خروجی
 cli:

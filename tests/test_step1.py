@@ -132,7 +132,7 @@ def test_output_name():
     with pytest.raises(ValueError):to_output_name('<>:')
 
 def test_discovery(tmp_path):
-    cfg=load_config(ROOT/'config.yaml');assert len(discover_assets(cfg,ROOT))==4
+    cfg=load_config(ROOT/'config.yaml');assert len(discover_assets(cfg,ROOT))==5
     cfg=copy.deepcopy(cfg);cfg['paths']['assets']='.';cfg['asset_patterns']={'syllabus':'*Syllabus*.xlsx'}
     with pytest.raises(AssetDiscoveryError):discover_assets(cfg,tmp_path)
     (tmp_path/'Syllabus.xlsx').touch();assert discover_assets(cfg,tmp_path)['syllabus'].name=='Syllabus.xlsx'
