@@ -43,7 +43,7 @@ def test_launcher_order_and_fallback_simulation(tmp_path):
     assert any(line.startswith('py -3 -c ') for line in calls)
     assert all(not line.startswith('python ') for line in calls)
     assert (tmp_path/'selected.txt').read_text(encoding='utf-8').strip()=='py -3'
-    assert 'Report: output\\report.txt' in result.stdout
+    assert 'Report: output\\report.html' in result.stdout
 
 
 @pytest.mark.skipif(sys.platform!='win32',reason='Windows batch launcher')
@@ -56,6 +56,6 @@ def test_launcher_real_one_input(tmp_path):
                           capture_output=True,text=True,encoding='utf-8',
                           errors='replace',timeout=300)
     assert result.returncode==0,result.stdout+result.stderr
-    assert 'خلاصه: 1 موفق' in result.stdout
+    assert 'Summary: OK=1 REVIEW=0 BLOCKED=0' in result.stdout
     assert list(output.glob('LessonNote_*.pdf'))
-    assert 'Report: output\\report.txt' in result.stdout
+    assert 'Report: output\\report.html' in result.stdout

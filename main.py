@@ -21,6 +21,7 @@ from qc import check_pdf
 from events import EventBus
 from logging_setup import setup_logging
 from report_text import write_report
+from ui import TerminalUI
 
 ROOT=Path(__file__).resolve().parent
 
@@ -173,7 +174,9 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
             if quality.get('blocking_failed'):
                 item['error']='کنترل‌های بلاک‌کننده رد شد: '+', '.join(quality['blocking_failed'])
                 item['status_code']='BLOCKED'
-                event_bus.emit('error', file=file_name, stage='qc', message=item['error'])
+                event_bus.emit('error', file=file_name, stage='qc', code='E102',
+                               message=item['error'],
+                               public_message='quality control failed - check output/report.txt')
                 return item
             with _timed_stage(event_bus, 'write', file_name):
                 os.replace(temporary,output/name)
@@ -183,28 +186,40 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
                 item['review_controls']=quality['advisory_failed']
     except NotFoundError:
         item['error']='نامک در سیلابس پیدا نشد؛ نام فایل یا --namak را بررسی کنید'
-        event_bus.emit('error', file=file_name, stage='resolve', message=item['error'])
+        event_bus.emit('error', file=file_name, stage='resolve', code='E101',
+                       message=item['error'],
+                       public_message='namak not found in syllabus - check the input file name')
     except Exception as exc:
         item['warnings'].extend(getattr(syllabus,'lookup_warnings',[]))
         item['error']=str(exc)
-        event_bus.emit('error', file=file_name, stage='run', message=item['error'])
+        event_bus.emit('error', file=file_name, stage='run', code='E199',
+                       message=item['error'],
+                       public_message='processing failed - check output/report.txt')
     return item
 
 
 def main(argv=None):
     for stream in (sys.stdout,sys.stderr):
         if hasattr(stream,'reconfigure'): stream.reconfigure(encoding='utf-8',errors='replace')
-    parser=argparse.ArgumentParser(description='آماده‌سازی آفلاین جزوه‌ها')
+    parser=argparse.ArgumentParser(description='Offline lesson note processor')
     parser.add_argument('--input',type=Path);parser.add_argument('--output',type=Path)
     parser.add_argument('--merge',nargs='+',type=Path);parser.add_argument('--namak')
+    parser.add_argument('--ui',choices=('auto','fancy','compat','plain'),default='auto')
+    parser.add_argument('--plain',action='store_true',help='Use plain English terminal output')
+    parser.add_argument('--quiet',action='store_true',help='Hide per-file terminal updates')
     args=parser.parse_args(argv)
-    if args.merge and (not args.namak or args.input): parser.error('--merge نیازمند --namak است و با --input جمع نمی‌شود')
-    if args.namak and not args.merge: parser.error('--namak فقط همراه --merge است')
+    if args.merge and (not args.namak or args.input): parser.error('--merge requires --namak and cannot be combined with --input')
+    if args.namak and not args.merge: parser.error('--namak requires --merge')
     cfg=load_config();output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
     clear_review_artifacts(output)
     event_bus=EventBus()
     logger=setup_logging(output,event_bus=event_bus)
+    ui=TerminalUI('plain' if args.plain else args.ui, quiet=args.quiet, config=cfg)
+    ui.attach(event_bus)
+    ui.start()
     items=[];global_warnings=[]
+    run_started=time.perf_counter()
+    interrupted=False
     event_bus.emit('run_started',stage='run',files=0)
     try:
         assets=discover_assets(cfg,ROOT)
@@ -214,7 +229,8 @@ def main(argv=None):
             warnings.simplefilter('ignore',UserWarning);syllabus=Syllabus()
         global_warnings=syllabus.warnings
         for warning in global_warnings:
-            event_bus.emit('warning',stage='resolve',kind='syllabus',message=warning)
+            event_bus.emit('warning',stage='resolve',kind='syllabus',message=warning,
+                           public_message='syllabus configuration warning - see output/report.txt')
         (ROOT/cfg['paths']['cache']).mkdir(parents=True,exist_ok=True)
         claimed=set()
         if args.merge: jobs=[([p.resolve() for p in args.merge],args.namak)]
@@ -228,7 +244,6 @@ def main(argv=None):
         for index,(paths,namak) in enumerate(jobs,1):
             file_name=', '.join(p.name for p in paths)
             event_bus.emit('file_started',file=file_name,index=index,total=len(jobs))
-            print('در حال پردازش: '+', '.join(p.name for p in paths),flush=True)
             started=time.perf_counter()
             item=process_job(paths,namak,syllabus,cfg,output,claimed,event_bus=event_bus)
             item['seconds']=round(time.perf_counter()-started,2)
@@ -237,16 +252,15 @@ def main(argv=None):
                 kind=warning.get('kind','unknown')
                 if warning['kind']=='empty_cover_fields':
                     message='empty syllabus values: '+', '.join(warning['fields'])
-                    print('WARNING: '+message,flush=True)
                     stage='resolve'
                 elif warning['kind']=='syllabus_source_conflict':
                     message='syllabus source conflict: subject sheet takes priority'
-                    print('WARNING: '+message,flush=True)
                     stage='resolve'
                 else:
                     message=f'{kind}: {warning}'
                     stage='pages'
-                event_bus.emit('warning',file=file_name,stage=stage,kind=kind,message=message)
+                event_bus.emit('warning',file=file_name,stage=stage,kind=kind,message=message,
+                               public_message=message)
             if item.get('status')=='بازبینی' and item.get('output'):
                 try:
                     item['review_image']=write_review_image(output/item['output'],output)
@@ -256,21 +270,28 @@ def main(argv=None):
                     event_bus.emit('warning',file=file_name,stage='write',kind=warning['kind'],
                                    message=warning['detail'])
             event_bus.emit('file_done',file=file_name,status=item['status'],
-                           status_code=item.get('status_code'),seconds=item['seconds'])
+                           status_code=item.get('status_code'),seconds=item['seconds'],item=item)
+    except KeyboardInterrupt:
+        interrupted=True
+        event_bus.emit('error',file='',stage='run',code='E130',message='اجرای کاربر متوقف شد',
+                       public_message='interrupted - no partial file was published')
     except Exception as exc:
         items.append({'files':['راه‌اندازی'],'status':'خطا','error':str(exc)})
-        event_bus.emit('error',file='راه‌اندازی',stage='run',message=str(exc))
+        event_bus.emit('error',file='',stage='run',code='E201',message=str(exc),
+                       public_message='startup failed - check output/report.txt')
     try:
         summary=write_report(output,items,global_warnings)
         counts={'OK':sum(i['status']=='موفق' for i in items),
                 'REVIEW':sum(i['status']=='بازبینی' for i in items),
                 'BLOCKED':sum(i['status']=='خطا' for i in items)}
         logger.flush_warnings()
-        event_bus.emit('run_finished',summary=summary,counts=counts)
+        event_bus.emit('run_finished',summary=summary,counts=counts,
+                       total_seconds=time.perf_counter()-run_started,
+                       interrupted=interrupted)
     finally:
         logger.close()
-    print(summary)
-    return int(any(i['status']=='خطا' for i in items))
+        ui.close()
+    return 130 if interrupted else int(any(i['status']=='خطا' for i in items))
 
 
 if __name__=='__main__':

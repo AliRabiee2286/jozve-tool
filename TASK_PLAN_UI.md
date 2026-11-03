@@ -61,13 +61,13 @@
 
 ### مرحلهٔ ۲ — رابط ترمینال (`ui.py`)
 
-- [ ] ۲.۱ حالت‌ها با `--ui auto|fancy|compat|plain` (پیش‌فرض `auto`): fancy وقتی ترمینال مدرن است (`WT_SESSION` یا `TERM_PROGRAM` یا `COLORTERM=truecolor`) و TTY؛ compat برای cmd قدیمی (ASCII، ۱۶ رنگ)؛ plain برای غیر TTY، `NO_COLOR`، `--plain` یا نبود `rich`.
-- [ ] ۲.۲ ظاهر fancy: بنر ورود کوتاه (کمتر از ۱ ثانیه، با رنگ‌بندی تدریجی؛ در `--quiet` و plain نمایش داده نشود)؛ داشبورد زنده با `rich.live.Live` (حدود ۱۲ فریم بر ثانیه، بدون پرش): بالا نوار پیشرفت کلی با زمان و ETA؛ وسط جدول فایل‌ها که زنده به‌روز می‌شود (وضعیت با spinner یا PASS/REVIEW/FAIL، نامک، رشتهٔ انگلیسی، جهت، صفحات، مرحلهٔ جاری، زمان)؛ پایین نوار پیشرفت صفحه‌به‌صفحهٔ فایل جاری. رنگ‌ها: سبز OK، زرد REVIEW، قرمز BLOCKED.
-- [ ] ۲.۳ پنل خلاصهٔ پایانی: شمارش OK/REVIEW/BLOCKED، جدول خلاصه (file، field، orientation، pages، time، status)، زمان کل، لینک `output\report.html` (قابل‌کلیک) و فهرست REVIEWها با مسیر تصویر مرور.
-- [ ] ۲.۴ خطاها کوتاه با کد و راهنما: `E101  namak not found in syllabus - check the input file name`. جزئیات فارسی فقط در لاگ و گزارش.
-- [ ] ۲.۵ `Ctrl+C`: توقف مرتب، خلاصهٔ «Interrupted»، کد خروج ۱۳۰؛ هیچ فایل نیمه‌کاره منتشر نشود.
-- [ ] ۲.۶ نمونه‌های دیداری: با `Console(record=True)` یک اجرای ساختگی و یک اجرای واقعی کوتاه را در fancy و compat ضبط و به‌صورت SVG در `docs/ui_preview/` بگذار (برای نمایش به کاربر).
-- [ ] ۲.۷ تست‌ها: هیچ نویسهٔ فارسی/عربی در stdout/stderr؛ حالت plain، `NO_COLOR`، غیر TTY؛ نبود `rich` (شبیه‌سازی `ImportError`).
+- [x] ۲.۱ حالت‌ها با `--ui auto|fancy|compat|plain` (پیش‌فرض `auto`): fancy وقتی ترمینال مدرن است (`WT_SESSION` یا `TERM_PROGRAM` یا `COLORTERM=truecolor`) و TTY؛ compat برای cmd قدیمی (ASCII، ۱۶ رنگ)؛ plain برای غیر TTY، `NO_COLOR`، `--plain` یا نبود `rich`.
+- [x] ۲.۲ ظاهر fancy: بنر ورود کوتاه (کمتر از ۱ ثانیه، با رنگ‌بندی تدریجی؛ در `--quiet` و plain نمایش داده نشود)؛ داشبورد زنده با `rich.live.Live` (حدود ۱۲ فریم بر ثانیه، بدون پرش): بالا نوار پیشرفت کلی با زمان و ETA؛ وسط جدول فایل‌ها که زنده به‌روز می‌شود (وضعیت با spinner یا PASS/REVIEW/FAIL، نامک، رشتهٔ انگلیسی، جهت، صفحات، مرحلهٔ جاری، زمان)؛ پایین نوار پیشرفت صفحه‌به‌صفحهٔ فایل جاری. رنگ‌ها: سبز OK، زرد REVIEW، قرمز BLOCKED.
+- [x] ۲.۳ پنل خلاصهٔ پایانی: شمارش OK/REVIEW/BLOCKED، جدول خلاصه (file، field، orientation، pages، time، status)، زمان کل، لینک `output\report.html` (قابل‌کلیک) و فهرست REVIEWها با مسیر تصویر مرور.
+- [x] ۲.۴ خطاها کوتاه با کد و راهنما: `E101  namak not found in syllabus - check the input file name`. جزئیات فارسی فقط در لاگ و گزارش.
+- [x] ۲.۵ `Ctrl+C`: توقف مرتب، خلاصهٔ «Interrupted»، کد خروج ۱۳۰؛ هیچ فایل نیمه‌کاره منتشر نشود.
+- [x] ۲.۶ نمونه‌های دیداری: با `Console(record=True)` یک اجرای ساختگی و یک اجرای واقعی کوتاه را در fancy و compat ضبط و به‌صورت SVG در `docs/ui_preview/` بگذار (برای نمایش به کاربر).
+- [x] ۲.۷ تست‌ها: هیچ نویسهٔ فارسی/عربی در stdout/stderr؛ حالت plain، `NO_COLOR`، غیر TTY؛ نبود `rich` (شبیه‌سازی `ImportError`).
 - commit: «step 7b: modern terminal UI (fancy/compat/plain)». گزارش بده و منتظر «ادامه» بمان.
 
 ### مرحلهٔ ۳ — گزارش HTML (`report_html.py`)

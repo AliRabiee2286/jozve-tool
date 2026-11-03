@@ -32,6 +32,6 @@ goto finish
 call python main.py %*
 set result=%errorlevel%
 :finish
-echo Report: output\report.txt
+echo Report: output\report.html
 pause
 exit /b %result%

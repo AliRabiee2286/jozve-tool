@@ -31,6 +31,21 @@ headers: # نام‌های معنایی ستون؛ هیچ وابستگی به ج
   course: [درس] # عنوان درس
   chapter: [فصل] # عنوان فصل
   topic: [مبحث] # عنوان مبحث
+field_labels_en: # برچسب‌های ترمینال؛ فقط برای نمایش انگلیسی، متن PDF تغییر نمی‌کند
+  هوش مصنوعی: artificial intelligence
+  علوم زمین: earth sciences
+  ادبی: literature
+  ریاضی: mathematics
+  نانو: nanotechnology
+  فیزیک: physics
+  سواد رسانه: media literacy
+  کامپیوتر: computer science
+  زیست شناسی: biology
+  سلول: cell biology
+  نجوم: astronomy
+  اقتصاد: economics
+  جغرافیا: geography
+  شیمی: chemistry
 sheet_to_template: # شماره یک‌مبنای تمپلیت در بلوک عمودی؛ شیت‌های دارای اولویت
   هوش مصنوعی: 1 # تمپلیت هوش مصنوعی
   علوم زمین: 2 # تمپلیت علوم زمین
