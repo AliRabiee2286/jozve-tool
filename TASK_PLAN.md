@@ -107,9 +107,9 @@
 
 - [x] ۵.۱ تست سریع (`python tests/run_tests.py`) و corpus سبز.
 - [x] ۵.۲ `git merge-base --is-ancestor origin/main lean-step6` باید بدون خطا (کد خروج ۰) باشد.
-- [ ] ۵.۳ `git push origin lean-step6:main` (fast-forward؛ force ممنوع). رد شد ← متوقف شو و بپرس.
-- [ ] ۵.۴ فقط اگر هر دو شاخهٔ `wip/local-main-pointer` و `wip/local-step6-backup` وجود دارند: `git switch main` ؛ `git reset --hard origin/main` .
-- [ ] ۵.۵ `git tag v1.1-lean` ؛ `git push origin v1.1-lean` . شاخه‌های `wip/*` را حذف نکن.
+- [x] ۵.۳ `git push origin lean-step6:main` (fast-forward؛ force ممنوع). رد شد ← متوقف شو و بپرس.
+- [x] ۵.۴ فقط اگر هر دو شاخهٔ `wip/local-main-pointer` و `wip/local-step6-backup` وجود دارند: `git switch main` ؛ `git reset --hard origin/main` .
+- [x] ۵.۵ `git tag v1.1-lean` ؛ `git push origin v1.1-lean` . شاخه‌های `wip/*` را حذف نکن.
 - گزارش نهایی: کارهای انجام‌شده، نتیجهٔ تست‌ها و corpus با عدد، فایل‌های REVIEW با علت، محدودیت‌های شناخته‌شده.
 
 ### مرحلهٔ ۶ — اختیاری (فقط وقتی کاربر خواست)

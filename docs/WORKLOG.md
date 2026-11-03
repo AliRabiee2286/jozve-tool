@@ -2,4 +2,8 @@
 - کنترل نهایی: `python tests/run_tests.py` با ۶۳ قبول و ۱۷۱ کنارگذاشته‌شده در ۵۰٫۴۴ ثانیه.
 - corpus نهایی: ۱۹ `OK`، ۳ `REVIEW`، صفر `BLOCKED`، صفر صفحهٔ تغییرکرده؛ زمان ۸۲۰٫۴۱ ثانیه.
 - `git merge-base --is-ancestor origin/main lean-step6` با کد خروج ۰ موفق شد.
-- هر دو شاخهٔ `wip/local-main-pointer` و `wip/local-step6-backup` وجود دارند؛ push، همگام‌سازی `main` و tag هنوز انجام نشده‌اند.
+- `git push origin lean-step6:main` به‌صورت fast-forward موفق شد و `main` روی commit `b4ab426` قرار گرفت.
+- هر دو شاخهٔ `wip/local-main-pointer` و `wip/local-step6-backup` حفظ شدند؛ checkout مستقیم `main` به‌علت سه فایل untracked ممکن نبود، بنابراین reset در worktree موقت انجام شد و فایل‌های کاربر دست‌نخورده ماندند.
+- tag `v1.1-lean` ساخته و push شد و روی commit `b4ab426` قرار دارد.
+- علت REVIEWها: `ADAB_SBK_14` یک کنترل توصیه‌ای هش/تعداد تصویر؛ `SCELL_AD_2_3` تعداد ۳۶ کنترل توصیه‌ای متن/هش تصویر؛ `SCELL_AD_2_4` تعداد ۴۶ کنترل توصیه‌ای متن/هش تصویر. هر سه خروجی منتشر شدند و بازبینی دیداری لازم دارند.
+- محدودیت: در `input/` فایل Office برای آزمون مسیر LibreOffice وجود نداشت؛ baseline فقط هش رندر ۷۲ dpi است.
