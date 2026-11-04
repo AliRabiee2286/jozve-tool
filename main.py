@@ -405,5 +405,76 @@ def main(argv=None):
     return 130 if interrupted else 2 if startup_failed else int(any(i['status']=='خطا' for i in items))
 
 
+# Optional startup splash: the silhouette comes from the supplied Balatar logo.
+_SPLASH_MASK = (
+    '..............##..............', '.............####.............',
+    '............######............', '...........########...........',
+    '..........####..####..........', '.........####....####.........',
+    '........####......####........', '........###........###........',
+    '.......###..........###.......', '......####..........####......',
+    '......###............###......', '.....###..............###.....',
+    '.....###..............###.....', '....###................###....',
+    '....###................###....', '...###..................###...',
+    '...###.......####.......###...', '...##......########......##...',
+    '..###....############....###..', '..###...######..######...###..',
+    '..##...####........####...##..', '.###...###..........###...###.',
+    '.###..###............###..###.', '.###..###............###..###.',
+    '.##..###..............###..##.', '###..###......##......###..###',
+    '###..###.....####.....###..###', '###..###....######....###..###',
+    '###..###...########...###..###', '###..##...####..####..###..###',
+    '###.....#####....####.###..###', '###...######......###.###..###',
+    '###.######............####.###', '#########............#########',
+    '##########..........##########', '####...####........####...####',
+    '#.......####......####.......#', '.........############.........',
+    '..........##########..........', '............######............',
+)
+
+
+def _show_startup_splash(argv, stream=None, environ=None):
+    """Show a short truecolor animation only in an interactive modern terminal."""
+    stream = sys.stdout if stream is None else stream
+    environ = os.environ if environ is None else environ
+    if any(arg in argv for arg in ('--quiet', '--plain', '--no-color', '--dry-run',
+                                  '--version', '--help', '-h')) or 'NO_COLOR' in environ:
+        return
+    for index, arg in enumerate(argv):
+        if arg in ('--ui=plain', '--ui=compat') or (
+                arg == '--ui' and index + 1 < len(argv) and argv[index + 1] in ('plain', 'compat')):
+            return
+    try:
+        from ui import _modern_terminal, _rich_modules
+        if not stream.isatty() or not _modern_terminal(environ) or _rich_modules() is None:
+            return
+        if shutil.get_terminal_size((80, 24)).lines < 22:
+            return
+        '▀▄█'.encode(stream.encoding or 'utf-8')
+    except (AttributeError, LookupError, OSError, UnicodeError):
+        return
+    try:
+        stream.write('\x1b[?25l\x1b[2J')
+        for frame in range(10):
+            rows = []
+            for y in range(0, len(_SPLASH_MASK), 2):
+                red = max(35, min(155, 106 + (frame - 5) * 8 - y))
+                blue = min(255, 200 + y + frame * 2)
+                color = f'\x1b[38;2;{red};{72 + y * 2};{blue}m'
+                pixels = ''.join(('█' if top == '#' and bottom == '#' else
+                                  '▀' if top == '#' else '▄' if bottom == '#' else ' ')
+                                 for top, bottom in zip(_SPLASH_MASK[y], _SPLASH_MASK[y + 1]))
+                rows.append('  ' + color + pixels + '\x1b[0m')
+            stream.write('\x1b[H' + '\n'.join(rows))
+            stream.flush()
+            time.sleep(0.055)
+    except (OSError, UnicodeError):
+        pass
+    finally:
+        try:
+            stream.write('\x1b[0m\x1b[?25h\x1b[2J\x1b[H')
+            stream.flush()
+        except (OSError, UnicodeError):
+            pass
+
+
 if __name__=='__main__':
+    _show_startup_splash(sys.argv[1:])
     raise SystemExit(main())
