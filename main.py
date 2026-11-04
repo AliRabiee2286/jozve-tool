@@ -498,6 +498,7 @@ def _show_startup_splash(argv, stream=None, environ=None):
             stream.write('\x1b[H' + '\n'.join(rows))
             stream.flush()
             time.sleep(0.04)
+        time.sleep(0.8)  # Keep the completed logo visible before the CLI starts.
     except (OSError, UnicodeError):
         pass
     finally:
