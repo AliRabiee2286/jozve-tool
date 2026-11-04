@@ -445,26 +445,42 @@ def _show_startup_splash(argv, stream=None, environ=None):
         from ui import _modern_terminal, _rich_modules
         if not stream.isatty() or not _modern_terminal(environ) or _rich_modules() is None:
             return
-        if shutil.get_terminal_size((80, 24)).lines < 22:
+        size = shutil.get_terminal_size((80, 24))
+        if size.lines < 24 or size.columns < 36:
             return
         '▀▄█'.encode(stream.encoding or 'utf-8')
     except (AttributeError, LookupError, OSError, UnicodeError):
         return
     try:
         stream.write('\x1b[?25l\x1b[2J')
-        for frame in range(10):
-            rows = []
+        indent = ' ' * max(0, (size.columns - 30) // 2)
+        top_padding = [''] * max(0, (size.lines - 24) // 2)
+        for frame in range(18):
+            progress = (frame + 1) / 18
+            reveal = min(1.0, progress / 0.65)
+            sweep = progress * 2.3 - 0.4
+            rows = list(top_padding)
             for y in range(0, len(_SPLASH_MASK), 2):
-                red = max(35, min(155, 106 + (frame - 5) * 8 - y))
-                blue = min(255, 200 + y + frame * 2)
-                color = f'\x1b[38;2;{red};{72 + y * 2};{blue}m'
-                pixels = ''.join(('█' if top == '#' and bottom == '#' else
-                                  '▀' if top == '#' else '▄' if bottom == '#' else ' ')
-                                 for top, bottom in zip(_SPLASH_MASK[y], _SPLASH_MASK[y + 1]))
-                rows.append('  ' + color + pixels + '\x1b[0m')
+                line = []
+                for x, (top, bottom) in enumerate(zip(_SPLASH_MASK[y], _SPLASH_MASK[y + 1])):
+                    pixel = ('█' if top == '#' and bottom == '#' else
+                             '▀' if top == '#' else '▄' if bottom == '#' else ' ')
+                    if pixel == ' ' or (x / 30 + y / 40) / 2 > reveal:
+                        line.append(' ')
+                        continue
+                    distance = abs((x / 30 + y / 40) / 2 - sweep)
+                    shine = max(0.0, 1.0 - distance / 0.16)
+                    red = min(255, int(105 + 55 * (1 - y / 40) + 80 * shine))
+                    green = min(255, int(80 + 60 * x / 30 + 110 * shine))
+                    blue = min(255, int(210 + 45 * y / 40 + 40 * shine))
+                    line.append(f'\x1b[38;2;{red};{green};{blue}m{pixel}')
+                rows.append(indent + ''.join(line) + '\x1b[0m')
+            label = 'B A L A T A R' if progress >= 0.6 else ' ' * 13
+            label_indent = ' ' * max(0, (size.columns - len(label)) // 2)
+            rows.extend(('', label_indent + '\x1b[38;2;190;181;255m' + label + '\x1b[0m'))
             stream.write('\x1b[H' + '\n'.join(rows))
             stream.flush()
-            time.sleep(0.055)
+            time.sleep(0.045)
     except (OSError, UnicodeError):
         pass
     finally:
