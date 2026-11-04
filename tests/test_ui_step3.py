@@ -88,6 +88,37 @@ def test_report_sections_metadata_and_untrusted_text_are_offline_and_escaped(tmp
                 'data-status="REVIEW"', 'data-count=', 'aria-live='))
 
 
+def test_report_embeds_configured_aria_and_allows_it_through_csp(tmp_path, items):
+    from report_html import PROJECT_ROOT, write_html_report
+    from syllabus import load_config
+
+    config = load_config()
+    font = next((PROJECT_ROOT / config['paths']['assets']).glob(config['asset_patterns']['font']))
+    html = write_html_report(tmp_path, items, [], thumbs='none', config=config).read_text(encoding='utf-8')
+    encoded = html.split('data:font/otf;base64,', 1)[1].split(')', 1)[0]
+    assert base64.b64decode(encoded, validate=True) == font.read_bytes()
+    assert 'font-src data:' in html
+    assert 'local("Times New Roman")' in html
+    assert 'unicode-range:U+0000-024F,U+1E00-1EFF' in html
+    assert 'font-family:ReportLatin,ReportAria,Tahoma,sans-serif' in html
+
+
+@pytest.mark.parametrize('count', [0, 2])
+def test_report_rejects_missing_or_ambiguous_font(tmp_path, monkeypatch, count):
+    import report_html
+    from syllabus import load_config
+
+    config = load_config()
+    monkeypatch.setattr(report_html, 'PROJECT_ROOT', tmp_path)
+    assets = tmp_path / config['paths']['assets']
+    assets.mkdir()
+    for index in range(count):
+        (assets / f'{index}-Aria-Regular.otf').write_bytes(b'font')
+    with pytest.raises(ValueError, match='exactly one'):
+        report_html.write_html_report(tmp_path / 'out', [], [], config=config)
+    assert not (tmp_path / 'out' / 'report.html').exists()
+
+
 @pytest.mark.parametrize('mode,count', [('review', 3), ('all', 6), ('none', 0)])
 def test_thumbnails_are_small_jpegs_from_first_three_output_pages_only(tmp_path, items, mode, count):
     from report_html import write_html_report

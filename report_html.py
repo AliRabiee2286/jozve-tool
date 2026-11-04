@@ -18,6 +18,24 @@ from syllabus import load_config
 STATUSES = {'OK': 'موفق', 'REVIEW': 'بازبینی', 'BLOCKED': 'خطا'}
 STAGES = {'resolve': 'تطبیق سیلابس', 'cover': 'فرست‌پیج', 'border': 'بوردر',
           'pages': 'صفحات', 'qc': 'کنترل کیفیت', 'write': 'انتشار'}
+PROJECT_ROOT = Path(__file__).resolve().parent
+
+
+def _report_font_css(config):
+    """Embed the configured Persian font; use the installed Times face for Latin."""
+    font_dir = PROJECT_ROOT / config['paths']['assets']
+    fonts = [path for path in font_dir.glob(config['asset_patterns']['font']) if path.is_file()]
+    if len(fonts) != 1:
+        raise ValueError('Expected exactly one configured report font')
+    font_data = base64.b64encode(fonts[0].read_bytes()).decode('ascii')
+    return (
+        '@font-face{font-family:ReportAria;src:url(data:font/otf;base64,' + font_data +
+        ') format("opentype");font-style:normal;font-weight:400;font-display:swap}'
+        '@font-face{font-family:ReportLatin;src:local("Times New Roman");'
+        'unicode-range:U+0000-024F,U+1E00-1EFF}'
+        'body,button,input,select,pre,code,.ring-inside strong{'
+        'font-family:ReportLatin,ReportAria,Tahoma,sans-serif}'
+    )
 
 
 def _text(value):
@@ -218,7 +236,8 @@ def write_html_report(output, items, global_warnings, *, thumbs='review', elapse
         intro='اجرای شما متوقف شد؛ فقط نتایج ثبت‌شدهٔ این اجرا در گزارش آمده‌اند.' if interrupted else 'از نتیجهٔ اجرا تا جزئیات هر جزوه؛ همه در یک نگاه.',
         total=total, elapsed=f'{elapsed:.2f}', percent=percent, cards=cards, warnings=warnings,
         rows=''.join(rows), details=''.join(details), empty=' hidden' if items else '',
-        versions=versions, assets=assets or '<li>ثبت نشده</li>', tool_version=_text(config['tool_version']))
+        versions=versions, assets=assets or '<li>ثبت نشده</li>', tool_version=_text(config['tool_version']),
+        font_css=_report_font_css(config))
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', newline='\n',
@@ -240,7 +259,7 @@ HTML_TEMPLATE = r'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>گزارش پردازش جزوه‌ها | جزوه‌تول</title>
 <style>
 :root{--bg:#f4f5f1;--surface:#fff;--soft:#eef2ed;--ink:#203b36;--muted:#5f726b;--line:#dbe3dc;--brand:#176a53;--brand-soft:#e1efe5;--ok:#176844;--ok-bg:#e6f2e8;--review:#805819;--review-bg:#fff1d3;--blocked:#a23535;--blocked-bg:#fbe8e6;--shadow:0 10px 38px #243d3210;--radius:20px;color-scheme:light}
@@ -298,6 +317,7 @@ footer{margin-top:48px;padding:28px;border:1px solid var(--hero-line);border-rad
  :root{--bg:#fff;--surface:#fff;--surface-strong:#fff;--soft:#f4f4f4;--ink:#111;--muted:#444;--line:#ccc;--brand:#176a53;--brand-strong:#fff;--hero-ink:#111;--hero-muted:#444;--hero-line:#aaa;--hero-panel:#fff;--hero-track:#ddd;--accent:#805819}
  html{overflow:visible}body{background:#fff!important;color:#111!important;font-size:11px}.skip-link,.topbar,.toolbar,.print-button,.local-badge,.ring,.technical{display:none!important}main{max-width:none;padding:0}.hero{display:block;margin-bottom:12px;padding:16px;border:1px solid #aaa;border-radius:0;background:#fff!important;color:#111!important;box-shadow:none;animation:none}.hero::before,.hero::after{display:none}.hero h1,.hero p,.run-meta,.run-meta time,.run-meta bdi{color:#111!important}.hero p,.run-meta{font-size:11px}.completion{display:block;max-width:none;margin-top:10px;padding:10px;border:1px solid #aaa;border-radius:0;background:#fff!important;color:#111!important}.completion-head,.completion-foot,.completion-caption,.completion-title,.completion-total{color:#111!important}.completion-body{margin-block:4px}.metrics{margin-bottom:14px}.metric{padding:10px 16px;box-shadow:none}.metric strong,.metric-label,.metric-caption{color:#111!important}.table-shell{box-shadow:none;border-color:#aaa}.file-card,tbody tr{box-shadow:none;border-color:#aaa;break-inside:avoid;page-break-inside:avoid}.file-card>summary{background:#fff!important}.file-body{display:block!important}.checks{max-height:none;overflow:visible}.thumbnails{background:#fff}.detail-grid{gap:12px}footer{break-inside:avoid;margin-top:20px;border-color:#aaa;border-radius:0;background:#fff;color:#333;box-shadow:none}footer h2,footer p,footer .footer-kicker,footer .footer-note,footer code{color:#111!important}.file-title::after{display:none}}
 @media(prefers-reduced-motion:reduce){.hero{animation:none}.file-card>summary,.metric,.print-button{transition:none}}
+$font_css
 </style>
 </head>
 <body>
