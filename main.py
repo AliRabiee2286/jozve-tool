@@ -451,36 +451,53 @@ def _show_startup_splash(argv, stream=None, environ=None):
         '▀▄█'.encode(stream.encoding or 'utf-8')
     except (AttributeError, LookupError, OSError, UnicodeError):
         return
+    # Render from the embedded original; retain the static silhouette as a safe fallback.
+    mask = _SPLASH_MASK
+    try:
+        from base64 import b64decode
+        from io import BytesIO
+        from report_html import _BALATAR_LOGO_PNG
+        width = 36 if size.columns >= 42 else 30
+        with Image.open(BytesIO(b64decode(_BALATAR_LOGO_PNG))) as image:
+            alpha = image.getchannel('A').resize((width, 40), Image.Resampling.LANCZOS)
+            mask = tuple(''.join('#' if alpha.getpixel((x, y)) > 90 else '.'
+                                 for x in range(width)) for y in range(40))
+    except Exception:
+        pass  # The optional splash must never block the processing pipeline.
     try:
         stream.write('\x1b[?25l\x1b[2J')
-        indent = ' ' * max(0, (size.columns - 30) // 2)
+        width = len(mask[0])
+        indent = ' ' * max(0, (size.columns - width) // 2)
         top_padding = [''] * max(0, (size.lines - 24) // 2)
-        for frame in range(18):
-            progress = (frame + 1) / 18
-            reveal = min(1.0, progress / 0.65)
-            sweep = progress * 2.3 - 0.4
+        for frame in range(20):
+            progress = (frame + 1) / 20
+            reveal = min(1.0, progress / 0.6)
+            sweep = progress * 1.8 - 0.35
             rows = list(top_padding)
-            for y in range(0, len(_SPLASH_MASK), 2):
+            for y in range(0, len(mask), 2):
                 line = []
-                for x, (top, bottom) in enumerate(zip(_SPLASH_MASK[y], _SPLASH_MASK[y + 1])):
+                for x, (top, bottom) in enumerate(zip(mask[y], mask[y + 1])):
                     pixel = ('█' if top == '#' and bottom == '#' else
                              '▀' if top == '#' else '▄' if bottom == '#' else ' ')
-                    if pixel == ' ' or (x / 30 + y / 40) / 2 > reveal:
+                    diagonal = (x / width + y / 40) / 2
+                    if pixel == ' ' or diagonal > reveal:
                         line.append(' ')
                         continue
-                    distance = abs((x / 30 + y / 40) / 2 - sweep)
-                    shine = max(0.0, 1.0 - distance / 0.16)
-                    red = min(255, int(105 + 55 * (1 - y / 40) + 80 * shine))
-                    green = min(255, int(80 + 60 * x / 30 + 110 * shine))
-                    blue = min(255, int(210 + 45 * y / 40 + 40 * shine))
+                    shine = max(0.0, 1.0 - abs(diagonal - sweep) / 0.13)
+                    red = min(255, int(125 + 45 * (1 - y / 40) + 65 * shine))
+                    green = min(255, int(70 + 55 * x / width + 150 * shine))
+                    blue = min(255, int(210 + 35 * y / 40 + 45 * shine))
                     line.append(f'\x1b[38;2;{red};{green};{blue}m{pixel}')
                 rows.append(indent + ''.join(line) + '\x1b[0m')
-            label = 'B A L A T A R' if progress >= 0.6 else ' ' * 13
+            label = 'B A L A T A R' if progress >= 0.55 else ' ' * 13
             label_indent = ' ' * max(0, (size.columns - len(label)) // 2)
-            rows.extend(('', label_indent + '\x1b[38;2;190;181;255m' + label + '\x1b[0m'))
+            caption = 'OFFLINE  /  LESSON PROCESSOR' if progress >= 0.8 else ' ' * 28
+            caption_indent = ' ' * max(0, (size.columns - len(caption)) // 2)
+            rows.extend((label_indent + '\x1b[38;2;214;202;255m' + label + '\x1b[0m',
+                         caption_indent + '\x1b[38;2;91;196;220m' + caption + '\x1b[0m'))
             stream.write('\x1b[H' + '\n'.join(rows))
             stream.flush()
-            time.sleep(0.045)
+            time.sleep(0.04)
     except (OSError, UnicodeError):
         pass
     finally:
