@@ -506,10 +506,17 @@ def _show_startup_splash(argv, stream=None, environ=None):
             canvas[y][x] = code + glyph + bg_sgr
 
     def _revealed(x, y, reveal):
-        if not (0 <= y < height and mask[y][x] == '#'):
-            return False
-        diagonal = 0.38 * x / max(1, width - 1) + 0.62 * y / max(1, height - 1)
-        return diagonal <= reveal
+        # Fractional coverage interpolates motion between half-cell samples.
+        import math
+        base = math.floor(y)
+        fraction = y - base
+        coverage = 0.0
+        for sample, weight in ((base, 1 - fraction), (base + 1, fraction)):
+            if 0 <= sample < height and mask[sample][x] == '#':
+                diagonal = 0.38 * x / max(1, width - 1) + 0.62 * sample / max(1, height - 1)
+                if diagonal <= reveal:
+                    coverage += weight
+        return coverage
 
     def _paint_logo(canvas, top_pixel, reveal=1.0, scan=None, dim=1.0, outline=False):
         for cell_y in range(size.lines - 1):
@@ -521,7 +528,7 @@ def _show_startup_splash(argv, stream=None, environ=None):
                 if not (top_on or bottom_on):
                     continue
                 if outline:
-                    source_y = source_top if top_on else source_bottom
+                    source_y = round(source_top if top_on else source_bottom)
                     neighbors = ((x - 1, source_y), (x + 1, source_y),
                                  (x, source_y - 1), (x, source_y + 1))
                     if all(0 <= nx < width and 0 <= ny < height and mask[ny][nx] == '#'
@@ -532,19 +539,15 @@ def _show_startup_splash(argv, stream=None, environ=None):
                     source_y = source_top if top_on else source_bottom
                     diagonal = 0.38 * x / max(1, width - 1) + 0.62 * source_y / max(1, height - 1)
                     shine = max(0.0, 1.0 - abs(diagonal - scan) / 0.09)
-                glyph = '▀' if top_on else '▄'
-                if top_on and bottom_on:
-                    top_color = _rgb(x, source_top, shine, dim)
-                    bottom_color = _rgb(x, source_bottom, shine, dim)
-                    _put(canvas, x + (columns - width) // 2, cell_y, glyph,
-                         top_color, bottom_color)
-                else:
-                    source_y = source_top if top_on else source_bottom
-                    _put(canvas, x + (columns - width) // 2, cell_y, glyph,
-                         _rgb(x, source_y, shine, dim))
+                def covered(y, coverage):
+                    color = _rgb(x, y, shine, dim)
+                    return tuple(round(background[i] + (color[i] - background[i]) * coverage)
+                                 for i in range(3))
+                _put(canvas, x + (columns - width) // 2, cell_y, '▀',
+                     covered(source_top, top_on), covered(source_bottom, bottom_on))
 
     def _paint_trail(canvas, top_pixel, extent, strength=1.0):
-        base_row = (top_pixel + height + 1) // 2
+        base_row = int((top_pixel + height + 1) // 2)
         center = columns // 2
         extent = max(0, min(extent, size.lines - base_row))
         for step in range(extent):
@@ -552,7 +555,7 @@ def _show_startup_splash(argv, stream=None, environ=None):
             if fade <= 0.03:
                 continue
             mix = step / max(1, extent - 1)
-            color = (int(155 - 80 * mix), int(92 + 25 * mix), 255)
+            color = (int(210 - 130 * mix), int(220 - 110 * mix), 255)
             color = tuple(max(18, int(channel * fade)) for channel in color)
             glyph = '█' if step < 2 else '▓' if step < 4 else '▒' if step < 7 else '░'
             half_width = 1 if step < 3 else 0
@@ -597,7 +600,12 @@ def _show_startup_splash(argv, stream=None, environ=None):
 
     frame_number = 0
     started = time.monotonic()
-    flight_end = final_pixel + max(2, round(travel_pixels * 0.16))
+    def flight_position(t):
+        # Quintic trajectory: zero velocity and acceleration at both ends.
+        q = max(0.0, min(1.0, (t - 2.5) / 1.2))
+        eased = q * q * q * (10 + q * (-15 + 6 * q))
+        return start_pixel + 2 - (start_pixel + 2 - final_pixel) * eased
+
     try:
         stream.write('\x1b[?25l\x1b[2J' + bg_sgr)
         for frame in range(168):
@@ -606,17 +614,16 @@ def _show_startup_splash(argv, stream=None, environ=None):
             top_pixel, ghosts, trail, strength = start_pixel, (), 0, 0.0
             if 2.2 <= t < 2.5:
                 q = (t - 2.2) / 0.3
-                top_pixel += round(2 * q * q)
-                trail, strength = 1, q
-            elif 2.5 <= t < 3.2:
-                q = (t - 2.5) / 0.7
-                top_pixel = round(start_pixel + 2 - (start_pixel + 2 - flight_end) * q * q)
-                ghosts = ((top_pixel + 3, 0.18), (top_pixel + 6, 0.08))
-                trail, strength = round(2 + 8 * q), 0.92
-            elif t >= 3.2:
-                q = min(1.0, (t - 3.2) / 0.5)
-                top_pixel = round(flight_end + (final_pixel - flight_end) * (1 - (1 - q) ** 3))
-                trail, strength = round(7 * (1 - q)), 0.8 * (1 - q)
+                top_pixel += 2 * q * q * q * (10 + q * (-15 + 6 * q))
+                trail, strength = 2, q
+            elif t >= 2.5:
+                q = min(1.0, (t - 2.5) / 1.2)
+                top_pixel = flight_position(t)
+                speed = 16 * q * q * (1 - q) * (1 - q)
+                ghosts = ((flight_position(t - 0.09), 0.28 * speed),
+                          (flight_position(t - 0.18), 0.13 * speed)) if speed > 0.01 else ()
+                trail = round(12 * speed)
+                strength = min(1.0, 1.25 * speed + 0.15 * (1 - q))
             _show_frame(top_pixel, reveal=reveal, scan=t / 1.9 if t < 2.2 else None,
                         ghosts=ghosts, trail=trail, trail_strength=strength,
                         name_strength=min(1.0, (t - 3.7) / 0.9) if t >= 3.7 else None,
