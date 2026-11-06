@@ -6,6 +6,7 @@ import hashlib
 from html.parser import HTMLParser
 from io import BytesIO
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -101,6 +102,40 @@ def test_report_embeds_configured_aria_and_allows_it_through_csp(tmp_path, items
     assert 'local("Times New Roman")' in html
     assert 'unicode-range:U+0000-024F,U+1E00-1EFF' in html
     assert 'font-family:ReportLatin,ReportAria,Tahoma,sans-serif' in html
+
+
+def test_all_subject_icons_are_embedded_monochrome_and_decorative(tmp_path, items):
+    import report_html
+    from syllabus import load_config
+    subjects = load_config()['field_labels_en']
+    assert len(subjects) == 14
+    for subject in subjects:
+        icon = report_html._subject_icon({'sheet': subject})
+        attrs = ReportParser(icon).elements[0][1]
+        assert attrs['aria-hidden'] == 'true'
+        assert attrs['class'] == 'subject-icon'
+        encoded = attrs['style'].split('base64,')[1].split(')')[0]
+        with Image.open(BytesIO(base64.b64decode(encoded, validate=True))) as image:
+            assert image.mode == 'RGBA'
+            assert image.getchannel('A').getextrema() == (0, 255)
+        assert encoded != report_html._BALATAR_LOGO_PNG
+    assert report_html._BALATAR_LOGO_PNG in report_html._subject_icon({'sheet': '<unknown>'})
+    html = report_html.write_html_report(tmp_path, items, [], thumbs='none').read_text(encoding='utf-8')
+    parser = ReportParser(html)
+    icons = [attrs for tag, attrs in parser.elements if tag == 'svg']
+    assert len(icons) == 6
+    assert all(attrs['aria-hidden'] == 'true' and attrs['focusable'] == 'false' for attrs in icons)
+    assert 'mask:var(--subject-image)' in html
+    assert 'pointer-events:none' in html
+    assert '.metric:active' in html and '.metric[aria-pressed="true"]' in html
+    assert 'prefers-reduced-motion:reduce' in html
+    # Item count must not be overridden by the former fixed-column rules.
+    for selector in ('metrics', 'properties', 'thumbnails', 'qc-grid', 'detail-grid'):
+        declarations = re.findall(r'(?:^|[{}])\s*\.' + selector + r'\{([^{}]*)\}', html)
+        assert declarations
+        assert all('grid-template-columns:' not in rule for rule in declarations)
+    assert 'repeat(auto-fit,minmax(min(100%,var(--cell-min)),1fr))' in html
+    assert '.metric:hover:not(:active)' in html
 
 
 @pytest.mark.parametrize('count', [0, 2])
