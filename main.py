@@ -457,18 +457,22 @@ def _show_startup_splash(argv, stream=None, environ=None):
         from base64 import b64decode
         from io import BytesIO
         from report_html import _BALATAR_LOGO_PNG
-        width = 36 if size.columns >= 42 else 30
+        height = min(40, (size.lines - 8) * 2)
+        width = min(size.columns - 6, round(height * 0.88))
         with Image.open(BytesIO(b64decode(_BALATAR_LOGO_PNG))) as image:
-            alpha = image.getchannel('A').resize((width, 40), Image.Resampling.LANCZOS)
+            alpha = image.getchannel('A').resize((width, height), Image.Resampling.LANCZOS)
             mask = tuple(''.join('#' if alpha.getpixel((x, y)) > 90 else '.'
-                                 for x in range(width)) for y in range(40))
+                                 for x in range(width)) for y in range(height))
     except Exception:
         pass  # The optional splash must never block the processing pipeline.
     try:
         stream.write('\x1b[?25l\x1b[2J')
         width = len(mask[0])
+        height = len(mask)
+        logo_rows = height // 2
         indent = ' ' * max(0, (size.columns - width) // 2)
-        top_padding = [''] * max(0, (size.lines - 24) // 2)
+        canvas_rows = min(size.lines - 2, logo_rows + 6)
+        top_padding = [''] * max(0, (size.lines - canvas_rows - 2) // 2)
         # Storyboard: discovery, assembly, pause, ignition, ascent and final hold.
         for frame in range(112):
             elapsed = frame * 0.05
@@ -476,35 +480,43 @@ def _show_startup_splash(argv, stream=None, environ=None):
             sweep = min(1.4, max(-0.3, (elapsed - 0.8) / 1.3))
             ascent = min(1.0, max(0.0, (elapsed - 2.5) / 0.7))
             ascent = 1 - (1 - ascent) ** 3
-            offset = 2 - round(2 * ascent)
+            offset = round((canvas_rows - logo_rows) * (1 - ascent))
             rows = list(top_padding)
-            for row in range(22):
+            for row in range(canvas_rows):
                 line = []
                 source_row = row - offset
                 for x in range(width):
                     y = source_row * 2
                     top, bottom = ((mask[y][x], mask[y + 1][x])
-                                   if 0 <= source_row < 20 else ('.', '.'))
-                    pixel = ('█' if top == '#' and bottom == '#' else
+                                   if 0 <= source_row < logo_rows else ('.', '.'))
+                    pixel = ('▀' if top == '#' and bottom == '#' else
                              '▀' if top == '#' else '▄' if bottom == '#' else ' ')
-                    diagonal = (x / width + max(0, y) / 40) / 2
+                    diagonal = (x / width + max(0, y) / height) / 2
                     if pixel == ' ' or diagonal > reveal:
                         # A few orbiting points suggest exploration without obscuring the logo.
-                        point = (elapsed < 1.7 and row in (5, 9, 13) and
+                        point = (elapsed < 1.7 and row in (4, 8, 12) and
                                  x in (2 + (frame // 5) % 5, width - 3 - (frame // 6) % 5))
-                        # The short exhaust trail appears only during ascent.
-                        trail = (2.5 <= elapsed < 3.7 and 20 + offset <= row <= 21 and
-                                 abs(x - width // 2) <= (1 if row == 20 else 0))
-                        energy = (2.2 <= elapsed < 2.5 and row == 21 and
+                        trail_depth = row - (logo_rows + offset)
+                        trail = (2.5 <= elapsed < 3.7 and 0 <= trail_depth < 6 and
+                                 abs(x - width // 2) <= (1 if trail_depth < 2 else 0))
+                        energy = (2.2 <= elapsed < 2.5 and row == canvas_rows - 1 and
                                   abs(x - width // 2) <= 1 + frame % 3)
-                        line.append('\x1b[38;2;77;210;242m' + ('+' if point else '▄') + '\x1b[0m'
+                        trail_pixel = ('█' if trail_depth < 1 else '▓' if trail_depth < 3 else
+                                       '▒' if trail_depth < 5 else '░')
+                        line.append('\x1b[38;2;77;210;242m' + ('+' if point else trail_pixel if trail else '▄') + '\x1b[0m'
                                     if point or trail or energy else ' ')
                         continue
                     shine = max(0.0, 1.0 - abs(diagonal - sweep) / 0.13)
-                    red = min(255, int(125 + 45 * (1 - y / 40) + 65 * shine))
+                    red = min(255, int(125 + 45 * (1 - y / height) + 65 * shine))
                     green = min(255, int(70 + 55 * x / width + 150 * shine))
-                    blue = min(255, int(210 + 35 * y / 40 + 45 * shine))
-                    line.append(f'\x1b[38;2;{red};{green};{blue}m{pixel}')
+                    blue = min(255, int(210 + 35 * y / height + 45 * shine))
+                    color = f'\x1b[38;2;{red};{green};{blue}m'
+                    if top == '#' and bottom == '#':
+                        lower_red = max(0, red - 2)
+                        lower_blue = min(255, blue + 1)
+                        line.append(color + f'\x1b[48;2;{lower_red};{green};{lower_blue}m▀\x1b[49m')
+                    else:
+                        line.append(color + pixel)
                 rows.append(indent + ''.join(line) + '\x1b[0m')
             label_full = 'B A L A T A R'
             visible = max(0, min(len(label_full), int((elapsed - 3.7) / 0.9 * len(label_full))))
