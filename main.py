@@ -550,21 +550,25 @@ def _show_startup_splash(argv, stream=None, environ=None):
         base_row = int((top_pixel + height + 1) // 2)
         center = columns // 2
         extent = max(0, min(extent, size.lines - base_row))
+        import math
+        nozzle = max(2, min(4, width // 7))
         for step in range(extent):
-            fade = strength * (1.0 - step / max(1, extent))
-            if fade <= 0.03:
-                continue
-            mix = step / max(1, extent - 1)
-            color = (int(210 - 130 * mix), int(220 - 110 * mix), 255)
-            color = tuple(max(18, int(channel * fade)) for channel in color)
-            glyph = '█' if step < 2 else '▓' if step < 4 else '▒' if step < 7 else '░'
-            half_width = 1 if step < 3 else 0
-            for dx in range(-half_width, half_width + 1):
-                _put(canvas, center + dx, base_row + step,
-                     glyph if dx == 0 else '░', color)
-            if step in (2, 5, 8) and base_row + step + 1 < size.lines:
-                spark_x = center + (-2 if step == 2 else 2)
-                _put(canvas, spark_x, base_row + step + 1, '.', color)
+            depth = step / max(1, extent - 1)
+            # Broad plasma cone with a bright core and a cool, fading envelope.
+            radius = max(0.65, nozzle * (1 - depth) ** 0.65)
+            pulse = 0.92 + 0.08 * math.sin(frame_number * 0.45 - step * 0.9)
+            for dx in range(-nozzle - 1, nozzle + 2):
+                edge = abs(dx) / radius
+                if edge > 1.35:
+                    continue
+                core = max(0.0, 1 - edge * 1.7) * (1 - depth)
+                palette = (int(85 + 160 * core + 65 * min(1, edge)),
+                           int(125 + 125 * core + 75 * (1 - min(1, edge))), 255)
+                opacity = strength * (1 - depth * 0.85) * max(0.0, 1 - edge / 1.4) * pulse
+                color = tuple(round(background[k] + (v - background[k]) * opacity)
+                              for k, v in enumerate(palette))
+                glyph = '█' if core > 0.45 else '▓' if edge < 0.65 else '▒' if edge < 1 else '░'
+                _put(canvas, center + dx, base_row + step, glyph, color)
 
     # Compact geometric lettering: five pixel rows, rendered in three cell rows.
     letters = {
@@ -653,6 +657,7 @@ def _show_startup_splash(argv, stream=None, environ=None):
         time.sleep(max(0.0, started + frame_number / 30.0 - time.monotonic()))
 
     frame_number = 0
+    final_hold_started = None
     started = time.monotonic()
     def flight_position(t):
         # Quintic trajectory: zero velocity and acceleration at both ends.
@@ -676,12 +681,17 @@ def _show_startup_splash(argv, stream=None, environ=None):
                 speed = 16 * q * q * (1 - q) * (1 - q)
                 ghosts = ((flight_position(t - 0.09), 0.28 * speed),
                           (flight_position(t - 0.18), 0.13 * speed)) if speed > 0.01 else ()
-                trail = round(12 * speed)
+                trail = round(16 * speed)
                 strength = min(1.0, 1.25 * speed + 0.15 * (1 - q))
             _show_frame(top_pixel, reveal=reveal, scan=t / 1.9 if t < 2.2 else None,
                         ghosts=ghosts, trail=trail, trail_strength=strength,
                         name_strength=min(1.0, (t - 3.7) / 0.9) if t >= 3.7 else None,
                         science_strength=max(0.0, 1 - t / 1.7))
+            if t >= 4.6 and final_hold_started is None:
+                final_hold_started = time.monotonic()
+        # Guarantee a readable final card even when rendering misses deadlines.
+        if final_hold_started is not None:
+            time.sleep(max(0.0, 0.7 - (time.monotonic() - final_hold_started)))
     except (OSError, UnicodeError):
         pass
     finally:
