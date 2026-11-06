@@ -451,84 +451,176 @@ def _show_startup_splash(argv, stream=None, environ=None):
         '▀▄█'.encode(stream.encoding or 'utf-8')
     except (AttributeError, LookupError, OSError, UnicodeError):
         return
-    # Render from the embedded original; retain the static silhouette as a safe fallback.
+    # Keep the supplied mark's aspect ratio and derive every final frame from
+    # its alpha channel; the built-in mask is only a safe rendering fallback.
+    # Leave room for flight, label, and a blank last terminal row.
+    height = min(40, (size.lines - 11) * 2)
+    height -= height % 2
+    width = min(size.columns - 8, round(height * 0.88))
     mask = _SPLASH_MASK
     try:
         from base64 import b64decode
         from io import BytesIO
         from report_html import _BALATAR_LOGO_PNG
-        height = min(40, (size.lines - 8) * 2)
-        width = min(size.columns - 6, round(height * 0.88))
         with Image.open(BytesIO(b64decode(_BALATAR_LOGO_PNG))) as image:
             alpha = image.getchannel('A').resize((width, height), Image.Resampling.LANCZOS)
             mask = tuple(''.join('#' if alpha.getpixel((x, y)) > 90 else '.'
                                  for x in range(width)) for y in range(height))
     except Exception:
-        pass  # The optional splash must never block the processing pipeline.
-    try:
-        stream.write('\x1b[?25l\x1b[2J')
-        width = len(mask[0])
-        height = len(mask)
-        logo_rows = height // 2
-        indent = ' ' * max(0, (size.columns - width) // 2)
-        canvas_rows = min(size.lines - 2, logo_rows + 6)
-        top_padding = [''] * max(0, (size.lines - canvas_rows - 2) // 2)
-        # Storyboard: discovery, assembly, pause, ignition, ascent and final hold.
-        for frame in range(112):
-            elapsed = frame * 0.05
-            reveal = min(1.0, max(0.0, (elapsed - 0.2) / 1.5))
-            sweep = min(1.4, max(-0.3, (elapsed - 0.8) / 1.3))
-            ascent = min(1.0, max(0.0, (elapsed - 2.5) / 0.7))
-            ascent = 1 - (1 - ascent) ** 3
-            offset = round((canvas_rows - logo_rows) * (1 - ascent))
-            rows = list(top_padding)
-            for row in range(canvas_rows):
-                line = []
-                source_row = row - offset
-                for x in range(width):
-                    y = source_row * 2
-                    top, bottom = ((mask[y][x], mask[y + 1][x])
-                                   if 0 <= source_row < logo_rows else ('.', '.'))
-                    pixel = ('▀' if top == '#' and bottom == '#' else
-                             '▀' if top == '#' else '▄' if bottom == '#' else ' ')
-                    diagonal = (x / width + max(0, y) / height) / 2
-                    if pixel == ' ' or diagonal > reveal:
-                        # A few orbiting points suggest exploration without obscuring the logo.
-                        point = (elapsed < 1.7 and row in (4, 8, 12) and
-                                 x in (2 + (frame // 5) % 5, width - 3 - (frame // 6) % 5))
-                        trail_depth = row - (logo_rows + offset)
-                        trail = (2.5 <= elapsed < 3.7 and 0 <= trail_depth < 6 and
-                                 abs(x - width // 2) <= (1 if trail_depth < 2 else 0))
-                        energy = (2.2 <= elapsed < 2.5 and row == canvas_rows - 1 and
-                                  abs(x - width // 2) <= 1 + frame % 3)
-                        trail_pixel = ('█' if trail_depth < 1 else '▓' if trail_depth < 3 else
-                                       '▒' if trail_depth < 5 else '░')
-                        line.append('\x1b[38;2;77;210;242m' + ('+' if point else trail_pixel if trail else '▄') + '\x1b[0m'
-                                    if point or trail or energy else ' ')
+        # Resize the conservative embedded silhouette if the image asset is absent.
+        source_height = len(mask)
+        source_width = len(mask[0])
+        mask = tuple(''.join(
+            '#' if mask[min(source_height - 1, round(y * (source_height - 1) / max(1, height - 1)))][
+                min(source_width - 1, round(x * (source_width - 1) / max(1, width - 1)))] == '#'
+            else '.' for x in range(width)) for y in range(height))
+
+    rows_high = height // 2
+    final_top = max(1, (size.lines - rows_high - 3) // 2 - max(1, size.lines // 12))
+    travel_pixels = min(12, max(8, (size.lines - rows_high - 3) * 2))
+    final_pixel = final_top * 2
+    start_pixel = final_pixel + travel_pixels
+    columns = size.columns - 1
+    background = (8, 13, 29)
+    bg_sgr = f'\x1b[48;2;{background[0]};{background[1]};{background[2]}m'
+    reset = '\x1b[0m'
+
+    def _rgb(x, y, shine=0.0, dim=1.0):
+        xratio = x / max(1, width - 1)
+        yratio = y / max(1, height - 1)
+        blend = 0.42 * xratio + 0.58 * yratio
+        color = (77 + 78 * blend, 124 - 32 * blend, 255)
+        light = max(0.0, min(1.0, shine)) * 0.48
+        return tuple(max(16, min(255, int((channel + (255 - channel) * light) * dim)))
+                     for channel in color)
+
+    def _put(canvas, x, y, glyph, color, lower_color=None):
+        if 0 <= x < columns and 0 <= y < size.lines - 1:
+            r, g, b = color
+            code = f'\x1b[38;2;{r};{g};{b}m'
+            if lower_color is not None:
+                lr, lg, lb = lower_color
+                code += f'\x1b[48;2;{lr};{lg};{lb}m'
+            else:
+                code += bg_sgr
+            canvas[y][x] = code + glyph + bg_sgr
+
+    def _revealed(x, y, reveal):
+        if not (0 <= y < height and mask[y][x] == '#'):
+            return False
+        diagonal = 0.38 * x / max(1, width - 1) + 0.62 * y / max(1, height - 1)
+        return diagonal <= reveal
+
+    def _paint_logo(canvas, top_pixel, reveal=1.0, scan=None, dim=1.0, outline=False):
+        for cell_y in range(size.lines - 1):
+            source_top = cell_y * 2 - top_pixel
+            source_bottom = source_top + 1
+            for x in range(width):
+                top_on = _revealed(x, source_top, reveal)
+                bottom_on = _revealed(x, source_bottom, reveal)
+                if not (top_on or bottom_on):
+                    continue
+                if outline:
+                    source_y = source_top if top_on else source_bottom
+                    neighbors = ((x - 1, source_y), (x + 1, source_y),
+                                 (x, source_y - 1), (x, source_y + 1))
+                    if all(0 <= nx < width and 0 <= ny < height and mask[ny][nx] == '#'
+                           for nx, ny in neighbors):
                         continue
-                    shine = max(0.0, 1.0 - abs(diagonal - sweep) / 0.13)
-                    red = min(255, int(125 + 45 * (1 - y / height) + 65 * shine))
-                    green = min(255, int(70 + 55 * x / width + 150 * shine))
-                    blue = min(255, int(210 + 35 * y / height + 45 * shine))
-                    color = f'\x1b[38;2;{red};{green};{blue}m'
-                    if top == '#' and bottom == '#':
-                        lower_red = max(0, red - 2)
-                        lower_blue = min(255, blue + 1)
-                        line.append(color + f'\x1b[48;2;{lower_red};{green};{lower_blue}m▀\x1b[49m')
-                    else:
-                        line.append(color + pixel)
-                rows.append(indent + ''.join(line) + '\x1b[0m')
-            label_full = 'B A L A T A R'
-            visible = max(0, min(len(label_full), int((elapsed - 3.7) / 0.9 * len(label_full))))
-            label = label_full[:visible].ljust(len(label_full))
-            label_indent = ' ' * max(0, (size.columns - len(label)) // 2)
-            caption = 'OFFLINE  /  LESSON PROCESSOR' if elapsed >= 4.6 else ' ' * 28
-            caption_indent = ' ' * max(0, (size.columns - len(caption)) // 2)
-            rows.extend((label_indent + '\x1b[38;2;214;202;255m' + label + '\x1b[0m',
-                         caption_indent + '\x1b[38;2;91;196;220m' + caption + '\x1b[0m'))
-            stream.write('\x1b[H' + '\n'.join(rows))
-            stream.flush()
-            time.sleep(0.05)
+                shine = 0.0
+                if scan is not None:
+                    source_y = source_top if top_on else source_bottom
+                    diagonal = 0.38 * x / max(1, width - 1) + 0.62 * source_y / max(1, height - 1)
+                    shine = max(0.0, 1.0 - abs(diagonal - scan) / 0.09)
+                glyph = '▀' if top_on else '▄'
+                if top_on and bottom_on:
+                    top_color = _rgb(x, source_top, shine, dim)
+                    bottom_color = _rgb(x, source_bottom, shine, dim)
+                    _put(canvas, x + (columns - width) // 2, cell_y, glyph,
+                         top_color, bottom_color)
+                else:
+                    source_y = source_top if top_on else source_bottom
+                    _put(canvas, x + (columns - width) // 2, cell_y, glyph,
+                         _rgb(x, source_y, shine, dim))
+
+    def _paint_trail(canvas, top_pixel, extent, strength=1.0):
+        base_row = (top_pixel + height + 1) // 2
+        center = columns // 2
+        extent = max(0, min(extent, size.lines - base_row))
+        for step in range(extent):
+            fade = strength * (1.0 - step / max(1, extent))
+            if fade <= 0.03:
+                continue
+            mix = step / max(1, extent - 1)
+            color = (int(155 - 80 * mix), int(92 + 25 * mix), 255)
+            color = tuple(max(18, int(channel * fade)) for channel in color)
+            glyph = '█' if step < 2 else '▓' if step < 4 else '▒' if step < 7 else '░'
+            half_width = 1 if step < 3 else 0
+            for dx in range(-half_width, half_width + 1):
+                _put(canvas, center + dx, base_row + step,
+                     glyph if dx == 0 else '░', color)
+            if step in (2, 5, 8) and base_row + step + 1 < size.lines:
+                spark_x = center + (-2 if step == 2 else 2)
+                _put(canvas, spark_x, base_row + step + 1, '.', color)
+
+    def _show_frame(top_pixel, reveal=1.0, scan=None, ghosts=(), trail=0,
+                    trail_strength=1.0, name_strength=None, science_strength=0.0):
+        canvas = [[' ' for _ in range(columns)] for _ in range(size.lines - 1)]
+        if science_strength > 0:
+            tone = tuple(int(c * science_strength) for c in (48, 94, 140))
+            for side in (-1, 1):
+                anchor = columns // 2 + side * (width // 2 + 3)
+                for dx, dy, glyph in ((0, 0, '+'), (side, 1, '.'), (side * 2, 2, '+'),
+                                      (side, 3, '.'), (0, 4, '+')):
+                    _put(canvas, anchor + dx, final_top + 2 + dy, glyph, tone)
+        for ghost_pixel, ghost_dim in ghosts:
+            _paint_logo(canvas, ghost_pixel, dim=ghost_dim, outline=True)
+        if trail:
+            _paint_trail(canvas, top_pixel, trail, trail_strength)
+        _paint_logo(canvas, top_pixel, reveal=reveal, scan=scan)
+        if name_strength is not None:
+            wordmark = 'BALATAR'
+            name_y = final_top + rows_high + 1
+            name_x = max(0, (columns - len(wordmark)) // 2)
+            q = max(0.0, min(1.0, name_strength))
+            color = (int(62 + 135 * q), int(58 + 137 * q), 255)
+            label = (f'\x1b[38;2;{color[0]};{color[1]};{color[2]}m'
+                     + wordmark + bg_sgr)
+            if 0 <= name_y < size.lines - 1:
+                canvas[name_y][name_x:name_x + len(wordmark)] = [label] + [''] * (len(wordmark) - 1)
+        lines = [bg_sgr + ''.join(line) + reset for line in canvas]
+        stream.write('\x1b[H' + '\n'.join(lines))
+        stream.flush()
+        nonlocal frame_number
+        frame_number += 1
+        time.sleep(max(0.0, started + frame_number / 30.0 - time.monotonic()))
+
+    frame_number = 0
+    started = time.monotonic()
+    flight_end = final_pixel + max(2, round(travel_pixels * 0.16))
+    try:
+        stream.write('\x1b[?25l\x1b[2J' + bg_sgr)
+        for frame in range(168):
+            t = frame / 30.0
+            reveal = min(1.0, 0.08 + 0.92 * t / 1.7)
+            top_pixel, ghosts, trail, strength = start_pixel, (), 0, 0.0
+            if 2.2 <= t < 2.5:
+                q = (t - 2.2) / 0.3
+                top_pixel += round(2 * q * q)
+                trail, strength = 1, q
+            elif 2.5 <= t < 3.2:
+                q = (t - 2.5) / 0.7
+                top_pixel = round(start_pixel + 2 - (start_pixel + 2 - flight_end) * q * q)
+                ghosts = ((top_pixel + 3, 0.18), (top_pixel + 6, 0.08))
+                trail, strength = round(2 + 8 * q), 0.92
+            elif t >= 3.2:
+                q = min(1.0, (t - 3.2) / 0.5)
+                top_pixel = round(flight_end + (final_pixel - flight_end) * (1 - (1 - q) ** 3))
+                trail, strength = round(7 * (1 - q)), 0.8 * (1 - q)
+            _show_frame(top_pixel, reveal=reveal, scan=t / 1.9 if t < 2.2 else None,
+                        ghosts=ghosts, trail=trail, trail_strength=strength,
+                        name_strength=min(1.0, (t - 3.7) / 0.9) if t >= 3.7 else None,
+                        science_strength=max(0.0, 1 - t / 1.7))
     except (OSError, UnicodeError):
         pass
     finally:
