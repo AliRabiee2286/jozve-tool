@@ -82,8 +82,14 @@ def test_report_sections_metadata_and_untrusted_text_are_offline_and_escaped(tmp
     for tag, attrs in parser.elements:
         for key in ('src', 'href', 'action'):
             if key in attrs:
-                assert attrs[key].startswith(('#', 'data:')), (tag, attrs)
-    assert 'http:' not in html and 'https:' not in html
+                if tag == 'a' and key == 'href':
+                    assert attrs[key].startswith(('#', './review.pdf')) or attrs[key] in (
+                        'https://github.com/AliRabiee86',
+                        'https://github.com/AliRabiee2286/jozve-tool'), (tag, attrs)
+                else:
+                    assert attrs[key].startswith(('#', 'data:')), (tag, attrs)
+    # External navigation was explicitly requested; resources remain embedded.
+    assert 'connect-src \'none\'' in html
     assert all(token in html for token in
                ('prefers-color-scheme', 'prefers-reduced-motion', '@media print',
                 'data-status="REVIEW"', 'data-count=', 'aria-live='))
@@ -122,7 +128,7 @@ def test_all_subject_icons_are_embedded_monochrome_and_decorative(tmp_path, item
     assert report_html._BALATAR_LOGO_PNG in report_html._subject_icon({'sheet': '<unknown>'})
     html = report_html.write_html_report(tmp_path, items, [], thumbs='none').read_text(encoding='utf-8')
     parser = ReportParser(html)
-    icons = [attrs for tag, attrs in parser.elements if tag == 'svg']
+    icons = [attrs for tag, attrs in parser.elements if tag == 'svg' and attrs.get('class') != 'github-icon']
     assert len(icons) == 6
     assert all(attrs['aria-hidden'] == 'true' and attrs['focusable'] == 'false' for attrs in icons)
     assert 'mask:var(--subject-image)' in html
@@ -161,6 +167,51 @@ def test_subject_color_follows_each_file_status_and_hero_watermark_stays_subtle(
         if opacity:
             assert float(opacity.group(1)) <= .04
     assert 'inset-inline-start:auto' in html
+
+
+def test_review_buttons_target_correct_pdf_pages_and_work_from_archive(tmp_path, items):
+    from urllib.parse import unquote
+    from report_html import write_html_report
+    item = deepcopy(items[1])
+    name = 'lesson # review.pdf'
+    shutil.copyfile(tmp_path / 'review.pdf', tmp_path / name)
+    item.update(output=name, input_pages=3, output_pages=4)
+    item['qc']['advisory_failed'] = ['صفحه محتوا 1: متن حفظ شده', 'صفحه محتوا 3: متن حفظ شده',
+                                   'صفحه محتوا 3: هش تصاویر', 'صفحه محتوا 99: نامعتبر']
+    path = write_html_report(tmp_path, [item], [], thumbs='none')
+    def buttons(path):
+        return [attrs for tag, attrs in ReportParser(path.read_text(encoding='utf-8')).elements
+                if tag == 'a' and attrs.get('data-pdf-link') == 'true']
+    links = buttons(path)
+    assert [attrs['href'].split('#page=')[-1] for attrs in links[1:]] == ['2', '4']
+    assert len(links) == 3
+    for attrs in links:
+        assert attrs['target'] == '_blank' and attrs['rel'] == 'noopener noreferrer'
+        assert (tmp_path / unquote(attrs['href'].split('#')[0])).resolve() == (tmp_path / name).resolve()
+    archive = next((tmp_path / 'reports').glob('*/report.html'))
+    for attrs in buttons(archive):
+        assert (archive.parent / unquote(attrs['href'].split('#')[0])).resolve() == (tmp_path / name).resolve()
+
+
+@pytest.mark.parametrize('output_name,status', [('missing.pdf','REVIEW'),('../outside.pdf','REVIEW'),
+                                               ('review.pdf','BLOCKED'),('https://example.com/a.pdf','REVIEW')])
+def test_review_links_never_publish_missing_blocked_or_external_outputs(tmp_path, items, output_name, status):
+    from report_html import _review_links
+    item = deepcopy(items[1])
+    item.update(output=output_name, status_code=status)
+    assert 'data-pdf-link' not in _review_links(item, tmp_path)
+
+
+def test_footer_credit_links_are_explicit_and_do_not_load_remote_assets(tmp_path, items):
+    from report_html import write_html_report
+    html = write_html_report(tmp_path, items, [], thumbs='none').read_text(encoding='utf-8')
+    elements = ReportParser(html).elements
+    links = [attrs for tag, attrs in elements if tag == 'a' and attrs.get('href', '').startswith('https:')]
+    assert {attrs['href'] for attrs in links} == {'https://github.com/AliRabiee86',
+                                                'https://github.com/AliRabiee2286/jozve-tool'}
+    assert all(attrs['target'] == '_blank' and attrs['rel'] == 'noopener noreferrer' for attrs in links)
+    assert 'توسعه‌یافته توسط' in html
+    assert all(not attrs.get('src', '').startswith(('http:', 'https:')) for _, attrs in elements)
 
 
 @pytest.mark.parametrize('count', [0, 2])
@@ -247,7 +298,8 @@ def test_archive_keeps_twenty_managed_runs_and_preserves_legacy_reports(tmp_path
                              now=datetime(2026, 11, 3, 12, 0, 0))
     snapshots = sorted(root.glob('*/report.html'))
     assert len(snapshots) == 20 and foreign.is_dir()
-    assert snapshots[-1].read_bytes() == path.read_bytes()
+    assert snapshots[-1].read_text(encoding='utf-8') == path.read_text(encoding='utf-8').replace(
+        'data-pdf-link="true" href="./', 'data-pdf-link="true" href="../../')
     for name, data in legacy.items():
         assert (tmp_path / name).read_bytes() == data
         assert (snapshots[-1].parent / name).read_bytes() == data

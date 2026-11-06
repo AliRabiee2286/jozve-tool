@@ -9,6 +9,7 @@ import re
 import shutil
 from string import Template
 import tempfile
+from urllib.parse import quote
 
 import pymupdf as fitz
 
@@ -166,6 +167,35 @@ def _warnings_html(item, config):
     return '<ul>' + ''.join(messages) + '</ul>' if messages else '<p class="muted">هشداری ثبت نشده است.</p>'
 
 
+def _review_links(item, output):
+    """Link only to a published local PDF; QC content pages exclude the cover."""
+    if _code(item) != 'REVIEW':
+        return ''
+    name = item.get('output')
+    if not isinstance(name, str) or not name:
+        return '<p class="muted">PDF خروجی برای بازکردن در دسترس نیست.</p>'
+    root = Path(output).resolve()
+    path = (root / name).resolve()
+    if not path.is_relative_to(root) or path.suffix.lower() != '.pdf' or not path.is_file():
+        return '<p class="muted">PDF خروجی برای بازکردن در دسترس نیست.</p>'
+    href = './' + quote(path.relative_to(root).as_posix(), safe='/')
+    pages = set()
+    qc = item.get('qc', {})
+    failed = list(qc.get('advisory_failed', [])) + [key for key, passed in qc.get('checks', {}).items() if not passed]
+    for check in failed:
+        match = re.match(r'^صفحه محتوا (\d+):', str(check))
+        if match:
+            page = int(match.group(1))
+            if page > 0 and page <= item.get('input_pages', 0):
+                pages.add(page)
+    def link(label, fragment=''):
+        return (f'<a class="review-link" data-pdf-link="true" href="{_text(href + fragment)}" '
+                f'target="_blank" rel="noopener noreferrer">{label}<span aria-hidden="true"> ↗</span></a>')
+    buttons = link('بازکردن PDF در تب جدید')
+    buttons += ''.join(link(f'صفحهٔ محتوای {page} · صفحهٔ {page + 1} PDF', f'#page={page + 1}') for page in sorted(pages))
+    return '<div class="review-actions" aria-label="بازکردن صفحات برای بازبینی">' + buttons + '</div>'
+
+
 def _file_html(item, index, output, config, metadata, thumbs):
     code = _code(item)
     files = ', '.join(item.get('files', []))
@@ -194,7 +224,8 @@ def _file_html(item, index, output, config, metadata, thumbs):
         f'<div><dt>{_text(label)}</dt><dd><bdi>{_text(value)}</bdi></dd></div>' for label, value in properties) + '</dl>'
     action = ''
     if code == 'REVIEW':
-        action = '<aside class="notice review"><h3>چه کنم؟</h3><p>فایل منتشر شده است. کنترل‌های توصیه‌ای ردشده و پیش‌نمایش‌ها را ببینید و صفحات مربوط را در PDF بازبینی کنید.</p></aside>'
+        action = ('<aside class="notice review"><h3>چه کنم؟</h3><p>فایل منتشر شده است. کنترل‌های توصیه‌ای ردشده را بررسی کنید؛ PDF یا صفحهٔ مشخص‌شده را در تب جدید باز کنید.</p>'
+                  + _review_links(item, output) + '</aside>')
     elif code == 'BLOCKED':
         action = f'<aside class="notice blocked"><h3>خروجی منتشر نشد</h3><p>{_text(item.get("error", "علت ثبت نشده"))}</p><p>علت خطا را اصلاح و دوباره اجرا کنید. خروجی قدیمی، نتیجهٔ این اجرا نیست.</p></aside>'
     removed = ''.join(f'<li>صفحهٔ {_text(page.get("page"))}: <bdi>{_text(number.get("text"))}</bdi></li>'
@@ -219,7 +250,8 @@ def _archive(output, html, now, retain):
     root = output / 'reports'
     archive = root / now.strftime('%Y%m%d_%H%M%S_%f')
     archive.mkdir(parents=True, exist_ok=False)
-    (archive / 'report.html').write_text(html, encoding='utf-8', newline='\n')
+    archived_html = html.replace('data-pdf-link="true" href="./', 'data-pdf-link="true" href="../../')
+    (archive / 'report.html').write_text(archived_html, encoding='utf-8', newline='\n')
     for name in ('report.txt', 'report.json', 'log.txt', 'log.jsonl'):
         if (output / name).is_file():
             shutil.copyfile(output / name, archive / name)
@@ -407,7 +439,13 @@ tbody tr:hover{background:var(--soft)}
 .file-body h3{margin:24px 0 12px;font-size:15px}
 .properties dt{margin-bottom:5px;color:var(--muted);font-size:12px}
 .properties dd{margin:0;line-height:1.9;font-size:14px}
-.notice{border-radius:12px;padding:15px 20px;margin-top:20px;font-size:13px;border:1px solid currentColor;border-inline-start-width:4px}
+.notice{border-radius:12px;padding:20px 24px;margin-top:20px;font-size:16px;border:1px solid currentColor;border-inline-start-width:4px}
+.file-body .notice h3{margin:0 0 8px;font-size:20px;font-weight:700;line-height:1.5}
+.file-body .notice p{margin:0;max-width:85ch;font-size:16px;line-height:1.95}
+.file-body .notice p+p{margin-top:8px}
+.review-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.review-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 14px;border:1px solid currentColor;border-radius:10px;background:var(--surface);color:inherit;text-decoration:none;font-size:14px;line-height:1.7;transition:background-color .16s,transform .16s}
+.review-link:hover{background:var(--soft)}.review-link:active{transform:translateY(1px)}
 .checks{list-style:none;padding:0;margin:0;max-height:350px;overflow:auto;border:1px solid var(--line);border-color:var(--line);border-radius:10px}
 .checks li{display:flex;align-items:baseline;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);border-color:var(--line);font-size:13px}
 .check{font-size:10px;padding:1px 7px;border-radius:5px;flex-shrink:0;min-height:22px;padding-inline:7px;font-weight:700}
@@ -460,7 +498,7 @@ th{padding:13px 18px;text-align:start;background:var(--soft);color:var(--muted);
 .hero::after{color:var(--hero-ink);width:180px;height:205px;inset-inline-start:auto;inset-inline-end:42%;inset-block-end:-105px;opacity:.035}
 .completion::after{width:130px;height:150px;inset-inline-end:-30px;inset-block-end:-45px;color:var(--hero-ink);opacity:.055}
 footer::after{color:var(--hero-ink)}
-.subject-watermark{inset-inline-end:-35px;inset-block-start:48px;transform:rotate(-12deg);opacity:.035}
+.subject-watermark{inset-inline-end:-35px;inset-block-start:48px;transform:rotate(-12deg);opacity:.065}
 .subject-watermark .subject-icon{width:210px;height:210px;mask-size:contain;-webkit-mask-size:contain}
 .metric{border:1px solid var(--line);text-align:right;display:grid;position:relative;overflow:hidden;grid-template-rows:auto auto;align-items:center;column-gap:14px;padding:18px 20px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow);min-height:126px;grid-template-columns:38px minmax(0,1fr) auto;transition:transform .16s ease,box-shadow .2s ease,background-color .2s ease,border-color .2s ease}
 .metric-icon{width:34px;height:34px;grid-column:1;grid-row:1/3;align-self:center;pointer-events:none;stroke-width:3.5}
@@ -478,7 +516,7 @@ footer::after{color:var(--hero-ink)}
 @keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(prefers-color-scheme:dark){:root{--bg:#111d1b;--surface:#172925;--surface-strong:#1b302b;--soft:#213b35;--ink:#edf6ef;--muted:#b4c7bd;--line:#3b574e;--brand:#9bd8b9;--brand-strong:#0d2927;--brand-soft:#29483e;--accent:#e5b765;--focus:#9be1c3;--ok:#a5d9b8;--ok-bg:#214536;--review:#f0ca83;--review-bg:#4a3c23;--blocked:#f0aaa6;--blocked-bg:#4c2d2d;--hero-ink:#eff8f1;--hero-muted:#c5d9ce;--hero-line:#496e65;--hero-panel:#204b45;--hero-track:#3b6159;--shadow:0 1px 2px rgba(0,0,0,.24),0 12px 32px rgba(0,0,0,.16);color-scheme:dark}
 .watermark{opacity:.10}
-.subject-watermark{opacity:.045}
+.subject-watermark{opacity:.08}
 .hero::after{opacity:.035}
 footer::after{opacity:.065}}
 @media(hover:hover){.metric:hover:not(:active){transform:translateY(-2px);box-shadow:var(--shadow)}
@@ -583,6 +621,9 @@ html{scroll-behavior:auto}
 *,*::before,*::after{animation:none!important;transition:none!important}
 .metric:active,.print-button:active{transform:none}}
 @keyframes detail-enter{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.developer-credit{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;border-top:1px solid var(--hero-line);padding-top:18px;color:var(--hero-ink);font-size:14px}
+.developer-credit a{display:inline-flex;align-items:center;gap:8px;color:inherit;min-height:44px;text-underline-offset:5px}.github-icon{width:22px;height:22px;flex-shrink:0;fill:currentColor}
+@media print{.review-actions{display:none}.file-body .notice h3{font-size:14px}.file-body .notice p{font-size:11px}.developer-credit,.developer-credit a{color:#111}.notice{padding:12px}}
 $font_css
 :root{--report-logo:url(data:image/png;base64,$logo_data)}
 .brand-mark{background:var(--brand)!important;mask:var(--report-logo) center/contain no-repeat;-webkit-mask:var(--report-logo) center/contain no-repeat;border-radius:0}
@@ -601,7 +642,7 @@ $warnings
 <p class="empty" id="empty"$empty>فایلی برای نمایش وجود ندارد.</p>
 <div class="section-heading detail-heading"><div><span class="section-kicker">بازبینی و شواهد</span><h2>جزئیات هر فایل</h2></div><p>برای بازکردن روی عنوان بزنید</p></div>
 <div id="file-details">$details</div></section>
-<footer><div><span class="footer-kicker">پروندهٔ اجرا</span><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi dir="ltr">$tool_version</bdi></p><p>شناسهٔ اجرا: <bdi dir="ltr">$run_id</bdi></p><p>زمان پردازش و آماده‌سازی: <bdi>$elapsed</bdi> ثانیه</p><p>$versions</p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><span class="footer-kicker">منابع ورودی</span><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets">$assets</ul></div></footer>
+<footer><div><span class="footer-kicker">پروندهٔ اجرا</span><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi dir="ltr">$tool_version</bdi></p><p>شناسهٔ اجرا: <bdi dir="ltr">$run_id</bdi></p><p>زمان پردازش و آماده‌سازی: <bdi>$elapsed</bdi> ثانیه</p><p>$versions</p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><span class="footer-kicker">منابع ورودی</span><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets">$assets</ul></div><div class="developer-credit"><span>توسعه‌یافته توسط <a href="https://github.com/AliRabiee86" target="_blank" rel="noopener noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg><bdi>AliRabiee86</bdi></a></span><a href="https://github.com/AliRabiee2286/jozve-tool" target="_blank" rel="noopener noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg>کد پروژه در گیت‌هاب</a></div></footer>
 </main>
 <script>
 (() => {
