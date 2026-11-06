@@ -35,6 +35,8 @@ const links = [...html.matchAll(/data-open="([^"]+)"/g)]
 const counters = [...html.matchAll(/data-count="(\d+)"/g)]
   .map(match => new Element(match[1], {count: match[1]}));
 const ring = new Element();
+const disclosures = [new Element(), new Element()];
+disclosures[1].open = true;
 let printed = false;
 let frames = 0;
 const windowListeners = {};
@@ -44,6 +46,7 @@ const document = {
   querySelectorAll: selector => ({
     'tbody tr[data-file]': rows, '[data-filter]': cards,
     '[data-open]': links, '[data-count]': counters,
+    '.detail-disclosure': disclosures,
   }[selector]),
 };
 const context = {
@@ -78,8 +81,10 @@ ids['print-report'].fire('click');
 assert.equal(printed, true);
 ids['file-1'].open = false;
 windowListeners.beforeprint();
+assert.ok(disclosures.every(detail => detail.open));
 assert.ok(rows.every(row => ids[row.dataset.file].open));
 windowListeners.afterprint();
+assert.deepEqual(disclosures.map(detail => detail.open), [false, true]);
 assert.equal(ids['file-1'].open, false);
 assert.equal(frames, reduced ? 0 : 1);
 assert.ok(counters.every(counter => counter.textContent ===

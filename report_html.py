@@ -171,14 +171,6 @@ def _review_links(item, output):
     """Link only to a published local PDF; QC content pages exclude the cover."""
     if _code(item) != 'REVIEW':
         return ''
-    name = item.get('output')
-    if not isinstance(name, str) or not name:
-        return '<p class="muted">PDF خروجی برای بازکردن در دسترس نیست.</p>'
-    root = Path(output).resolve()
-    path = (root / name).resolve()
-    if not path.is_relative_to(root) or path.suffix.lower() != '.pdf' or not path.is_file():
-        return '<p class="muted">PDF خروجی برای بازکردن در دسترس نیست.</p>'
-    href = './' + quote(path.relative_to(root).as_posix(), safe='/')
     pages = set()
     qc = item.get('qc', {})
     failed = list(qc.get('advisory_failed', [])) + [key for key, passed in qc.get('checks', {}).items() if not passed]
@@ -188,12 +180,35 @@ def _review_links(item, output):
             page = int(match.group(1))
             if page > 0 and page <= item.get('input_pages', 0):
                 pages.add(page)
+    full_review = (f'<p class="full-review-tag">نیازمند بررسی کامل · {len(pages)} صفحه نیازمند بازبینی</p>'
+                   if len(pages) > 4 else '')
+    unavailable = full_review + '<p class="muted">PDF خروجی برای بازکردن در دسترس نیست.</p>'
+    name = item.get('output')
+    if not isinstance(name, str) or not name:
+        return unavailable
+    root = Path(output).resolve()
+    path = (root / name).resolve()
+    if not path.is_relative_to(root) or path.suffix.lower() != '.pdf' or not path.is_file():
+        return unavailable
+    href = './' + quote(path.relative_to(root).as_posix(), safe='/')
     def link(label, fragment=''):
         return (f'<a class="review-link" data-pdf-link="true" href="{_text(href + fragment)}" '
                 f'target="_blank" rel="noopener noreferrer">{label}<span aria-hidden="true"> ↗</span></a>')
     buttons = link('بازکردن PDF در تب جدید')
-    buttons += ''.join(link(f'صفحهٔ محتوای {page} · صفحهٔ {page + 1} PDF', f'#page={page + 1}') for page in sorted(pages))
-    return '<div class="review-actions" aria-label="بازکردن صفحات برای بازبینی">' + buttons + '</div>'
+    page_links = ''.join(link(f'صفحهٔ محتوای {page} · صفحهٔ {page + 1} PDF', f'#page={page + 1}') for page in sorted(pages))
+    if len(pages) > 4:
+        return (full_review + '<div class="review-actions">' + buttons + '</div>'
+                f'<details class="detail-disclosure review-page-list"><summary>نمایش لینک {len(pages)} صفحه</summary>'
+                '<div class="review-actions">' + page_links + '</div></details>')
+    return '<div class="review-actions" aria-label="بازکردن صفحات برای بازبینی">' + buttons + page_links + '</div>'
+
+
+def _detail_panel(title, count, caption, body):
+    if count > 4:
+        body = (f'<details class="detail-disclosure"><summary>نمایش همهٔ {count} مورد</summary>'
+                + body + '</details>')
+    return (f'<section class="detail-panel"><div class="detail-panel-heading"><h3>{title}</h3>'
+            f'<span class="detail-count">{count}</span></div><p class="detail-caption">{caption}</p>{body}</section>')
 
 
 def _file_html(item, index, output, config, metadata, thumbs):
@@ -228,12 +243,19 @@ def _file_html(item, index, output, config, metadata, thumbs):
                   + _review_links(item, output) + '</aside>')
     elif code == 'BLOCKED':
         action = f'<aside class="notice blocked"><h3>خروجی منتشر نشد</h3><p>{_text(item.get("error", "علت ثبت نشده"))}</p><p>علت خطا را اصلاح و دوباره اجرا کنید. خروجی قدیمی، نتیجهٔ این اجرا نیست.</p></aside>'
-    removed = ''.join(f'<li>صفحهٔ {_text(page.get("page"))}: <bdi>{_text(number.get("text"))}</bdi></li>'
-                      for page in item.get('pages', []) for number in page.get('removed', []))
-    removed = '<ul>' + removed + '</ul>' if removed else '<p class="muted">شمارهٔ متنی حذف‌شده‌ای ثبت نشده است.</p>'
+    removed_count = sum(len(page.get('removed', [])) for page in item.get('pages', []))
+    removed = ''.join(f'<li><span class="page-label">صفحهٔ {_text(page.get("page"))}</span><span class="removed-values">' +
+                      ''.join(f'<bdi>{_text(number.get("text"))}</bdi>' for number in page.get('removed', [])) + '</span></li>'
+                      for page in item.get('pages', []) if page.get('removed'))
+    removed = '<ul class="removed-list">' + removed + '</ul>' if removed else '<p class="muted">شمارهٔ متنی حذف‌شده‌ای ثبت نشده است.</p>'
     timing = metadata['stages'].get(files, [])
-    timings = ''.join(f'<li><span>{STAGES[entry["stage"]]}</span><bdi>{entry["seconds"]:.4f} ثانیه</bdi></li>' for entry in timing)
+    timings = ''.join(f'<li><span>{STAGES[entry["stage"]]}</span><span class="timing-value"><bdi>{entry["seconds"]:.4f}</bdi><small>ثانیه</small></span></li>' for entry in timing)
     timings = '<ul class="timings">' + timings + '</ul>' if timings else '<p class="muted">زمان مرحله‌ها ثبت نشده است.</p>'
+    panels = _detail_panel('هشدارها', len(item.get('warnings', [])), 'موارد ثبت‌شده هنگام آماده‌سازی جزوه', _warnings_html(item, config))
+    panels += _detail_panel('شماره‌های حذف‌شده', removed_count, 'شماره‌های متنی حذف‌شده، گروه‌بندی بر اساس صفحه', removed)
+    panels += (f'<section class="detail-panel"><div class="detail-panel-heading"><h3>زمان پردازش</h3></div>'
+               f'<p class="time-total"><bdi>{seconds:.2f}</bdi><span>ثانیه · کل این فایل</span></p>'
+               '<h4>زمان مرحله‌ها</h4>' + timings + '</section>')
     images = ''
     if code != 'BLOCKED' and (thumbs == 'all' or thumbs == 'review' and code == 'REVIEW'):
         images = '<section><h3>مرور صفحات</h3>' + _thumbnails(output, item, config) + '</section>'
@@ -241,8 +263,7 @@ def _file_html(item, index, output, config, metadata, thumbs):
     detail = (f'<details class="file-card {code.lower()}" id="file-{index}" data-status="{code}"{opened}>'
               f'<summary><span class="file-title"><span class="ordinal">{index:02d}</span>{_subject_icon(item)}<bdi>{_text(name)}</bdi></span>{_badge(code)}</summary>'
               f'<div class="file-body"><span class="watermark subject-watermark" aria-hidden="true">{_subject_icon(item)}</span>{action}{info}{images}<section><h3>کنترل کیفیت</h3><div class="qc-grid">{_qc_html(item, config)}</div></section>'
-              f'<div class="detail-grid"><section><h3>هشدارها</h3>{_warnings_html(item, config)}</section>'
-              f'<section><h3>شماره‌های حذف‌شده</h3>{removed}</section><section><h3>زمان مرحله‌ها</h3>{timings}</section></div></div></details>')
+              f'<div class="detail-grid">{panels}</div></div></details>')
     return row, detail
 
 
@@ -624,6 +645,27 @@ html{scroll-behavior:auto}
 .developer-credit{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;border-top:1px solid var(--hero-line);padding-top:18px;color:var(--hero-ink);font-size:14px}
 .developer-credit a{display:inline-flex;align-items:center;gap:8px;color:inherit;min-height:44px;text-underline-offset:5px}.github-icon{width:22px;height:22px;flex-shrink:0;fill:currentColor}
 @media print{.review-actions{display:none}.file-body .notice h3{font-size:14px}.file-body .notice p{font-size:11px}.developer-credit,.developer-credit a{color:#111}.notice{padding:12px}}
+.full-review-tag{display:inline-flex;padding:6px 12px;border:1px solid currentColor;border-radius:999px;font-weight:700}
+.file-body .notice .full-review-tag{margin-top:14px;font-size:14px}
+.detail-grid{align-items:start;margin-top:24px}
+.detail-panel{padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--surface-strong);min-width:0}
+.detail-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.file-body .detail-panel h3{margin:0;font-size:18px;line-height:1.5}
+.detail-count{display:inline-grid;place-items:center;min-width:32px;height:32px;padding-inline:8px;border-radius:9px;background:var(--soft);color:var(--brand);font-size:16px;font-variant-numeric:tabular-nums}
+.detail-caption{margin:8px 0 16px;color:var(--muted);font-size:13px;line-height:1.8}
+.detail-panel ul{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.9}
+.detail-panel li{padding:10px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.detail-panel li:last-child{border-bottom:0}
+.detail-disclosure{margin-top:14px}.detail-disclosure>summary{padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--soft);font-size:14px;font-weight:700;min-height:44px}
+.detail-disclosure[open]>summary{margin-bottom:12px}
+.removed-list li{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.page-label{flex-shrink:0;color:var(--muted)}.removed-values{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.removed-values bdi{padding:1px 8px;border-radius:6px;background:var(--soft);font-variant-numeric:tabular-nums}
+.time-total{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:16px 0 22px}.time-total>bdi{font-size:30px;font-variant-numeric:tabular-nums;line-height:1.2}.time-total>span{font-size:12px;color:var(--muted)}
+.detail-panel .timings li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;border-bottom:1px solid var(--line)}
+.timing-value{display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums}.timing-value small{font-size:11px;color:var(--muted)}
+.developer-credit{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}.developer-credit p{margin:0;font-size:14px;line-height:1.9}.developer-name{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--hero-line)}
+@media print{.detail-panel{padding:12px;box-shadow:none;break-inside:avoid}.detail-panel li{break-inside:avoid}.detail-disclosure>summary{background:none}.review-page-list{display:none}.time-total>bdi{font-size:20px}}
 $font_css
 :root{--report-logo:url(data:image/png;base64,$logo_data)}
 .brand-mark{background:var(--brand)!important;mask:var(--report-logo) center/contain no-repeat;-webkit-mask:var(--report-logo) center/contain no-repeat;border-radius:0}
@@ -642,7 +684,7 @@ $warnings
 <p class="empty" id="empty"$empty>فایلی برای نمایش وجود ندارد.</p>
 <div class="section-heading detail-heading"><div><span class="section-kicker">بازبینی و شواهد</span><h2>جزئیات هر فایل</h2></div><p>برای بازکردن روی عنوان بزنید</p></div>
 <div id="file-details">$details</div></section>
-<footer><div><span class="footer-kicker">پروندهٔ اجرا</span><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi dir="ltr">$tool_version</bdi></p><p>شناسهٔ اجرا: <bdi dir="ltr">$run_id</bdi></p><p>زمان پردازش و آماده‌سازی: <bdi>$elapsed</bdi> ثانیه</p><p>$versions</p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><span class="footer-kicker">منابع ورودی</span><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets">$assets</ul></div><div class="developer-credit"><span>توسعه‌یافته توسط <a href="https://github.com/AliRabiee86" target="_blank" rel="noopener noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg><bdi>AliRabiee86</bdi></a></span><a href="https://github.com/AliRabiee2286/jozve-tool" target="_blank" rel="noopener noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg>کد پروژه در گیت‌هاب</a></div></footer>
+<footer><div><span class="footer-kicker">پروندهٔ اجرا</span><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi dir="ltr">$tool_version</bdi></p><p>شناسهٔ اجرا: <bdi dir="ltr">$run_id</bdi></p><p>زمان پردازش و آماده‌سازی: <bdi>$elapsed</bdi> ثانیه</p><p>$versions</p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><span class="footer-kicker">منابع ورودی</span><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets">$assets</ul></div><div class="developer-credit"><p>برای نصب آخرین نسخه، دریافت به‌روزرسانی‌ها و اطلاع از تغییرات، <a href="https://github.com/AliRabiee2286/jozve-tool" target="_blank" rel="noopener noreferrer">به صفحهٔ گیت‌هاب پروژه مراجعه کنید ↗</a>.</p><p class="developer-name">توسعه‌یافته توسط <svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg><bdi dir="ltr">AliRabiee</bdi></p></div></footer>
 </main>
 <script>
 (() => {
@@ -683,7 +725,12 @@ $warnings
   }));
   document.getElementById('print-report').addEventListener('click', () => window.print());
   const printState = new Map();
+  const disclosureState = new Map();
   window.addEventListener('beforeprint', () => {
+    Array.from(document.querySelectorAll('.detail-disclosure') || []).forEach(detail => {
+      disclosureState.set(detail, detail.open);
+      detail.open = true;
+    });
     entries.forEach(entry => {
       printState.set(entry.detail, {open: entry.detail.open, rowHidden: entry.row.hidden, detailHidden: entry.detail.hidden});
       entry.row.hidden = false;
@@ -699,6 +746,8 @@ $warnings
       if (row) row.hidden = state.rowHidden;
     });
     printState.clear();
+    disclosureState.forEach((open, detail) => { detail.open = open; });
+    disclosureState.clear();
   });
   const counters = Array.from(document.querySelectorAll('[data-count]'));
   if (reducedMotion) {

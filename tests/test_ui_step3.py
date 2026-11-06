@@ -84,8 +84,7 @@ def test_report_sections_metadata_and_untrusted_text_are_offline_and_escaped(tmp
             if key in attrs:
                 if tag == 'a' and key == 'href':
                     assert attrs[key].startswith(('#', './review.pdf')) or attrs[key] in (
-                        'https://github.com/AliRabiee86',
-                        'https://github.com/AliRabiee2286/jozve-tool'), (tag, attrs)
+                        'https://github.com/AliRabiee2286/jozve-tool',), (tag, attrs)
                 else:
                     assert attrs[key].startswith(('#', 'data:')), (tag, attrs)
     # External navigation was explicitly requested; resources remain embedded.
@@ -207,11 +206,41 @@ def test_footer_credit_links_are_explicit_and_do_not_load_remote_assets(tmp_path
     html = write_html_report(tmp_path, items, [], thumbs='none').read_text(encoding='utf-8')
     elements = ReportParser(html).elements
     links = [attrs for tag, attrs in elements if tag == 'a' and attrs.get('href', '').startswith('https:')]
-    assert {attrs['href'] for attrs in links} == {'https://github.com/AliRabiee86',
-                                                'https://github.com/AliRabiee2286/jozve-tool'}
+    assert {attrs['href'] for attrs in links} == {'https://github.com/AliRabiee2286/jozve-tool'}
     assert all(attrs['target'] == '_blank' and attrs['rel'] == 'noopener noreferrer' for attrs in links)
     assert 'توسعه‌یافته توسط' in html
+    assert '<bdi dir="ltr">AliRabiee</bdi>' in html
+    assert 'github.com/AliRabiee86' not in html
     assert all(not attrs.get('src', '').startswith(('http:', 'https:')) for _, attrs in elements)
+
+
+@pytest.mark.parametrize('count', [4, 5, 24])
+def test_many_review_pages_are_folded_without_losing_links(tmp_path, items, count):
+    from report_html import _review_links
+    item = deepcopy(items[1])
+    item['input_pages'] = count
+    item['qc']['checks'] = {}
+    item['qc']['advisory_failed'] = [f'صفحه محتوا {i}: متن حفظ شده' for i in range(1, count + 1)]
+    html = _review_links(item, tmp_path)
+    assert html.count('data-pdf-link="true"') == count + 1
+    assert ('نیازمند بررسی کامل' in html) == (count > 4)
+    disclosures = [a for t, a in ReportParser(html).elements if t == 'details']
+    assert len(disclosures) == (1 if count > 4 else 0)
+    assert all('open' not in attrs for attrs in disclosures)
+    item['output'] = 'missing.pdf'
+    assert ('نیازمند بررسی کامل' in _review_links(item, tmp_path)) == (count > 4)
+
+
+def test_long_detail_lists_are_collapsed_and_content_preserved(tmp_path, items):
+    from report_html import write_html_report
+    item = deepcopy(items[0])
+    item['warnings'] = [{'kind': 'image_number_unknown', 'page': n} for n in range(1, 9)]
+    item['pages'] = [{'page': n, 'removed': [{'text': f'Removed {n}'}]} for n in range(1, 9)]
+    html = write_html_report(tmp_path, [item], [], thumbs='none').read_text(encoding='utf-8')
+    assert html.count('class="detail-panel"') == 3
+    assert html.count('نمایش همهٔ 8 مورد') == 2
+    assert all(f'Removed {n}' in html for n in range(1, 9))
+    assert 'کل این فایل' in html
 
 
 @pytest.mark.parametrize('count', [0, 2])
