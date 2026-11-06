@@ -13,6 +13,33 @@ from ui import TerminalUI, select_mode, write_ui_previews
 ARABIC = re.compile(r'[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff]')
 
 
+def test_live_table_fits_resizing_terminal_and_keeps_22_unique_files():
+    from rich.console import Console
+    ui = TerminalUI('fancy', stream=TTY(), environ={'WT_SESSION': '1'},
+                    config={'field_labels_en': {'artificial intelligence': 'artificial intelligence'}})
+    for index in range(1, 23):
+        name = f'file_{index:02d}_[long_name].pdf'
+        ui.handle_event('file_started', {'file': name, 'index': index, 'total': 22})
+        ui.handle_event('stage_progress', {'file': name, 'index': 20, 'total': 20})
+        ui.handle_event('file_done', {'file': name, 'status_code': 'OK',
+                                    'item': {'sheet': 'artificial intelligence'}})
+        for width, height in ((80, 24), (110, 40), (60, 20)):
+            stream = StringIO()
+            ui._console = Console(file=stream, width=width, height=height, color_system=None)
+            ui._console.print(ui.render())
+            lines = stream.getvalue().splitlines()
+            assert len(lines) <= height
+            assert all(len(line) <= width for line in lines)
+            assert f'OK={index}' in stream.getvalue()
+            assert 'field #' not in stream.getvalue()
+    assert len(ui.files) == 22
+    ui.handle_event('stage_started', {'stage': 'run'})
+    assert len(ui.files) == 22 and '' not in ui.files
+    ui.handle_event('file_started', {'file': name, 'index': 22, 'total': 22})
+    assert ui.current_progress == (0, 0)
+    assert len(ui.files) == 22
+
+
 class TTY(StringIO):
     def isatty(self):
         return True

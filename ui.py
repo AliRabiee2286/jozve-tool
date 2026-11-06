@@ -143,12 +143,13 @@ class TerminalUI:
             try:
                 Console, _, Live, _, _, _ = self._rich
                 self._console = Console(file=self.stream, force_terminal=True,
-                                        color_system='standard', width=110)
+                                        color_system='standard')
                 if not self.quiet:
                     self._console.print('[bold cyan]JO[/bold cyan][bold blue]ZVE[/bold blue] '
                                         '[bold magenta]TOOL[/bold magenta] [dim]offline lesson processor[/dim]')
                 self._live = Live(self.render(), console=self._console,
-                                  refresh_per_second=12, transient=False)
+                                  refresh_per_second=12, transient=False,
+                                  vertical_overflow='crop')
                 self._live.start(refresh=True)
             except Exception:
                 self._console = None
@@ -195,13 +196,17 @@ class TerminalUI:
                 self._write('Starting run')
         elif name == 'file_started':
             self.current_file = file_name
+            self.current_progress = (0, 0)
+            self.current_stage = 'run'
             self.total_files = max(self.total_files, int(payload.get('total') or 0))
             self.files.setdefault(file_name, {'stage': 'run', 'status': 'RUNNING'})
             if not self.quiet and self.mode != 'fancy':
                 self._write(f"Processing: {_ascii(file_name)} ({payload.get('index', '?')}/{payload.get('total', '?')})")
         elif name == 'stage_started':
             self.current_stage = payload.get('stage', 'run')
-            self.files.setdefault(file_name, {})['stage'] = self.current_stage
+            self.current_progress = (0, 0)
+            if file_name in self.files:
+                self.files[file_name]['stage'] = self.current_stage
             if self.verbose and self.mode != 'fancy':
                 self._write(f'Stage {_stage(self.current_stage)}: started')
         elif name == 'stage_finished':
@@ -270,25 +275,39 @@ class TerminalUI:
         if not self._rich:
             return ''
         _, Group, _, Panel, Table, Text = self._rich
-        counts = self.summary or {'OK': 0, 'REVIEW': 0, 'BLOCKED': 0}
+        counts = self.summary or {
+            key: sum(row.get('status') == status for row in self.files.values())
+            for key, status in (('OK', 'PASS'), ('REVIEW', 'REVIEW'), ('BLOCKED', 'FAIL'))}
         elapsed = time.perf_counter() - self.started if self.started else 0
-        table = Table(title='Files', expand=True)
-        for column in ('Status', 'File', 'Slug', 'Subject', 'Orientation', 'Pages', 'Stage', 'Time'):
-            table.add_column(column, overflow='ellipsis')
-        for index, (file_name, row) in enumerate(self.files.items(), 1):
+        terminal_width = self._console.width if self._console else 110
+        terminal_height = self._console.height if self._console else 25
+        capacity = max(1, terminal_height - 12)
+        entries = list(self.files.items())
+        first = max(0, len(entries) - capacity)
+        title = f'Files {first + 1}-{len(entries)} of {self.total_files or len(entries)}' if entries else 'Files'
+        table = Table(title=title, expand=True)
+        compact = terminal_width < 100
+        headings = ('#', 'Status', 'File', 'Pages', 'Stage', 'Time') if compact else (
+            '#', 'Status', 'File', 'Slug', 'Subject', 'Orientation', 'Pages', 'Stage', 'Time')
+        for column in headings:
+            table.add_column(column, overflow='ellipsis', no_wrap=True)
+        for index, (file_name, row) in enumerate(entries[first:], first + 1):
             item = row.get('item', {})
             status = row.get('status', 'RUNNING')
             style = {'PASS': 'green', 'REVIEW': 'yellow', 'FAIL': 'red'}.get(status, 'cyan')
             pages = item.get('input_pages', '-')
             if item.get('output_pages'):
                 pages = f'{pages}->{item["output_pages"]}'
-            table.add_row(Text(status, style=style), _ascii(file_name),
-                          _ascii(item.get('namak', f'field #{index}')),
-                          self._subject_label(item, index),
+            cells = [Text(str(index)), Text(status, style=style), Text(_ascii(file_name))]
+            if not compact:
+                cells.extend([Text(_ascii(item.get('namak', '-'))),
+                          Text(self._subject_label(item, index) if item else '-'),
                           _ascii({'portrait': 'Portrait', 'landscape': 'Landscape'}.get(
-                              item.get('orientation'), item.get('orientation', '-'))),
+                              item.get('orientation'), item.get('orientation', '-')))])
+            cells.extend([
                           _ascii(pages), _stage(row.get('stage', self.current_stage)),
-                          f"{row.get('seconds', 0):.2f}s")
+                          f"{row.get('seconds', 0):.2f}s"])
+            table.add_row(*cells)
         completed = sum(row.get('status') in ('PASS', 'REVIEW', 'FAIL') for row in self.files.values())
         total = max(len(self.files), self.total_files if hasattr(self, 'total_files') else 0)
         ratio = completed / total if total else 0
@@ -298,15 +317,24 @@ class TerminalUI:
             eta = f'{elapsed / completed * (total - completed):.1f}s'
         top = Text(f"Overall [{bar}] {completed}/{total}  ETA {eta}  "
                    f"OK={counts.get('OK', 0)}  REVIEW={counts.get('REVIEW', 0)}  "
-                   f"BLOCKED={counts.get('BLOCKED', 0)}  {elapsed:.1f}s", style='bold')
+                   f"BLOCKED={counts.get('BLOCKED', 0)}  {elapsed:.1f}s", style='bold',
+                   no_wrap=True, overflow='ellipsis')
+        if compact:
+            top = Text(f"Overall {completed}/{total}  OK={counts.get('OK', 0)}  "
+                       f"REVIEW={counts.get('REVIEW', 0)}  BLOCKED={counts.get('BLOCKED', 0)}",
+                       style='bold', no_wrap=True, overflow='ellipsis')
         page = Text(f'Page progress: {self.current_progress[0]}/{self.current_progress[1]} '
-                    f'({_stage(self.current_stage)})', style='dim')
+                    f'({_stage(self.current_stage)})', style='dim', no_wrap=True,
+                    overflow='ellipsis')
         reviews = [f"Review image: {_ascii(row['item']['review_image'])}"
                    for row in self.files.values()
                    if row.get('status') == 'REVIEW' and row.get('item', {}).get('review_image')]
         summary_text = (('Report: ' + self.report_path) if self.report_available
-                        else 'Report unavailable') + ('\n' + '\n'.join(reviews) if reviews else '')
-        summary = Panel(summary_text, title='Complete' if self.finished else 'Running')
+                        else 'Report pending' if not self.finished else 'Report unavailable')
+        if reviews:
+            summary_text += f'\nReview images: {len(reviews)} - see HTML report'
+        summary = Panel(Text(summary_text, no_wrap=True, overflow='ellipsis'),
+                        title='Complete' if self.finished else 'Running')
         return Group(top, table, page, summary)
 
 
