@@ -566,9 +566,51 @@ def _show_startup_splash(argv, stream=None, environ=None):
                 spark_x = center + (-2 if step == 2 else 2)
                 _put(canvas, spark_x, base_row + step + 1, '.', color)
 
+    # Compact geometric lettering: five pixel rows, rendered in three cell rows.
+    letters = {
+        'B': ('11110','10001','11110','10001','11110'),
+        'A': ('01110','10001','11111','10001','10001'),
+        'L': ('10000','10000','10000','10000','11111'),
+        'T': ('11111','00100','00100','00100','00100'),
+        'R': ('11110','10001','11110','10100','10010'),
+    }
+    name_pixels = tuple('0'.join(letters[ch][row] for ch in 'BALATAR') for row in range(5))
+
+    def _paint_warp(canvas, t):
+        import math
+        q = max(0.0, min(1.0, (t - 2.5) / 0.8))
+        fade = max(0.0, min(1.0, (3.8 - t) / 0.5))
+        if t < 1.7 or fade <= 0:
+            return
+        cx, cy = columns / 2, (size.lines - 2) / 2
+        # Deterministic perspective rays accelerate outward from a vanishing point.
+        for i in range(42):
+            angle = i * 2.399963
+            radius = (0.18 + ((i * 0.618034 + q * q * 1.6) % 0.82))
+            length = 1 + int(15 * q * q)
+            for j in range(length):
+                depth = radius - j * 0.018
+                x = round(cx + math.cos(angle) * depth * columns * 0.7)
+                y = round(cy + math.sin(angle) * depth * (size.lines - 2) * 0.7)
+                # Keep the central mark legible throughout the jump.
+                if abs(x - cx) < width / 2 + 2 and abs(y - cy) < rows_high / 2 + 1:
+                    continue
+                light = fade * (0.20 + 0.80 * q) * (1 - j / max(1, length))
+                color = tuple(round(background[k] + (v - background[k]) * light)
+                              for k, v in enumerate((130, 210, 255)))
+                _put(canvas, x, y, '·' if length == 1 else '▀', color)
+        pulse = max(0.0, 1 - abs(t - 2.72) / 0.14)
+        if pulse:
+            for x in range(columns):
+                light = pulse * max(0.0, 1 - abs(x - cx) / (columns / 2))
+                if abs(x - cx) > width / 2 + 2:
+                    _put(canvas, x, round(cy), '─', (int(140 * light), int(200 * light), int(255 * light)))
+
     def _show_frame(top_pixel, reveal=1.0, scan=None, ghosts=(), trail=0,
                     trail_strength=1.0, name_strength=None, science_strength=0.0):
+        nonlocal frame_number
         canvas = [[' ' for _ in range(columns)] for _ in range(size.lines - 1)]
+        _paint_warp(canvas, frame_number / 30.0)
         if science_strength > 0:
             tone = tuple(int(c * science_strength) for c in (48, 94, 140))
             for side in (-1, 1):
@@ -582,19 +624,31 @@ def _show_startup_splash(argv, stream=None, environ=None):
             _paint_trail(canvas, top_pixel, trail, trail_strength)
         _paint_logo(canvas, top_pixel, reveal=reveal, scan=scan)
         if name_strength is not None:
-            wordmark = 'BALATAR'
-            name_y = final_top + rows_high + 1
-            name_x = max(0, (columns - len(wordmark)) // 2)
             q = max(0.0, min(1.0, name_strength))
-            color = (int(62 + 135 * q), int(58 + 137 * q), 255)
-            label = (f'\x1b[38;2;{color[0]};{color[1]};{color[2]}m'
-                     + wordmark + bg_sgr)
-            if 0 <= name_y < size.lines - 1:
-                canvas[name_y][name_x:name_x + len(wordmark)] = [label] + [''] * (len(wordmark) - 1)
+            name_width = len(name_pixels[0])
+            # A narrower terminal uses the readable text fallback.
+            if columns < name_width + 2:
+                label = 'BALATAR'
+                for i, ch in enumerate(label):
+                    _put(canvas, (columns - len(label)) // 2 + i,
+                         final_top + rows_high + 1, ch, (180, 195, 255))
+            else:
+                origin = (columns - name_width) // 2
+                for row in range(3):
+                    for x in range(name_width):
+                        colors = []
+                        for py in (row * 2, row * 2 + 1):
+                            on = py < 5 and name_pixels[py][x] == '1'
+                            shine = max(0.0, 1 - abs(x / name_width - (q * 1.4 - 0.2)) / 0.15) if q < 1 else 0
+                            base = (95 + int(85 * x / name_width), 160, 255)
+                            colors.append(tuple(round(background[k] +
+                                ((v + (255 - v) * shine) - background[k]) * q)
+                                if on else background[k] for k, v in enumerate(base)))
+                        _put(canvas, origin + x, final_top + rows_high + 1 + row,
+                             '▀', colors[0], colors[1])
         lines = [bg_sgr + ''.join(line) + reset for line in canvas]
         stream.write('\x1b[H' + '\n'.join(lines))
         stream.flush()
-        nonlocal frame_number
         frame_number += 1
         time.sleep(max(0.0, started + frame_number / 30.0 - time.monotonic()))
 
