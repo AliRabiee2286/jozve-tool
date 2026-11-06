@@ -138,6 +138,31 @@ def test_all_subject_icons_are_embedded_monochrome_and_decorative(tmp_path, item
     assert '.metric:hover:not(:active)' in html
 
 
+def test_subject_color_follows_each_file_status_and_hero_watermark_stays_subtle(tmp_path, items):
+    import report_html
+    combinations = []
+    for subject in report_html._SUBJECT_KEYS:
+        for code in report_html.STATUSES:
+            item = deepcopy(items[0])
+            item.update(sheet=subject, status_code=code)
+            combinations.append(item)
+    html = report_html.write_html_report(tmp_path, combinations, [], thumbs='none').read_text(encoding='utf-8')
+    elements = ReportParser(html).elements
+    for code in report_html.STATUSES:
+        cards = [attrs for tag, attrs in elements if tag == 'details' and
+                 attrs.get('class') == 'file-card ' + code.lower()]
+        assert len(cards) == 14
+        assert f'.file-card.{code.lower()}{{--subject-color:var(--{code.lower()})}}' in html
+    assert 'background:var(--subject-color,var(--brand))' in html
+    hero_rules = re.findall(r'(?:^|[{}])\s*\.hero::after\{([^{}]*)\}', html)
+    assert hero_rules
+    for rule in hero_rules:
+        opacity = re.search(r'opacity:([\d.]+)', rule)
+        if opacity:
+            assert float(opacity.group(1)) <= .04
+    assert 'inset-inline-start:auto' in html
+
+
 @pytest.mark.parametrize('count', [0, 2])
 def test_report_rejects_missing_or_ambiguous_font(tmp_path, monkeypatch, count):
     import report_html
