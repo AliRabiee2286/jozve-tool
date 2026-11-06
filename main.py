@@ -469,19 +469,34 @@ def _show_startup_splash(argv, stream=None, environ=None):
         width = len(mask[0])
         indent = ' ' * max(0, (size.columns - width) // 2)
         top_padding = [''] * max(0, (size.lines - 24) // 2)
-        for frame in range(20):
-            progress = (frame + 1) / 20
-            reveal = min(1.0, progress / 0.6)
-            sweep = progress * 1.8 - 0.35
+        # Discovery, assembly, ignition, ascent and a readable final hold.
+        for frame in range(56):
+            elapsed = frame * 0.05
+            reveal = min(1.0, max(0.0, (elapsed - 0.18) / 0.82))
+            sweep = min(1.4, max(-0.3, (elapsed - 0.4) / 0.65))
+            ascent = min(1.0, max(0.0, (elapsed - 1.2) / 0.5))
+            ascent = 1 - (1 - ascent) ** 3
+            offset = 2 - round(2 * ascent)
             rows = list(top_padding)
-            for y in range(0, len(mask), 2):
+            for row in range(22):
                 line = []
-                for x, (top, bottom) in enumerate(zip(mask[y], mask[y + 1])):
+                source_row = row - offset
+                for x in range(width):
+                    y = source_row * 2
+                    top, bottom = ((mask[y][x], mask[y + 1][x])
+                                   if 0 <= source_row < 20 else ('.', '.'))
                     pixel = ('█' if top == '#' and bottom == '#' else
                              '▀' if top == '#' else '▄' if bottom == '#' else ' ')
-                    diagonal = (x / width + y / 40) / 2
+                    diagonal = (x / width + max(0, y) / 40) / 2
                     if pixel == ' ' or diagonal > reveal:
-                        line.append(' ')
+                        # A few orbiting points suggest exploration without obscuring the logo.
+                        point = (elapsed < 1.0 and row in (5, 9, 13) and
+                                 x in (2 + (frame // 4) % 4, width - 3 - (frame // 5) % 4))
+                        # The short exhaust trail appears only during ascent.
+                        trail = (1.2 <= elapsed < 1.7 and 20 + offset <= row <= 21 and
+                                 abs(x - width // 2) <= (1 if row == 20 else 0))
+                        line.append('\x1b[38;2;77;210;242m' + ('+' if point else '▄') + '\x1b[0m'
+                                    if point or trail else ' ')
                         continue
                     shine = max(0.0, 1.0 - abs(diagonal - sweep) / 0.13)
                     red = min(255, int(125 + 45 * (1 - y / 40) + 65 * shine))
@@ -489,16 +504,15 @@ def _show_startup_splash(argv, stream=None, environ=None):
                     blue = min(255, int(210 + 35 * y / 40 + 45 * shine))
                     line.append(f'\x1b[38;2;{red};{green};{blue}m{pixel}')
                 rows.append(indent + ''.join(line) + '\x1b[0m')
-            label = 'B A L A T A R' if progress >= 0.55 else ' ' * 13
+            label = 'B A L A T A R' if elapsed >= 2.0 else ' ' * 13
             label_indent = ' ' * max(0, (size.columns - len(label)) // 2)
-            caption = 'OFFLINE  /  LESSON PROCESSOR' if progress >= 0.8 else ' ' * 28
+            caption = 'OFFLINE  /  LESSON PROCESSOR' if elapsed >= 2.0 else ' ' * 28
             caption_indent = ' ' * max(0, (size.columns - len(caption)) // 2)
             rows.extend((label_indent + '\x1b[38;2;214;202;255m' + label + '\x1b[0m',
                          caption_indent + '\x1b[38;2;91;196;220m' + caption + '\x1b[0m'))
             stream.write('\x1b[H' + '\n'.join(rows))
             stream.flush()
-            time.sleep(0.04)
-        time.sleep(0.8)  # Keep the completed logo visible before the CLI starts.
+            time.sleep(0.05)
     except (OSError, UnicodeError):
         pass
     finally:
