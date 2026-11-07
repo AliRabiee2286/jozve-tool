@@ -138,8 +138,9 @@ def _qc_html(item, config):
             f'<span>{_text(name)}</span></li>')
     if not any(groups.values()):
         return '<p class="muted">کنترل کیفیت انجام نشده است.</p>'
-    html = ''.join(f'<div><h4>{label}</h4><ul class="checks">{"".join(rows)}</ul></div>'
-                   for label, rows in groups.items())
+    html = '<div class="qc-groups">' + ''.join(
+        f'<div><h4>{label}</h4><ul class="checks">{"".join(rows)}</ul></div>'
+        for label, rows in groups.items() if rows) + '</div>'
     if quality.get('details'):
         raw = json.dumps(quality['details'], ensure_ascii=False, indent=2)
         html += f'<details class="technical"><summary>جزئیات فنی QC</summary><pre>{_text(raw)}</pre></details>'
@@ -253,9 +254,11 @@ def _file_html(item, index, output, config, metadata, thumbs):
     timings = '<ul class="timings">' + timings + '</ul>' if timings else '<p class="muted">زمان مرحله‌ها ثبت نشده است.</p>'
     panels = _detail_panel('هشدارها', len(item.get('warnings', [])), 'موارد ثبت‌شده هنگام آماده‌سازی جزوه', _warnings_html(item, config))
     panels += _detail_panel('شماره‌های حذف‌شده', removed_count, 'شماره‌های متنی حذف‌شده، گروه‌بندی بر اساس صفحه', removed)
-    panels += (f'<section class="detail-panel"><div class="detail-panel-heading"><h3>زمان پردازش</h3></div>'
-               f'<p class="time-total"><bdi>{seconds:.2f}</bdi><span>ثانیه · کل این فایل</span></p>'
-               '<h4>زمان مرحله‌ها</h4>' + timings + '</section>')
+    panels += (f'<section class="detail-panel"><div class="detail-panel-heading"><h3>زمان پردازش</h3>'
+               f'<span class="detail-count">{len(timing)}</span></div>'
+               f'<p class="detail-caption"><bdi class="elapsed-total">{seconds:.2f}</bdi> ثانیه · کل این فایل</p>'
+               '<details class="detail-disclosure"><summary>نمایش زمان مرحله‌ها</summary>'
+               + timings + '</details></section>')
     images = ''
     if code != 'BLOCKED' and (thumbs == 'all' or thumbs == 'review' and code == 'REVIEW'):
         images = '<section><h3>مرور صفحات</h3>' + _thumbnails(output, item, config) + '</section>'
@@ -485,11 +488,14 @@ footer .footer-note{color:var(--hero-muted)}
 .hero{display:grid;position:relative;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:48px;align-items:center;margin-bottom:20px;padding:clamp(32px,5vw,64px);border:1px solid var(--hero-line);border-radius:24px;background:var(--brand-strong);color:var(--hero-ink);box-shadow:var(--shadow);overflow:hidden;animation:appear .55s both}
 .metric:hover{transform:none;box-shadow:var(--shadow)}
 .file-card>summary:hover{background:var(--soft)}
-.metrics,.properties,.thumbnails,.qc-grid,.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--cell-min)),1fr))}
+.metrics,.properties,.thumbnails,.qc-groups,.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--cell-min)),1fr))}
 .metrics{display:grid;margin:0 0 40px;animation-delay:.06s;gap:12px;margin-bottom:42px;animation:none;--cell-min:15rem}
 .properties{display:grid;margin:24px 0;gap:16px;margin-block:22px;--cell-min:13rem}
 .thumbnails{display:grid;gap:16px;padding:20px;border-radius:14px;background:var(--soft);border:1px solid var(--line);--cell-min:14rem}
-.qc-grid{display:grid;gap:16px;--cell-min:20rem}
+.qc-grid{display:block}
+.qc-groups{gap:20px;--cell-min:20rem;align-items:start}
+.qc-groups>div{min-width:0}
+.qc-grid>.technical{margin-top:12px}
 .detail-grid{display:grid;gap:20px;--cell-min:17rem}
 .metrics>*,.properties>*,.qc-grid>*,.detail-grid>*,.completion-body>*,.hero-copy{min-width:0}
 .qc-grid>.technical{grid-column:1/-1}
@@ -647,8 +653,11 @@ html{scroll-behavior:auto}
 @media print{.review-actions{display:none}.file-body .notice h3{font-size:14px}.file-body .notice p{font-size:11px}.developer-credit,.developer-credit a{color:#111}.notice{padding:12px}}
 .full-review-tag{display:inline-flex;padding:6px 12px;border:1px solid currentColor;border-radius:999px;font-weight:700}
 .file-body .notice .full-review-tag{margin-top:14px;font-size:14px}
-.detail-grid{align-items:start;margin-top:24px}
-.detail-panel{padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--surface-strong);min-width:0}
+.detail-grid{align-items:stretch;margin-top:24px}
+.detail-grid:has(.detail-disclosure[open]){align-items:start}
+.detail-panel{display:flex;flex-direction:column;padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--surface-strong);min-width:0}
+.detail-panel>.detail-disclosure{margin-top:auto}
+.elapsed-total{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
 .detail-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .file-body .detail-panel h3{margin:0;font-size:18px;line-height:1.5}
 .detail-count{display:inline-grid;place-items:center;min-width:32px;height:32px;padding-inline:8px;border-radius:9px;background:var(--soft);color:var(--brand);font-size:16px;font-variant-numeric:tabular-nums}
@@ -666,6 +675,12 @@ html{scroll-behavior:auto}
 .timing-value{display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums}.timing-value small{font-size:11px;color:var(--muted)}
 .developer-credit{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}.developer-credit p{margin:0;font-size:14px;line-height:1.9}.developer-name{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--hero-line)}
 @media print{.detail-panel{padding:12px;box-shadow:none;break-inside:avoid}.detail-panel li{break-inside:avoid}.detail-disclosure>summary{background:none}.review-page-list{display:none}.time-total>bdi{font-size:20px}}
+.credit-bottom{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--hero-line);padding-top:14px}
+.credit-bottom .developer-name{border:0;padding:0;flex-wrap:wrap}
+.developer-credit .project-github{display:grid;place-items:center;flex-shrink:0;width:48px;height:48px;border:1px solid var(--hero-line);border-radius:12px;background:var(--hero-panel);color:var(--hero-ink);text-decoration:none;transition:background-color .16s,transform .16s}
+.project-github .github-icon{width:26px;height:26px}.developer-credit .project-github:hover{background:var(--hero-track)}.developer-credit .project-github:active{transform:translateY(1px)}
+@media(prefers-reduced-motion:reduce){.developer-credit .project-github{transition:none}.developer-credit .project-github:active{transform:none}}
+@media print{.project-github{display:none!important}}
 $font_css
 :root{--report-logo:url(data:image/png;base64,$logo_data)}
 .brand-mark{background:var(--brand)!important;mask:var(--report-logo) center/contain no-repeat;-webkit-mask:var(--report-logo) center/contain no-repeat;border-radius:0}
@@ -684,7 +699,7 @@ $warnings
 <p class="empty" id="empty"$empty>فایلی برای نمایش وجود ندارد.</p>
 <div class="section-heading detail-heading"><div><span class="section-kicker">بازبینی و شواهد</span><h2>جزئیات هر فایل</h2></div><p>برای بازکردن روی عنوان بزنید</p></div>
 <div id="file-details">$details</div></section>
-<footer><div><span class="footer-kicker">پروندهٔ اجرا</span><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi dir="ltr">$tool_version</bdi></p><p>شناسهٔ اجرا: <bdi dir="ltr">$run_id</bdi></p><p>زمان پردازش و آماده‌سازی: <bdi>$elapsed</bdi> ثانیه</p><p>$versions</p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><span class="footer-kicker">منابع ورودی</span><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets">$assets</ul></div><div class="developer-credit"><p>برای نصب آخرین نسخه، دریافت به‌روزرسانی‌ها و اطلاع از تغییرات، <a href="https://github.com/AliRabiee2286/jozve-tool" target="_blank" rel="noopener noreferrer">به صفحهٔ گیت‌هاب پروژه مراجعه کنید ↗</a>.</p><p class="developer-name">توسعه‌یافته توسط <svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg><bdi dir="ltr">AliRabiee</bdi></p></div></footer>
+<footer><div><span class="footer-kicker">پروندهٔ اجرا</span><h2>دربارهٔ این اجرا</h2><p>نسخهٔ ابزار: <bdi dir="ltr">$tool_version</bdi></p><p>شناسهٔ اجرا: <bdi dir="ltr">$run_id</bdi></p><p>زمان پردازش و آماده‌سازی: <bdi>$elapsed</bdi> ثانیه</p><p>$versions</p><p class="footer-note">این گزارش خودکفاست؛ برای مشاهدهٔ آن به اینترنت نیاز ندارید.</p></div><div><span class="footer-kicker">منابع ورودی</span><h2>اثر انگشت منابع · SHA256 کوتاه</h2><ul class="assets">$assets</ul></div><div class="developer-credit"><p>برای نصب آخرین نسخه، دریافت به‌روزرسانی‌ها و اطلاع از تغییرات، <a href="https://github.com/AliRabiee2286/jozve-tool" target="_blank" rel="noopener noreferrer">به صفحهٔ گیت‌هاب پروژه مراجعه کنید ↗</a>.</p><div class="credit-bottom"><p class="developer-name">توسعه‌یافته توسط <svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg><bdi dir="ltr">AliRabiee</bdi></p><a class="project-github" href="https://github.com/AliRabiee2286/jozve-tool" target="_blank" rel="noopener noreferrer" aria-label="بازکردن پروژه در گیت‌هاب" title="پروژه در گیت‌هاب"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3Z"/></svg></a></div></div></footer>
 </main>
 <script>
 (() => {

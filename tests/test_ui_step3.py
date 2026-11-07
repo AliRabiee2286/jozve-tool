@@ -212,6 +212,9 @@ def test_footer_credit_links_are_explicit_and_do_not_load_remote_assets(tmp_path
     assert '<bdi dir="ltr">AliRabiee</bdi>' in html
     assert 'github.com/AliRabiee86' not in html
     assert all(not attrs.get('src', '').startswith(('http:', 'https:')) for _, attrs in elements)
+    assert len(links) == 2  # Text link and independent footer-corner icon.
+    icon_link = next(attrs for attrs in links if attrs.get('class') == 'project-github')
+    assert icon_link['aria-label'] == 'بازکردن پروژه در گیت‌هاب'
 
 
 @pytest.mark.parametrize('count', [4, 5, 24])
@@ -241,6 +244,30 @@ def test_long_detail_lists_are_collapsed_and_content_preserved(tmp_path, items):
     assert html.count('نمایش همهٔ 8 مورد') == 2
     assert all(f'Removed {n}' in html for n in range(1, 9))
     assert 'کل این فایل' in html
+
+
+def test_qc_technical_details_are_outside_auto_fit_groups(tmp_path, items):
+    from report_html import _qc_html
+    from syllabus import load_config
+    item = deepcopy(items[0])
+    item['qc']['details'] = [{'check': 'sample', 'detail': {'value': 1}}]
+    html = _qc_html(item, load_config())
+    # A spanning technical item inside the grid would keep empty columns alive.
+    assert html.startswith('<div class="qc-groups">')
+    assert '</ul></div></div><details class="technical">' in html
+    assert html.count('<h4>') == 2
+
+
+def test_stage_timings_are_collapsed_but_total_is_visible(tmp_path, items):
+    from report_html import write_html_report
+    (tmp_path / 'log.jsonl').write_text(json.dumps({
+        'file': 'lesson.pdf', 'stage': 'qc', 'seconds': 0.125,
+    }) + '\n', encoding='utf-8')
+    html = write_html_report(tmp_path, [items[0]], [], thumbs='none').read_text(encoding='utf-8')
+    assert '<bdi class="elapsed-total">1.20</bdi>' in html
+    assert '<details class="detail-disclosure"><summary>نمایش زمان مرحله‌ها</summary>' in html
+    assert '<bdi>0.1250</bdi>' in html
+    assert '.detail-grid:has(.detail-disclosure[open]){align-items:start}' in html
 
 
 @pytest.mark.parametrize('count', [0, 2])
