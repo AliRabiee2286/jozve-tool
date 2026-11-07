@@ -127,7 +127,7 @@ def test_all_subject_icons_are_embedded_monochrome_and_decorative(tmp_path, item
     assert report_html._BALATAR_LOGO_PNG in report_html._subject_icon({'sheet': '<unknown>'})
     html = report_html.write_html_report(tmp_path, items, [], thumbs='none').read_text(encoding='utf-8')
     parser = ReportParser(html)
-    icons = [attrs for tag, attrs in parser.elements if tag == 'svg' and attrs.get('class') != 'github-icon']
+    icons = [attrs for tag, attrs in parser.elements if tag == 'svg' and attrs.get('class') in ('metric-icon', 'watermark status-watermark')]
     assert len(icons) == 6
     assert all(attrs['aria-hidden'] == 'true' and attrs['focusable'] == 'false' for attrs in icons)
     assert 'mask:var(--subject-image)' in html

@@ -168,6 +168,17 @@ def _warnings_html(item, config):
     return '<ul>' + ''.join(messages) + '</ul>' if messages else '<p class="muted">هشداری ثبت نشده است.</p>'
 
 
+def _action_icon(kind):
+    paths = {
+        'document': '<path d="M14 3H5v18h14V8Z M14 3v5h5M8 12h8m-8 4h5"/>',
+        'review': '<path d="M9 3H4v5m11-5h5v5M4 16v5h5m11-5v5h-5"/><circle cx="11" cy="11" r="4"/><path d="m14 14 3 3"/>',
+        'external': '<path d="M14 3h7v7m0-7L10 14M10 5H4v15h15v-6"/>',
+    }
+    return ('<svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" '
+            'aria-hidden="true" focusable="false">' + paths[kind] + '</svg>')
+
+
 def _review_links(item, output):
     """Link only to a published local PDF; QC content pages exclude the cover."""
     if _code(item) != 'REVIEW':
@@ -181,7 +192,7 @@ def _review_links(item, output):
             page = int(match.group(1))
             if page > 0 and page <= item.get('input_pages', 0):
                 pages.add(page)
-    full_review = (f'<p class="full-review-tag">نیازمند بررسی کامل · {len(pages)} صفحه نیازمند بازبینی</p>'
+    full_review = (f'<p class="full-review-tag">{_action_icon("review")}<span>نیازمند بررسی کامل</span><bdi class="review-page-count">{len(pages)} صفحه</bdi></p>'
                    if len(pages) > 4 else '')
     unavailable = full_review + '<p class="muted">PDF خروجی برای بازکردن در دسترس نیست.</p>'
     name = item.get('output')
@@ -194,7 +205,7 @@ def _review_links(item, output):
     href = './' + quote(path.relative_to(root).as_posix(), safe='/')
     def link(label, fragment=''):
         return (f'<a class="review-link" data-pdf-link="true" href="{_text(href + fragment)}" '
-                f'target="_blank" rel="noopener noreferrer">{label}<span aria-hidden="true"> ↗</span></a>')
+                f'target="_blank" rel="noopener noreferrer">{_action_icon("document")}<span>{label}</span>{_action_icon("external")}</a>')
     buttons = link('بازکردن PDF در تب جدید')
     page_links = ''.join(link(f'صفحهٔ محتوای {page} · صفحهٔ {page + 1} PDF', f'#page={page + 1}') for page in sorted(pages))
     if len(pages) > 4:
@@ -435,7 +446,7 @@ main{padding:42px 24px 64px;margin:auto;max-width:1240px;padding-block:40px 64px
 .metric::before{content:"";position:absolute;inset:23px 0 23px auto;width:4px;border-radius:8px;background:currentColor;display:none}
 .metric-mark{grid-column:1;grid-row:1/3;align-self:stretch;position:relative;width:10px;border-radius:7px;background:currentColor;opacity:.9}
 .metric-mark::after{content:"";position:absolute;inset:50% 2px auto;height:2px;background:var(--surface);transform:translateY(-50%);opacity:.85}
-.metric-label{grid-column:2;font-weight:700;color:var(--ink)}
+.metric-label{grid-column:2;font-weight:700;color:var(--ink);font-size:21px;line-height:1.5}
 .metric strong{align-self:center;line-height:1.3;grid-column:3;grid-row:1/3;font-size:38px;color:var(--ink);font-variant-numeric:tabular-nums}
 .metric-caption{grid-column:2;color:var(--muted);font-size:12px}
 .section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
@@ -651,7 +662,10 @@ html{scroll-behavior:auto}
 .developer-credit{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;border-top:1px solid var(--hero-line);padding-top:18px;color:var(--hero-ink);font-size:14px}
 .developer-credit a{display:inline-flex;align-items:center;gap:8px;color:inherit;min-height:44px;text-underline-offset:5px}.github-icon{width:22px;height:22px;flex-shrink:0;fill:currentColor}
 @media print{.review-actions{display:none}.file-body .notice h3{font-size:14px}.file-body .notice p{font-size:11px}.developer-credit,.developer-credit a{color:#111}.notice{padding:12px}}
-.full-review-tag{display:inline-flex;padding:6px 12px;border:1px solid currentColor;border-radius:999px;font-weight:700}
+.full-review-tag{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 12px;border:1px solid currentColor;border-radius:10px;background:var(--surface);font-weight:700}
+.action-svg{width:20px;height:20px;flex-shrink:0;pointer-events:none}
+.review-page-count{padding:3px 9px;border-radius:7px;background:var(--review-bg);font-size:13px;font-weight:400;white-space:nowrap;font-variant-numeric:tabular-nums}
+.review-link{gap:10px;font-weight:700;padding:10px 16px}.review-link>.action-svg:last-child{width:16px;height:16px;opacity:.7}
 .file-body .notice .full-review-tag{margin-top:14px;font-size:14px}
 .detail-grid{align-items:stretch;margin-top:24px}
 .detail-grid:has(.detail-disclosure[open]){align-items:start}
