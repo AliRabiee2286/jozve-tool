@@ -171,3 +171,18 @@
 - نتیجهٔ corpus پس از اصلاحات: کد خروج ۰؛ ۲۲ فایل، ۲۸۵ صفحه، ۱۹ OK، سه REVIEW و صفر BLOCKED؛ مقایسه با baseline در ۷۲ dpi صفر صفحهٔ تغییرکرده. زمان کل ۱۱۰۴٫۰۱ ثانیه و مجموع تایمر فایل‌ها ۱۰۸۰٫۸۶ ثانیه بود؛ نسبت به مرجع ۸۶۵ ثانیه، ۲۷٫۶۳٪ بیشتر و بالاتر از سقف ۹۰۸٫۲۵ ثانیه است. REVIEWها همان سه فایل با ۱، ۳۶ و ۴۶ advisory failure هستند.
 - لاگ نهایی corpus با شناسهٔ `20261103-222342-609065` دارای ۳۶۸ خط، صفر ERROR و آخرین event `run` با خلاصهٔ ۱۹/۳/۰ است. هش تجمیعی ورودی‌ها/منابع/نمونه‌ها `743728968531bf1c30ef4a244acc91f82331f114552312e1cc5a8a082e965246` و هش baseline `fa99097bb2f9c34b024b66e15549f1206f3c32ef3d8ab6a4751c3d9b8bd24fb6` باقی ماندند.
 - با وجود افزایش زمان، مقایسهٔ کنترل‌شدهٔ قبلی و پروفایل تک‌فایل نشان داده‌اند اصلاح عملکردی حدسی موجه نیست؛ این اجرای رسمی نیز معیار زمانی را پاس نکرد. PDF/QC و تست‌ها سبزند، اما مرحلهٔ ۵.۲ از نظر زمان بسته نمی‌شود.
+
+
+## Q0 — ثبت پایهٔ QA — ۲۰۲۶-۱۱-۱۳ (ناتمام)
+- مالک تغییرات قبلی را تأیید کرد و ورودی‌های حذف‌شده را برگرداند. تغییرات قبلی وارد این commit نمی‌شوند.
+- شاخه: `qa-support`، ساخته‌شده از `ui-step7`؛ commit مبدأ: `4e61cb6dd496e5044d0e60ff605920f2a38b2c7c`.
+- AGENTS، برنامهٔ QA، انتهای WORKLOG، README و جریان‌های main.process_job، syllabus و naamak خوانده شد. Graphify در PATH و graphify-out/graph.json موجود نبود؛ نصب انجام نشد.
+- وابستگی‌ها: main.process_job ابتدا naamak.resolve_details و Syllabus.find را برای نامک و رکورد صدا می‌زند؛ سپس جهت صفحهٔ اول، cover.build_cover، border.clean_border و pages.process_pages؛ پس از مونتاژ، qc.check_pdf اجازهٔ انتشار را تعیین می‌کند. naamak برای نامک‌های کوتاه‌تر فقط پس از NotFoundError تلاش می‌کند؛ syllabus شیت‌های config و fallback را می‌خواند. هیچ‌یک تغییر نکرد.
+- `python tests/run_tests.py` در sandbox با سه خطای دسترسی هنگام collection متوقف شد؛ هیچ آزمونی اجرا نشد. اجرای مجدد همان دستور با دسترسی گسترده‌تر: **۱۳۶ قبول، ۲ رد، ۱۷۲ deselected**، ۸۸٫۳۶ ثانیه، exit 1.
+- شکست‌ها: `test_readonly_sources` به‌علت هش متفاوت سیلابس فعلی با شواهد inspection؛ `test_workbook_rows_and_headers` به‌علت تفاوت فهرست شیت‌ها (۲۸ شیت بیشتر). معیار، شواهد و baseline تغییر نکردند. این شکست‌ها پیش از هر تغییر کد QA مشاهده شدند.
+- dry-run: **۱۴ MATCH، ۸ E199**؛ بازاجرای تابع main با آرگومان --dry-run، exit 1 را تأیید کرد. چهار مرجع physics_thermo_8/9/10 و Savad resane-ma va resane-10 همگی MATCH شدند؛ این نتیجه تأیید QC یا رندر نیست.
+- بررسی مستقیم lookup: هر هشت خطا UNKNOWN_VIDEO_FIELD در شیت «ویدیو های حل سوال جدید» بود: Dore 22 unsolved / dore 23 / dore 24 در ردیف‌های ۳۰/۳۱/۳۲ با درس «حل تمرین شیمی»؛ SCELL_AD_2_3 / SCELL_AD_2_4 در ردیف‌های ۲۳/۲۴ با «فناوری‌های نوین مرتبط»؛ SCELL_BQ_1 / SCELL_BQ_2 / SCELL_BQ_3 در ردیف‌های ۱۲/۱۳/۲۶ با «مبانی پایه». هیچ نگاشت حدسی اضافه نشد.
+- input شامل ۲۲ فایل است: ADAB_LNG_10 (1).pdf؛ ADAB_LNG_9.pdf؛ ADAB_SBK_14.pdf؛ ai_par_2.pdf؛ Dore 22 unsolved.pdf؛ dore 23.pdf؛ dore 24.pdf؛ ECONO  GO P 7.pdf؛ ECONO EC M 12.pdf؛ ECONO EC M 15.pdf؛ nojoom_astr_18.pdf؛ physics_mech_7(1).pdf؛ physics_thermo_10.pdf؛ physics_thermo_8.pdf؛ physics_thermo_9.pdf؛ Savad resane-ma va resane-10.pdf؛ SCELL_AD_2_3.pdf؛ SCELL_AD_2_4.pdf؛ SCELL_BQ_1.pdf؛ SCELL_BQ_2.pdf؛ SCELL_BQ_3.pdf؛ shimi_alee_7.pdf.
+- tests/corpus_baseline.json شامل ۲۲ ورودی است؛ هیچ source غایب نیست. corpus سنگین و بررسی بصری جدید اجرا نشد؛ صحت پیکسلی خروجی‌های فعلی تأیید نشده است.
+- فایل‌های کد، config و baseline در git diff بدون تغییر هستند. فقط این گزارش و یادداشت وضعیت برنامه ثبت می‌شوند. تصویر جدیدی در debug ساخته نشد.
+- Q0 تیک نمی‌خورد: شرط عمومی تست سریع سبز برقرار نیست. برای تصمیم دربارهٔ ناسازگاری سیلابس جدید با شواهد ثابت، توقف؛ Q1 شروع نشد. commit از نوع WIP است و نتیجهٔ push در گزارش چت ثبت می‌شود.
