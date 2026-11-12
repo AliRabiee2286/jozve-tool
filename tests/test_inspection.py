@@ -8,6 +8,7 @@ import pymupdf as fitz
 import openpyxl
 import yaml
 import pytest
+from syllabus import Syllabus, discover_assets, load_config
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -15,10 +16,50 @@ ROOT = Path(__file__).resolve().parents[1]
 def evidence():
     return json.loads((ROOT/'tests/data/inspection_evidence.json').read_text(encoding='utf-8'))
 
-def test_readonly_sources(evidence):
+@pytest.fixture(scope='module')
+def historical_syllabus(evidence):
+    """Frozen inspection input; its original hash remains the authority."""
+    source = evidence['assets']['syllabus'][0]
+    path = ROOT/'tests/data/inspection_sources'/Path(source).name
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == evidence['source_hashes_before'][source]
+    return path
+
+
+@pytest.fixture(scope='session', autouse=True)
+def current_syllabus_readonly():
+    """Check the live workbook from inspection setup through session teardown."""
+    cfg = load_config(ROOT/'config.yaml')
+    path = discover_assets(cfg, ROOT)['syllabus']
+    before = hashlib.sha256(path.read_bytes()).hexdigest()
+    yield
+    assert discover_assets(cfg, ROOT)['syllabus'] == path
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == before
+
+
+def test_current_syllabus_schema():
+    cfg = load_config(ROOT/'config.yaml')
+    assets = discover_assets(cfg, ROOT)
+    current = Syllabus(ROOT/'config.yaml')
+    assert current.workbook_path == assets['syllabus']
+    with assets['syllabus'].open('rb') as stream:
+        wb = openpyxl.load_workbook(stream, read_only=True, data_only=True)
+        try:
+            assert set(cfg['sheet_to_template']) <= set(wb.sheetnames)
+            assert set(cfg['sheet_to_template']) <= set(current.column_map)
+            for sheet, info in current.column_map.items():
+                assert 1 <= info['header_row'] <= cfg['header_scan_rows']
+                for field, column in info['columns'].items():
+                    assert wb[sheet].cell(info['header_row'], column).value == info['headers'][field]
+        finally:
+            wb.close()
+
+
+def test_readonly_sources(evidence, historical_syllabus):
     expected=evidence['source_hashes_before']
     actual={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
             for name in ('input','assets','samples') for p in (ROOT/name).rglob('*') if p.is_file() and p.relative_to(ROOT).as_posix() in expected}
+    # Only the explicitly approved historical workbook is redirected.
+    actual[evidence['assets']['syllabus'][0]] = hashlib.sha256(historical_syllabus.read_bytes()).hexdigest()
     assert expected == evidence['source_hashes_after'] == actual
     assert evidence['sources_unchanged'] and not evidence['errors']
 
@@ -42,8 +83,8 @@ def test_asset_uniqueness_and_config(evidence):
         assert evidence['assets'][role]==[paths[0].relative_to(ROOT).as_posix()]
         assert cfg['resolved_assets'][role]==evidence['assets'][role][0]
 
-def test_workbook_rows_and_headers(evidence):
-    wb=openpyxl.load_workbook(ROOT/evidence['assets']['syllabus'][0],read_only=False,data_only=False)
+def test_workbook_rows_and_headers(evidence, historical_syllabus):
+    wb=openpyxl.load_workbook(historical_syllabus,read_only=False,data_only=False)
     assert wb.sheetnames==[s['name'] for s in evidence['sheets']]
     for s in evidence['sheets']:
         ws=wb[s['name']]
