@@ -10,6 +10,38 @@ asset_patterns: # هر الگو باید دقیقاً یک فایل پیدا ک�
   template: '*First_Page_Template*.pdf' # تمپلیت فرست‌پیج
   border: '*Sarbarg*.pdf' # بوردر دو نواری مرحله ۳
   font: '*Aria-Regular*.otf' # فونت متن فارسی فرست‌پیج
+  template_qa: '*First_Page_With_Questions_Answers*.pdf' # فرست‌پیج ترکیبی سوال و پاسخ
+  frame_qa: '*Frame_Purple_QA*.pdf' # قاب مستقل QA؛ بدون همپوشانی با Sarbarg
+optional_asset_roles: [template_qa, frame_qa] # فقط با درخواست صریح roles کشف و اجباری می‌شوند؛ مسیر قدیمی همان چهار منبع
+qa: # قرارداد اعتبارسنجی منابع Q1؛ هنوز مسیر تولید QA فعال نیست
+  kinds: # ترتیب هر جفت تمپلیت
+    soal:
+      sheet_suffix: '-سوال' # پسوند شیت؛ برای مراحل بعد
+      namak_suffix: '_soal' # پسوند نامک؛ برای مراحل بعد
+      template_offset: 0 # اولین صفحهٔ هر جفت
+      title: 'سوالات' # عنوان دیداری تأییدشده
+      extracted_title: 'سواالت' # ترتیب یونیکد استخراج‌شده از PDF موجود؛ تصویر عنوان درست است
+    pasokh:
+      sheet_suffix: '-پاسخ' # پسوند شیت؛ برای مراحل بعد
+      namak_suffix: '_pasokh' # پسوند نامک؛ برای مراحل بعد
+      template_offset: 1 # دومین صفحهٔ هر جفت
+      title: 'پاسخنامه' # عنوان دیداری
+      extracted_title: 'پاسخنامه' # متن استخراج‌شدهٔ عنوان
+  template_pages:
+    total: 56 # کل صفحات فایل ترکیبی
+    first: 29 # شروع QA؛ یک‌مبنا
+    last: 56 # پایان QA؛ شامل این صفحه
+    size: [612, 792] # Letter عمودی به پوینت
+    tolerance: 0.01 # فقط تلورانس عددی ابعاد PDF به پوینت
+    comparison_dpi: 30 # مقایسهٔ اطلاعاتی صفحات قدیمی
+  cover:
+    fields: [course, chapter, topic] # سه فیلد بدون استاد
+    placeholder: '…' # نشانگر جای مقدار در تمپلیت
+  asset_validation:
+    frame_pages: 1 # تعداد صفحات منبع قاب
+    frame_segments: 8 # دو مستطیل، هرکدام چهار خط
+    frame_widths: 2 # تعداد ضخامت‌های متمایز؛ مقدار واقعی از PDF خوانده می‌شود
+    frame_colors: 1 # یک رنگ؛ مقدار واقعی از PDF خوانده می‌شود
 resolved_assets: # نام‌های کشف‌شده؛ کشف مجدد با الگو مرجع اجراست
   syllabus: assets/Comprehensive_Syllabus_19 (1)(1).xlsx # سیلابس موجود
   template: assets/First_Page_Template (1)(1).pdf # تمپلیت موجود

@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import unicodedata
 import warnings
+import fnmatch
 import openpyxl
 from openpyxl.utils.cell import column_index_from_string
 import yaml
@@ -51,12 +52,19 @@ def load_config(path=DEFAULT_CONFIG):
     return config
 
 
-def discover_assets(config, base_dir):
+def discover_assets(config, base_dir, *, roles=None):
     """Resolve patterns relative to config, never trust stale resolved filenames."""
     directory = Path(base_dir) / config['paths']['assets']
     result = {}
-    for role, pattern in config['asset_patterns'].items():
-        found = sorted(p for p in directory.glob(pattern) if p.is_file())
+    patterns = config['asset_patterns']
+    if roles is None:
+        roles = [role for role in patterns if role not in config.get('optional_asset_roles', [])]
+    for role in roles:
+        if role not in patterns:
+            raise AssetDiscoveryError(f'{role}: no configured asset pattern')
+        pattern = patterns[role]
+        found = sorted(p for p in directory.glob('*')
+                       if p.is_file() and fnmatch.fnmatchcase(p.name.casefold(), pattern.casefold()))
         if len(found) != 1:
             raise AssetDiscoveryError(f'{role}: pattern {pattern!r}: {len(found)} files')
         result[role] = found[0].resolve()
