@@ -53,7 +53,7 @@ def test_real_exact_independent_cells(real,namak,sheet,index):
         assert len(rows)==1
         row=rows[0]
         expected=dict(zip(['namak','teacher','course','chapter','topic'],[v.strip() if isinstance(v,str) else v for v in row[1:6]]))
-        expected.update(sheet=sheet,template_index=index)
+        expected.update(sheet=sheet,template_index=index,kind='note')
         assert real.find(namak)==expected
         wb.close()
 

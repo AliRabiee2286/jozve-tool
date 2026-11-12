@@ -12,11 +12,15 @@ from naamak import resolve_details
 
 
 def sheet_records(syllabus):
-    sheets={sheet:{} for sheet in syllabus.column_map}
+    legacy=set(syllabus.config['sheet_to_template'])
+    legacy.add(syllabus.config.get('fallback_sheet'))
+    sheets={sheet:{} for sheet in syllabus.column_map if sheet in legacy}
     for index in (syllabus._index,syllabus._fallback_index):
         for key,rows in index.items():
             for row in rows:
                 sheet=row['record']['sheet']
+                if sheet not in sheets:
+                    continue
                 sheets[sheet].setdefault(key,[]).append(row)
     return sheets
 

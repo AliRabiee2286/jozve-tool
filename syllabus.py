@@ -118,8 +118,20 @@ class Syllabus:
                 raise SchemaError(f'Missing configured sheets: {sorted(missing)}')
             fallback_sheet = config.get('fallback_sheet')
             sources = dict(mapping)
+            source_kinds = {name: 'note' for name in sources}
             if fallback_sheet and fallback_sheet in wb.sheetnames and fallback_sheet not in sources:
                 sources[fallback_sheet] = None
+                source_kinds[fallback_sheet] = 'note'
+            for subject, template in mapping.items():
+                for kind, definition in config.get('qa', {}).get('kinds', {}).items():
+                    name = subject + definition['sheet_suffix']
+                    if name in sources:
+                        raise SchemaError(f'Duplicate configured sheet: {name}')
+                    if name not in wb.sheetnames:
+                        self.warnings.append(f'MISSING_QA_SHEET: {name}')
+                        continue
+                    sources[name] = template
+                    source_kinds[name] = kind
             self.ignored_sheets = [s for s in wb.sheetnames if s not in sources]
             for name, template in sources.items():
                 ws = wb[name]
@@ -173,6 +185,9 @@ class Syllabus:
                         continue
                     record = {k: _trim(row[col - 1]) for k, col in columns.items()}
                     record.update(sheet=name, template_index=template)
+                    # Preserve legacy stored records (including exception details).
+                    if source_kinds[name] != 'note':
+                        record['kind'] = source_kinds[name]
                     target = self._index if template is not None else self._fallback_index
                     target[key].append({'row': ri, 'record': record})
         finally:
@@ -190,17 +205,27 @@ class Syllabus:
         key = normalize_key(namak)
         primary = self._index.get(key, [])
         fallback = self._fallback_index.get(key, [])
+        qa_primary = any(row['record'].get('kind', 'note') != 'note' for row in primary)
+        if qa_primary and fallback:
+            raise AmbiguousError(namak, primary + fallback)
+        if not primary and any(key.endswith('_' + normalize_key(kind['namak_suffix']))
+                               for kind in self.config.get('qa', {}).get('kinds', {}).values()):
+            fallback = []
         rows = primary or fallback
         if not rows:
             raise NotFoundError(f'No syllabus match: {namak!r}')
         if self._ambiguous(rows):
             raise AmbiguousError(namak, rows)
         record = dict(rows[0]['record'])
-        fields = self.config['cover']['fields']
+        kind = record.get('kind', 'note')
+        fields = (self.config['cover']['fields'] if kind == 'note'
+                  else self.config['qa']['cover']['fields'])
         empty_fields=[field for field in fields if is_empty_value(record[field])]
         if len(empty_fields)==len(fields):
             self.lookup_warnings.append({'kind':'empty_cover_fields','fields':empty_fields})
             raise SchemaError('EMPTY_SYLLABUS_RECORD: نامک در سیلابس هست ولی هیچ مشخصاتی ندارد')
+        if kind != 'note' and empty_fields:
+            self.lookup_warnings.append({'kind':'empty_cover_fields','fields':empty_fields})
         if primary:
             if fallback and any(any(row['record'][field] != record[field] for field in fields)
                                 for row in fallback):
@@ -208,6 +233,7 @@ class Syllabus:
                     'preferred_sheet': record['sheet'],
                     'ignored_sheet': self.config.get('fallback_sheet'),
                     'rows': [row['row'] for row in fallback]})
+            record['kind'] = kind
             return record
         course = record['course']
         aliases = {normalize_key(source): target
@@ -220,4 +246,5 @@ class Syllabus:
             raise SchemaError(f'UNKNOWN_VIDEO_FIELD: {record["sheet"]}!{rows[0]["row"]}: {course!r}')
         record['sheet'] = canonical
         record['template_index'] = mapping[canonical]
+        record['kind'] = kind
         return record
