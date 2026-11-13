@@ -1,9 +1,10 @@
-"""Native QA covers only. Legacy cover renderer and content pages are untouched."""
+"""QA covers with source-derived typography and native/input page policies."""
 from html import escape
 from pathlib import Path
 import hashlib
 import math
 import unicodedata
+import copy
 import numpy as np
 import pymupdf as fitz
 from cover import CoverError, TextFitError, ink_bbox
@@ -14,6 +15,36 @@ from syllabus import DEFAULT_CONFIG, load_config, discover_assets, normalize_key
 def _pixels(page,dpi):
     pix=page.get_pixmap(dpi=dpi,alpha=False)
     return np.frombuffer(pix.samples,dtype=np.uint8).reshape(pix.height,pix.width,pix.n).copy()
+
+
+def word_gap_em(page, size, row_tolerance):
+    """Measure horizontal whitespace between painted glyph boxes, grouped by baseline.
+
+    Ignore extracted spaces (MuPDF can synthesize a wide space for justification)
+    and script baselines; the full-size base glyph anchors each formula word.
+    """
+    groups = []
+    for block in page.get_text('rawdict')['blocks']:
+        for line in block.get('lines', []):
+            for span in line['spans']:
+                if abs(span['size'] - size) > size * row_tolerance:
+                    continue
+                for char in span['chars']:
+                    if char['c'].isspace() or unicodedata.category(char['c']) in ('Cc', 'Cf'):
+                        continue
+                    y = char['origin'][1]
+                    group = next((g for g in groups if abs(g[0] - y) <= size * row_tolerance), None)
+                    if group is None:
+                        group = [y, []]; groups.append(group)
+                    group[1].append(fitz.Rect(char['bbox']))
+    maximum = 0.0
+    for _, boxes in groups:
+        right = None
+        for box in sorted(boxes, key=lambda b: b.x0):
+            if right is not None:
+                maximum = max(maximum, box.x0 - right)
+            right = max(right if right is not None else box.x1, box.x1)
+    return maximum / size
 
 
 def detect_qa_regions(page,cfg):
@@ -135,18 +166,24 @@ class QACoverBuilder:
                 fonts=p.get_fonts(full=True)
                 if not fonts or any(hashlib.sha256(layer.extract_font(f[0])[3]).digest()!=self.font_hash for f in fonts):
                     raise CoverError('QA_FONT_NOT_ARIA')
+                gap=word_gap_em(p,size,settings['row_group_em'])
+                if gap>settings['max_word_gap_em']:continue
                 ink=ink_bbox(p,settings['qc_dpi'])
                 if ink is None or not region.contains(ink):continue
                 data=layer.tobytes(garbage=4,deflate=True)
                 return data,{'value':value,'region':list(region),'ink_bbox':list(ink),'font_size':size,'scale':scale,
-                             'lines':lines,'max_lines':max_lines,'font_embedded':True,'formula':formula,'color':row['color']}
+                             'lines':lines,'max_lines':max_lines,'max_word_gap_em':gap,'font_embedded':True,'formula':formula,'color':row['color']}
             finally:layer.close()
         raise TextFitError(f'QA_TEXT_DOES_NOT_FIT: {row["field"]}: length={len(value)}: min_scale={settings["min_scale"]}')
 
     def build(self,kind,template_index,values,page_size_policy=None,*,input_size=None):
         settings=self.settings;policy=page_size_policy or settings['page_size_policy']
-        if input_size is not None and input_size[0]>=input_size[1]:raise CoverError('QA_LANDSCAPE_UNSUPPORTED')
-        if policy!='native':raise CoverError('QA_INPUT_POLICY_PENDING_Q6' if policy=='input' else 'QA_UNKNOWN_PAGE_POLICY')
+        if input_size is not None:
+            if len(input_size)!=2 or any(not isinstance(v,(int,float)) or not math.isfinite(v) or v<=0 for v in input_size):
+                raise CoverError('QA_INVALID_INPUT_SIZE')
+            if input_size[0]>=input_size[1]:raise CoverError('QA_LANDSCAPE_UNSUPPORTED')
+        if policy not in ('native','input'):raise CoverError('QA_UNKNOWN_PAGE_POLICY')
+        if policy=='input' and input_size is None:raise CoverError('QA_INPUT_SIZE_REQUIRED')
         if set(values)!=set(settings['fields']):raise CoverError('QA_EXPECTED_THREE_FIELDS')
         if all(is_empty_value(v) for v in values.values()):raise CoverError('EMPTY_SYLLABUS_RECORD')
         if any(not is_empty_value(v) and not isinstance(v,str) for v in values.values()):raise CoverError('INVALID_SYLLABUS_VALUE')
@@ -170,10 +207,77 @@ class QACoverBuilder:
             changed=np.any(actual!=baseline,axis=2)
             outside=int(np.count_nonzero(changed & ~allowed))
             if outside:raise CoverError(f'QA_PIXELS_OUTSIDE_VALUES: {outside}')
-            return result,{'kind':kind,'template_index':template_index,'template_page':page_index+1,
+            report={'kind':kind,'template_index':template_index,'template_page':page_index+1,
                            'page_size_policy':policy,'page_size':[page.rect.width,page.rect.height],'fields':reports,
                            'pixel_qc':{'dpi':settings['qc_dpi'],'changed_pixels':int(changed.sum()),'outside_values':outside}}
+            if policy=='input':
+                adapted,report=self._input_cover(result,data,report,input_size)
+                result.close()
+                return adapted,report
+            return result,report
         except Exception:result.close();raise
+
+    def _input_cover(self,native,blank_data,report,size):
+        from frame import QAFrame
+        from pages import _preserve_rendering_attributes
+        frame=QAFrame(self.config_path)
+        rect=fitz.Rect(0,0,*size)
+        native_rect=native[0].rect
+        dx,dy=(rect.width-native_rect.width)/2,(rect.height-native_rect.height)/2
+        shift=fitz.Matrix(1,0,0,1,dx,dy)
+        clip=frame.inner_rect(native_rect)
+        inset=self.settings['raster_inset_pixels']*72/self.settings['qc_dpi']
+        clip=fitz.Rect(clip.x0+inset,clip.y0+inset,clip.x1-inset,clip.y1-inset)
+        safe=frame.inner_rect(rect)
+
+        def adapt(source):
+            # Check the whole source interior before drawing to a smaller page;
+            # a destination clip must never conceal lost logo, labels or text.
+            with fitz.open() as interior:
+                p=interior.new_page(width=native_rect.width,height=native_rect.height)
+                p.show_pdf_page(clip,source,0,clip=clip)
+                _preserve_rendering_attributes(source,interior)
+                pixels=_pixels(p,self.settings['qc_dpi'])
+                ys,xs=np.where(np.any(pixels!=255,axis=2))
+                if len(xs):
+                    factor=72/self.settings['qc_dpi']
+                    ink=fitz.Rect(xs.min()*factor,ys.min()*factor,(xs.max()+1)*factor,(ys.max()+1)*factor)*shift
+                    if not safe.contains(ink):raise CoverError('QA_INPUT_COVER_CLIP_UNSAFE')
+            target=fitz.open()
+            try:
+                p=target.new_page(width=rect.width,height=rect.height)
+                p.show_pdf_page(clip*shift,source,0,clip=clip,keep_proportion=True)
+                _preserve_rendering_attributes(source,target)
+                frame.apply(p)
+                # Reload after grafting OutputIntents: MuPDF may otherwise keep
+                # the pre-graft color cache until the first on-disk reopening.
+                reopened=fitz.open(stream=target.tobytes(),filetype='pdf')
+                target.close()
+                return reopened
+            except Exception:target.close();raise
+
+        adapted=adapt(native)
+        try:
+            with fitz.open(stream=blank_data,filetype='pdf') as blank:
+                reference=adapt(blank)
+                try:baseline=_pixels(reference[0],self.settings['qc_dpi'])
+                finally:reference.close()
+            final=copy.deepcopy(report)
+            final.update(page_size=list(size),native_page_size=list(native_rect[2:]),
+                         content_transform=list(shift),source_clip=list(clip),frame_bbox=list(safe))
+            allowed=np.zeros(baseline.shape[:2],dtype=bool)
+            for info in final['fields'].values():
+                for key in ('region','ink_bbox'):
+                    if key in info:info[key]=list(fitz.Rect(info[key])*shift)
+                x0,y0,x1,y1=(fitz.Rect(info['region'])*(self.settings['qc_dpi']/72)).irect
+                allowed[max(0,y0):min(allowed.shape[0],y1),max(0,x0):min(allowed.shape[1],x1)]=True
+            changed=np.any(_pixels(adapted[0],self.settings['qc_dpi'])!=baseline,axis=2)
+            outside=int(np.count_nonzero(changed & ~allowed))
+            if outside:raise CoverError(f'QA_PIXELS_OUTSIDE_VALUES: {outside}')
+            final['native_pixel_qc']=report['pixel_qc']
+            final['pixel_qc']={'dpi':self.settings['qc_dpi'],'changed_pixels':int(changed.sum()),'outside_values':outside}
+            return adapted,final
+        except Exception:adapted.close();raise
 
 
 def build_qa_cover(kind,template_index,values,page_size_policy=None,*,input_size=None,config_path=DEFAULT_CONFIG):

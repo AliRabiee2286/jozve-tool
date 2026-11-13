@@ -31,7 +31,7 @@ def run_sweep(output=ROOT/'cache/qa_cover_sweep.json',artifacts=False):
             item={'namak':row['namak'],'kind':row['kind'],'sheet':row['sheet'],'row':row['workbook_row'],
                   'lengths':{f:len(str(row[f])) if not is_empty_value(row[f]) else 0 for f in fields},'empty_fields':[f for f in fields if is_empty_value(row[f])]}
             try:
-                doc,report=builder.build(row['kind'],row['template_index'],values)
+                doc,report=builder.build(row['kind'],row['template_index'],values,'native')
                 try:
                     item.update(status='ok',scales={f:r.get('scale') for f,r in report['fields'].items()},pixel_qc=report['pixel_qc'])
                     names=[]

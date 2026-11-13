@@ -13,6 +13,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def data():
     syllabus=Syllabus(ROOT/'config.yaml')
     with QACoverBuilder(ROOT/'config.yaml') as builder:
+        builder.settings['page_size_policy'] = 'native'
         yield builder,records(syllabus)
 
 @pytest.mark.parametrize('kind,index',[(kind,index) for kind in ('soal','pasokh') for index in range(1,15)])
@@ -42,6 +43,7 @@ def test_all_native_templates(data,kind,index):
             x0,y0,x1,y1=(rect*(dpi/72)).irect;allowed[y0:y1,x0:x1]=True
             if not info['empty']:
                 assert info['scale']>=builder.settings['min_scale']
+                assert info['max_word_gap_em']<=builder.settings['max_word_gap_em']
                 ink=fitz.Rect(info['ink_bbox']);assert rect.contains(ink)
                 assert rect.x1-ink.x1<=info['font_size']*builder.settings['row_group_em']
         assert np.array_equal(before[~allowed],after[~allowed])
@@ -70,7 +72,7 @@ def test_formula_uses_aria_and_survives_pixel_qc(data):
     finally:doc.close()
 
 @pytest.mark.parametrize('policy,size,code',[
-    ('native',(842,595),'LANDSCAPE'),('input',(595,842),'PENDING_Q6'),('invalid',None,'UNKNOWN_PAGE_POLICY')])
+    ('native',(842,595),'LANDSCAPE'),('input',None,'INPUT_SIZE_REQUIRED'),('invalid',None,'UNKNOWN_PAGE_POLICY')])
 def test_unsupported_orientation_or_policy_is_explicit(data,policy,size,code):
     builder,_=data
     with pytest.raises(CoverError,match=code):builder.build('soal',1,{'course':'x','chapter':'y','topic':'z'},policy,input_size=size)
@@ -156,3 +158,22 @@ def test_justify_short_mixed_and_explicit_lines(data, text):
             builder.settings['story_alignment'] = previous_alignment
     finally:
         doc.close()
+
+
+@pytest.mark.parametrize('kind', ['soal', 'pasokh'])
+def test_formula_first_line_has_no_excessive_pixel_gaps(data, kind):
+    builder, rows = data
+    record = next(r for r in rows if r['kind'] == kind and '^' in (r['topic'] or ''))
+    page_index, (_, regions, _) = builder._template(kind, record['template_index'])
+    row = regions[-1]
+    layer, info = builder._fit(record['topic'], row, builder.settings['max_lines'][-1], builder.templates[page_index].rect, True)
+    with fitz.open(stream=layer, filetype='pdf') as doc:
+        pix = doc[0].get_pixmap(dpi=builder.settings['qc_dpi'], alpha=True)
+        alpha = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)[:, :, -1]
+    size = info['font_size']; factor = builder.settings['qc_dpi'] / 72
+    top = row['origin'][1] - size * builder.settings['baseline_em']
+    y0, y1 = round(top * factor), round((top + size * builder.settings['line_height']) * factor)
+    occupied = np.flatnonzero(np.any(alpha[y0:y1] > 0, axis=0))
+    largest_gap = (np.diff(occupied).max() - 1) / factor
+    assert largest_gap <= size * builder.settings['max_word_gap_em']
+    assert info['scale'] >= builder.settings['min_scale']
