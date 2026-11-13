@@ -279,7 +279,7 @@ commit: «step Q4: formula-aware text conversion with Aria glyph guard».
 
 ---
 
-### ☐ Q5 — فرست‌پیج QA (سه فیلد)
+### ☑ Q5 — فرست‌پیج QA (سه فیلد)
 
 **پرامپت:**
 ```
