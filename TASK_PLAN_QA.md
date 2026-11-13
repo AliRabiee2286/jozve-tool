@@ -241,7 +241,7 @@ commit: «step Q2: load question and answer sheets with kind».
 
 ---
 
-### ☐ Q3 — نامک، نوع و نام خروجی (و `soul`)
+### ☑ Q3 — نامک، نوع و نام خروجی (و `soul`)
 
 **پرامپت:**
 ```

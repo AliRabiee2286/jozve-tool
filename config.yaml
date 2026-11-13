@@ -14,6 +14,8 @@ asset_patterns: # هر الگو باید دقیقاً یک فایل پیدا ک�
   frame_qa: '*Frame_Purple_QA*.pdf' # قاب مستقل QA؛ بدون همپوشانی با Sarbarg
 optional_asset_roles: [template_qa, frame_qa] # فقط با درخواست صریح roles کشف و اجباری می‌شوند؛ مسیر قدیمی همان چهار منبع
 qa: # قرارداد اعتبارسنجی منابع Q1؛ هنوز مسیر تولید QA فعال نیست
+  kind_suffix_aliases: # فقط پس از شکست تمام تطبیق‌های قبلی و با هشدار REVIEW
+    soul: soal # غلط املایی تأییدشدهٔ واژهٔ پایانی؛ فقط به رکورد سوال
   kinds: # ترتیب هر جفت تمپلیت
     soal:
       sheet_suffix: '-سوال' # پسوند شیت؛ برای مراحل بعد

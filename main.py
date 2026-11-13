@@ -236,7 +236,7 @@ def _dry_run(args, cfg):
                 match=resolve_details(namak or paths[0].stem,syllabus)
                 record=syllabus.find(match['namak'])
                 field=cfg.get('field_labels_en',{}).get(record['sheet'],f"field #{record['template_index']}")
-                print(english(f"MATCH | {files} | {match['namak']} | {field}"))
+                print(english(f"MATCH | {files} | {match['namak']} | {field} | {record.get('kind', 'note')}"))
             except NotFoundError:
                 blocked+=1
                 print(english(f'E101  {files}: namak not found in syllabus - check the input file name'))
