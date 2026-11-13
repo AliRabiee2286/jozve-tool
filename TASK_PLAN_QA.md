@@ -260,7 +260,7 @@ commit: «step Q3: resolve question and answer kinds and output names».
 
 ---
 
-### ☐ Q4 — موتور متن فرمول‌دار (بدون تغییر خروجی قدیمی)
+### ☑ Q4 — موتور متن فرمول‌دار (بدون تغییر خروجی قدیمی)
 
 **پرامپت:**
 ```
