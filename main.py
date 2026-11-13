@@ -31,6 +31,7 @@ try:
     from report_text import write_report
     from report_html import write_html_report
     from ui import TerminalUI
+    from qa_labels import qa_subject_label
 except Exception:
     if __name__ != '__main__':
         raise
@@ -124,7 +125,7 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
             record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
         if record.get('kind') in cfg['qa']['kinds']:
             from qa_pipeline import process_qa_job
-            return process_qa_job(paths,record,match,syllabus,cfg,output,claimed,event_bus,convert_office)
+            return process_qa_job(paths,record,match,syllabus,cfg,output,claimed,event_bus,convert_office,_timed_stage)
         item['warnings'].extend(syllabus.lookup_warnings)
         empty=[field for field in cfg['cover']['fields'] if is_empty_value(record[field])]
         if empty:
@@ -238,7 +239,7 @@ def _dry_run(args, cfg):
             try:
                 match=resolve_details(namak or paths[0].stem,syllabus)
                 record=syllabus.find(match['namak'])
-                field=cfg.get('field_labels_en',{}).get(record['sheet'],f"field #{record['template_index']}")
+                field=qa_subject_label(record['sheet'],cfg) or cfg.get('field_labels_en',{}).get(record['sheet'],f"field #{record['template_index']}")
                 print(english(f"MATCH | {files} | {match['namak']} | {field} | {record.get('kind', 'note')}"))
             except NotFoundError:
                 blocked+=1

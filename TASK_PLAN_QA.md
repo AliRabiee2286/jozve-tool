@@ -337,6 +337,18 @@ commit: «step Q7: QA quality control and pipeline dispatch».
 
 ---
 
+### ☑ Q7b — هماهنگی QA با UI، رویدادها و گزارش
+
+مرحلهٔ تکمیلی به درخواست صریح مالک، پس از Q7 و پیش از Q8؛ سقف ۱۵۰ خط تولیدی.
+- برچسب انگلیسی شیت QA از درس پایه و title_en نوع؛ dry-run و fancy/compat/plain.
+- رویدادهای resolve/cover/pages/qc/write هم‌نام جزوه‌ها، بدون تکرار resolve یا QC داخلی.
+- هشدار empty_cover_fields برای سه فیلد QA و آیکن درس پایه در HTML.
+- مقایسهٔ qc.blocking با qc_qa.blocking بدون تغییر معیار؛ docs/QA_Q7B_QC_COMPARISON.md.
+- تست‌های قدیمی بدون تغییر و اجرای ترکیبی جزوه/سوال/پاسخنامه؛ نتیجه در WORKLOG.
+- commit: «step Q7b: align QA with UI, events and reports»؛ توقف پس از مرحله.
+
+---
+
 ### ☐ Q8 — اجرای انتها‌به‌انتها و رگرسیون
 
 **پرامپت:**

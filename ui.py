@@ -7,6 +7,7 @@ import sys
 import time
 
 from events import EVENT_NAMES
+from qa_labels import qa_subject_label
 
 
 VALID_MODES = ('auto', 'fancy', 'compat', 'plain')
@@ -180,7 +181,7 @@ class TerminalUI:
         labels = self.config.get('field_labels_en', {})
         sheet = item.get('sheet') if isinstance(item, dict) else None
         subjects = labels.get('subjects', {}) if isinstance(labels, dict) else {}
-        return _ascii(labels.get(sheet, subjects.get(sheet, f'field #{index}')))
+        return _ascii(qa_subject_label(sheet, self.config) or labels.get(sheet, subjects.get(sheet, f'field #{index}')))
 
     def _refresh_fancy(self):
         if self._live is not None:
