@@ -238,7 +238,9 @@ def _file_html(item, index, output, config, metadata, thumbs):
     ) + '</tr>'
     properties = [('نامک', item.get('namak')), ('فایل ورودی', files), ('رشته', item.get('sheet'))]
     fields = item.get('cover', {}).get('fields', {})
-    for key in config['cover']['fields']:
+    qa=item.get('kind') in config['qa']['kinds']
+    if qa:properties.append(('نوع',config['qa']['kinds'][item['kind']]['title']))
+    for key in (config['qa']['cover']['fields'] if qa else config['cover']['fields']):
         field = fields.get(key, {})
         value = field.get('value', 'ثبت نشده')
         if 'value' in field and (value is None or not str(value).strip()):

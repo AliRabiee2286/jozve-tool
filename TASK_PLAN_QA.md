@@ -320,7 +320,7 @@ commit: «step Q6: add vector purple frame and QA content pages».
 
 ---
 
-### ☐ Q7 — QC مخصوص QA + یکپارچه‌سازی در `process_job` و گزارش
+### ☑ Q7 — QC مخصوص QA + یکپارچه‌سازی در `process_job` و گزارش
 
 **پرامپت:**
 ```

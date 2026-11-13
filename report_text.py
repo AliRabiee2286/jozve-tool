@@ -14,6 +14,9 @@ def write_report(output, items, global_warnings):
             if key in item:
                 value={'portrait':'عمودی','landscape':'افقی'}.get(item[key],item[key]) if key=='orientation' else item[key]
                 lines.append(f'{label}: {value}')
+        if item.get('kind') and item['kind'] in load_config()['qa']['kinds']:
+            cfg=load_config();lines.append('نوع: '+cfg['qa']['kinds'][item['kind']]['title'])
+            lines.extend(cfg['headers'][k][0]+': '+str(v.get('value') or '') for k,v in item.get('cover',{}).get('fields',{}).items())
         for key,passed in item.get('qc',{}).get('checks',{}).items(): lines.append(f"  {key}: {'قبول' if passed else 'رد'}")
         if item.get('qc',{}).get('blocking_failed'):
             lines.append('کنترل‌های بلاک‌کنندهٔ ردشده: '+', '.join(item['qc']['blocking_failed']))

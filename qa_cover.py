@@ -131,12 +131,12 @@ class QACoverBuilder:
             self.cache[page_index]=(data,rows,baseline)
         return page_index,self.cache[page_index]
 
-    def _story(self,html,size,color):
+    def _story(self,html,size,color,alignment=None):
         rgb=tuple(round(v*255) for v in color)
         css=('@font-face {font-family:qaAria;src:url("'+self.font_path.name+'");}'
              'body,p {margin:0;padding:0;} p {font-family:qaAria;white-space:pre-wrap;direction:rtl;'
              f'font-size:{size:.8f}pt;line-height:{self.settings["line_height"]};'
-             'text-align:'+self.settings['story_alignment']+';color:rgb('+','.join(map(str,rgb))+');}')
+             'text-align:'+(alignment or self.settings['story_alignment'])+';color:rgb('+','.join(map(str,rgb))+');}')
         return fitz.Story(html='<p id="value" dir="rtl">'+html+'</p>',user_css=css,archive=fitz.Archive(str(self.font_path.parent)))
 
     def _fit(self,value,row,max_lines,page_rect,last):
@@ -161,7 +161,8 @@ class QACoverBuilder:
             box=fitz.Rect(text_region.x0,y,text_region.x1,y+height+size*settings['guard_em'])
             layer=fitz.open();p=layer.new_page(width=page_rect.width,height=page_rect.height)
             try:
-                spare,applied=p.insert_htmlbox(box,self._story(html,size,row['color']),scale_low=1)
+                alignment=settings['multiline_alignment'] if lines>1 else settings['story_alignment']
+                spare,applied=p.insert_htmlbox(box,self._story(html,size,row['color'],alignment),scale_low=1)
                 if spare<0 or applied!=1:continue
                 fonts=p.get_fonts(full=True)
                 if not fonts or any(hashlib.sha256(layer.extract_font(f[0])[3]).digest()!=self.font_hash for f in fonts):
@@ -172,7 +173,7 @@ class QACoverBuilder:
                 if ink is None or not region.contains(ink):continue
                 data=layer.tobytes(garbage=4,deflate=True)
                 return data,{'value':value,'region':list(region),'ink_bbox':list(ink),'font_size':size,'scale':scale,
-                             'lines':lines,'max_lines':max_lines,'max_word_gap_em':gap,'font_embedded':True,'formula':formula,'color':row['color']}
+                             'lines':lines,'max_lines':max_lines,'alignment':alignment,'max_word_gap_em':gap,'font_embedded':True,'formula':formula,'color':row['color']}
             finally:layer.close()
         raise TextFitError(f'QA_TEXT_DOES_NOT_FIT: {row["field"]}: length={len(value)}: min_scale={settings["min_scale"]}')
 
@@ -230,6 +231,20 @@ class QACoverBuilder:
         clip=fitz.Rect(clip.x0+inset,clip.y0+inset,clip.x1-inset,clip.y1-inset)
         safe=frame.inner_rect(rect)
 
+        def frameless(source):
+            clean=fitz.open(stream=source.tobytes(),filetype='pdf')
+            strokes=[p for p in clean[0].get_drawings() if p['type']=='s']
+            if len(strokes)!=len(frame.segments):
+                clean.close();raise CoverError('QA_FRAME_REMOVAL_GEOMETRY')
+            for path in strokes:
+                r=fitz.Rect(path['rect']);pad=path['width']/2+frame.tolerance
+                clean[0].add_redact_annot(fitz.Rect(r.x0-pad,r.y0-pad,r.x1+pad,r.y1+pad),fill=False,cross_out=False)
+            clean[0].apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE,
+                graphics=fitz.PDF_REDACT_LINE_ART_REMOVE_IF_TOUCHED,text=fitz.PDF_REDACT_TEXT_NONE)
+            if any(p['type']=='s' for p in clean[0].get_drawings()):
+                clean.close();raise CoverError('QA_FRAME_REMOVAL_FAILED')
+            return clean
+
         def adapt(source):
             # Check the whole source interior before drawing to a smaller page;
             # a destination clip must never conceal lost logo, labels or text.
@@ -256,10 +271,12 @@ class QACoverBuilder:
                 return reopened
             except Exception:target.close();raise
 
-        adapted=adapt(native)
+        with frameless(native) as clean:
+            adapted=adapt(clean)
         try:
             with fitz.open(stream=blank_data,filetype='pdf') as blank:
-                reference=adapt(blank)
+                with frameless(blank) as clean:
+                    reference=adapt(clean)
                 try:baseline=_pixels(reference[0],self.settings['qc_dpi'])
                 finally:reference.close()
             final=copy.deepcopy(report)

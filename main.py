@@ -122,6 +122,9 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
             match=resolve_details(namak or paths[0].stem,syllabus)
             canonical=match['namak']; suffix=match['suffix']
             record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
+        if record.get('kind') in cfg['qa']['kinds']:
+            from qa_pipeline import process_qa_job
+            return process_qa_job(paths,record,match,syllabus,cfg,output,claimed,event_bus,convert_office)
         item['warnings'].extend(syllabus.lookup_warnings)
         empty=[field for field in cfg['cover']['fields'] if is_empty_value(record[field])]
         if empty:

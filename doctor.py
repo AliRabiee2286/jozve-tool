@@ -76,7 +76,8 @@ def collect_checks(root):
             if len(found) == 1:
                 assets[role] = found[0]
             check('asset ' + role, len(found) == 1,
-                  f'{len(found)} match(es) - keep exactly one matching file in assets/')
+                  f'{len(found)} match(es) - keep exactly one matching file in assets/',
+                  role not in config.get('optional_asset_roles',[]))
     except Exception:
         check('config', False, 'cannot read configuration - check config.yaml and PyYAML')
     try:
@@ -86,6 +87,22 @@ def collect_checks(root):
               name + ' - expected Aria Regular')
     except Exception:
         check('font', False, 'cannot load the font - check the font asset and PyMuPDF')
+    try:
+        from qa_cover import detect_qa_regions
+        from frame import QAFrame
+        QAFrame(root/'config.yaml')
+        spec=config['qa']['template_pages']
+        with modules['pymupdf'].open(assets['template_qa']) as templates:
+            valid=len(templates)==spec['total']
+            kinds=sorted(config['qa']['kinds'].values(),key=lambda k:k['template_offset'])
+            for i in range(spec['first']-1,spec['last']):
+                page=templates[i];kind=kinds[(i-spec['first']+1)%len(kinds)]
+                valid &= page.rotation==0 and kind['extracted_title'] in page.get_text()
+                valid &= all(abs(a-b)<=spec['tolerance'] for a,b in zip((page.rect.width,page.rect.height),spec['size']))
+                detect_qa_regions(page,config)
+        check('QA assets',valid,'QA template pages and frame geometry checked',False)
+    except Exception:
+        check('QA assets',False,'QA sources missing or invalid; legacy notes remain available',False)
     available = bool(find_libreoffice())
     check('LibreOffice', available, 'available' if available else
           'not found (optional for PDF input) - install LibreOffice only for Office conversion', False)

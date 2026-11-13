@@ -45,7 +45,10 @@ def test_all_native_templates(data,kind,index):
                 assert info['scale']>=builder.settings['min_scale']
                 assert info['max_word_gap_em']<=builder.settings['max_word_gap_em']
                 ink=fitz.Rect(info['ink_bbox']);assert rect.contains(ink)
-                assert rect.x1-ink.x1<=info['font_size']*builder.settings['row_group_em']
+                if info['lines']==1:
+                    assert rect.x1-ink.x1<=info['font_size']*builder.settings['row_group_em']
+                else:
+                    assert abs((rect.x0+rect.x1-ink.x0-ink.x1)/2)<=info['font_size']*builder.settings['row_group_em']
         assert np.array_equal(before[~allowed],after[~allowed])
         assert report['pixel_qc']['outside_values']==0
     finally:doc.close()
@@ -104,7 +107,7 @@ def test_public_builder_returns_independent_document():
 
 @pytest.mark.parametrize('kind', ['soal', 'pasokh'])
 @pytest.mark.parametrize('width_ratio', [1, 0.85])
-def test_justified_lines_and_right_aligned_last_line(data, kind, width_ratio):
+def test_multiline_uses_approved_legacy_centering(data, kind, width_ratio):
     builder, rows = data
     record = max((r for r in rows if r['kind'] == kind), key=lambda r: len(r['topic'] or ''))
     page_index, (_, regions, _) = builder._template(kind, record['template_index'])
@@ -129,9 +132,8 @@ def test_justified_lines_and_right_aligned_last_line(data, kind, width_ratio):
         edges.append((xs.min() / factor, (xs.max() + 1) / factor))
     tolerance = size * builder.settings['row_group_em']
     assert len(edges) > 1
-    assert all(0 <= rect.x1 - right <= tolerance for _, right in edges)
-    assert all(0 <= left - rect.x0 <= tolerance for left, _ in edges[:-1])
-    assert edges[-1][0] > rect.x0 + tolerance  # Last line must not be stretched.
+    assert all(abs((left+right-rect.x0-rect.x1)/2)<=tolerance for left,right in edges)
+    assert edges[-1][1]-edges[-1][0]<rect.width-tolerance
 
 
 @pytest.mark.parametrize('text', ['متن کوتاه', 'متن فارسی XRD و SEM', 'فرمول e^x', 'خط اول\nخط دوم'])
@@ -144,14 +146,17 @@ def test_justify_short_mixed_and_explicit_lines(data, text):
         assert report['pixel_qc']['outside_values'] == 0
         rect, ink = fitz.Rect(info['region']), fitz.Rect(info['ink_bbox'])
         assert rect.contains(ink)
-        assert rect.x1 - ink.x1 <= info['font_size'] * builder.settings['row_group_em']
+        if info['lines']==1:
+            assert rect.x1 - ink.x1 <= info['font_size'] * builder.settings['row_group_em']
+        else:
+            assert abs((rect.x0+rect.x1-ink.x0-ink.x1)/2)<=info['font_size']*builder.settings['row_group_em']
         # Short paragraphs and explicit line endings must retain their natural spacing.
         previous_alignment = builder.settings['story_alignment']
         try:
-            builder.settings['story_alignment'] = 'left'  # Calibrated visual RTL-right in Story.
+            builder.settings['story_alignment'] = 'center' if info['lines']>1 else 'left'
             natural, _ = builder.build('soal', 1, {'course': 'درس', 'chapter': 'فصل', 'topic': text})
             try:
-                assert doc[0].get_pixmap(dpi=150).samples == natural[0].get_pixmap(dpi=150).samples
+                assert doc[0].get_pixmap(dpi=150,clip=rect).samples == natural[0].get_pixmap(dpi=150,clip=rect).samples
             finally:
                 natural.close()
         finally:

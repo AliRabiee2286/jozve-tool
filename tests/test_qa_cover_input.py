@@ -35,6 +35,7 @@ def test_input_size_keeps_content_at_scale_one(data,kind,case):
     adapted,report=builder.build(kind,r['template_index'],values,input_size=size)
     try:
         assert report['page_size_policy']=='input'
+        assert sum(p['type']=='s' for p in adapted[0].get_drawings())==len(QAFrame().segments)
         assert (adapted[0].rect.width,adapted[0].rect.height)==size
         assert report['content_transform'][:4]==[1,0,0,1]
         dx,dy=report['content_transform'][-2:]
