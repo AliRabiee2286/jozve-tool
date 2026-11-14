@@ -45,7 +45,7 @@ def test_all_native_templates(data,kind,index):
                 assert info['scale']>=builder.settings['min_scale']
                 assert info['max_word_gap_em']<=builder.settings['max_word_gap_em']
                 ink=fitz.Rect(info['ink_bbox']);assert rect.contains(ink)
-                if info['lines']==1:
+                if info['lines']==1 or field=='topic':
                     assert rect.x1-ink.x1<=info['font_size']*builder.settings['row_group_em']
                 else:
                     assert abs((rect.x0+rect.x1-ink.x0-ink.x1)/2)<=info['font_size']*builder.settings['row_group_em']
@@ -107,7 +107,7 @@ def test_public_builder_returns_independent_document():
 
 @pytest.mark.parametrize('kind', ['soal', 'pasokh'])
 @pytest.mark.parametrize('width_ratio', [1, 0.85])
-def test_multiline_uses_approved_legacy_centering(data, kind, width_ratio):
+def test_multiline_topic_is_right_aligned(data, kind, width_ratio):
     builder, rows = data
     record = max((r for r in rows if r['kind'] == kind), key=lambda r: len(r['topic'] or ''))
     page_index, (_, regions, _) = builder._template(kind, record['template_index'])
@@ -132,7 +132,7 @@ def test_multiline_uses_approved_legacy_centering(data, kind, width_ratio):
         edges.append((xs.min() / factor, (xs.max() + 1) / factor))
     tolerance = size * builder.settings['row_group_em']
     assert len(edges) > 1
-    assert all(abs((left+right-rect.x0-rect.x1)/2)<=tolerance for left,right in edges)
+    assert all(abs(rect.x1-right)<=tolerance for left,right in edges)
     assert edges[-1][1]-edges[-1][0]<rect.width-tolerance
 
 
@@ -149,7 +149,7 @@ def test_justify_short_mixed_and_explicit_lines(data, text):
         if info['lines']==1:
             assert rect.x1 - ink.x1 <= info['font_size'] * builder.settings['row_group_em']
         else:
-            assert abs((rect.x0+rect.x1-ink.x0-ink.x1)/2)<=info['font_size']*builder.settings['row_group_em']
+            assert rect.x1-ink.x1<=info['font_size']*builder.settings['row_group_em']
         # Short paragraphs and explicit line endings must retain their natural spacing.
         previous_alignment = builder.settings['story_alignment']
         try:

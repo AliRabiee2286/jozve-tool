@@ -161,7 +161,7 @@ class QACoverBuilder:
             box=fitz.Rect(text_region.x0,y,text_region.x1,y+height+size*settings['guard_em'])
             layer=fitz.open();p=layer.new_page(width=page_rect.width,height=page_rect.height)
             try:
-                alignment=settings['multiline_alignment'] if lines>1 else settings['story_alignment']
+                alignment='left' if row['field']=='topic' else (settings['multiline_alignment'] if lines>1 else settings['story_alignment'])
                 spare,applied=p.insert_htmlbox(box,self._story(html,size,row['color'],alignment),scale_low=1)
                 if spare<0 or applied!=1:continue
                 fonts=p.get_fonts(full=True)
