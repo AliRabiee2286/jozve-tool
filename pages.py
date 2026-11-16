@@ -101,7 +101,16 @@ def meaningful_ink(image, settings):
 
 
 def bake_annotations(document, settings):
-    """Bake on the caller's output copy; reject violations, never rasterize content."""
+    """Bake on the caller's output copy; reject violations, never rasterize content.
+
+    Measures every page and collects all violations before raising.
+    Pixel differences up to bake_max_channel_difference are tolerated both
+    inside and outside annotation bboxes (Multiply-blend rounding); only
+    pixels exceeding the threshold outside bboxes count as blocking
+    outside_annotation_pixels.  Rounding-level outside pixels are recorded
+    separately in outside_rounding_pixels.
+    """
+    threshold = settings['bake_max_channel_difference']
     before = []
     for page in document:
         before.append({'image': raster(page, settings['diagnostic_dpi']),
@@ -111,29 +120,47 @@ def bake_annotations(document, settings):
                        'text': page.get_text()})
     document.bake(annots=True, widgets=False)
     result = []
+    violations = []
     for page, old in zip(document, before):
         delta = np.abs(raster(page, settings['diagnostic_dpi']).astype(np.int16)-old['image'].astype(np.int16))
-        changed = np.any(delta != 0, axis=2)
+        per_pixel_max = delta.max(axis=2)
+        changed = per_pixel_max > 0
         allowed = np.zeros(changed.shape, dtype=bool)
         margin = settings['bake_bbox_margin_pixels']
         for box in old['boxes']:
             x0,y0,x1,y1 = (fitz.Rect(box)*(settings['diagnostic_dpi']/72)).irect
             allowed[max(0,y0-margin):min(allowed.shape[0],y1+margin),
                     max(0,x0-margin):min(allowed.shape[1],x1+margin)] = True
+        outside_mask = changed & ~allowed
+        outside_above = outside_mask & (per_pixel_max > threshold)
+        outside_rounding = outside_mask & (per_pixel_max <= threshold)
         record = {'annotations_before': len(old['boxes']), 'annotations_after': len(list(page.annots() or [])),
                   'annotation_boxes': old['boxes'], 'widgets_before': old['widgets'],
                   'widgets_after': len(list(page.widgets() or [])),
                   'images_before': old['images'], 'images_after': len(page.get_images()),
                   'drawings_before': old['drawings'], 'drawings_after': len(page.get_drawings()),
                   'text_equal': old['text'] == page.get_text(),
-                  'different_pixels': int(changed.sum()), 'max_channel_difference': int(delta.max()),
-                  'outside_annotation_pixels': int(changed[~allowed].sum())}
-        if (record['annotations_after'] or record['outside_annotation_pixels'] or
-                record['max_channel_difference'] > settings['bake_max_channel_difference'] or
-                not record['text_equal'] or any(record[k+'_before'] != record[k+'_after']
-                                              for k in ('widgets', 'images', 'drawings'))):
-            raise ValueError(f'Bake verification failed on page {page.number+1}: {record}')
+                  'different_pixels': int(changed.sum()), 'max_channel_difference': int(per_pixel_max.max()),
+                  'outside_annotation_pixels': int(outside_above.sum()),
+                  'outside_rounding_pixels': int(outside_rounding.sum())}
+        failed = False
+        reasons = []
+        if record['annotations_after']:
+            failed = True; reasons.append('annotations_after')
+        if record['outside_annotation_pixels']:
+            failed = True; reasons.append('outside_annotation_pixels')
+        if record['max_channel_difference'] > threshold:
+            failed = True; reasons.append('max_channel_difference')
+        if not record['text_equal']:
+            failed = True; reasons.append('text_equal')
+        if any(record[k+'_before'] != record[k+'_after'] for k in ('widgets', 'images', 'drawings')):
+            failed = True; reasons.append('structure_changed')
+        if failed:
+            violations.append((page.number+1, reasons, record))
         result.append(record)
+    if violations:
+        worst = max(violations, key=lambda v: v[2]['max_channel_difference'])
+        raise ValueError(f'Bake verification failed on page {worst[0]}: {worst[2]}')
     return result
 
 
