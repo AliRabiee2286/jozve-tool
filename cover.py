@@ -4,11 +4,14 @@ build_cover(index, orientation, values) -> (one-page Document, QC report).
 Caller owns the returned Document and decides where to save it.
 """
 from pathlib import Path
-from html import escape
+from html import escape, unescape
 import math
 import hashlib
+import re
+import unicodedata
 import pymupdf as fitz
 from syllabus import DEFAULT_CONFIG, load_config, discover_assets, is_empty_value
+from formula import FormulaGlyphError, render_formula_html
 
 
 class CoverError(ValueError):
@@ -17,6 +20,13 @@ class CoverError(ValueError):
 
 class TextFitError(CoverError):
     pass
+
+
+class CoverGlyphError(CoverError):
+    def __init__(self, char):
+        self.code = 'COVER_GLYPH_MISSING'
+        self.char = char
+        super().__init__(f'{self.code}: {char!r} (U+{ord(char):04X})')
 
 
 def effective_orientation(page):
@@ -100,17 +110,18 @@ def ink_bbox(page, dpi):
     return fitz.Rect(*(v * 72 / dpi for v in bounds))
 
 
-def _story(value, size, font_path, settings):
+def _story(value, size, font_path, settings, formula_html=None):
     css = ('@font-face {font-family: coveraria; src:url("' + font_path.name + '");}'
            'body {margin:0;padding:0;} p {margin:0;padding:0;font-family:coveraria;'
            f'font-size:{size:.8f}pt;line-height:{settings["line_height"]};'
            'text-align:center;direction:rtl;color:#000000;white-space:pre-wrap;}')
-    return fitz.Story(html='<p id="value" dir="rtl">' + escape(value) + '</p>',
+    content = escape(value) if formula_html is None else formula_html
+    return fitz.Story(html='<p id="value" dir="rtl">' + content + '</p>',
                       user_css=css, archive=fitz.Archive(str(font_path.parent)))
 
 
 def _fit_value(value, region, label_size, max_lines, page_rect, font_path, settings,
-               first_line_row_height=None):
+               first_line_row_height=None, formula_html=None):
     if not isinstance(value, str) or not value.strip():
         raise TextFitError('Cover values must be nonempty strings')
     minimum = settings['min_scale']
@@ -119,7 +130,7 @@ def _fit_value(value, region, label_size, max_lines, page_rect, font_path, setti
     font_hash = hashlib.sha256(font_path.read_bytes()).digest()
     for scale in dict.fromkeys(scales):
         size = label_size * scale
-        story = _story(value, size, font_path, settings)
+        story = _story(value, size, font_path, settings, formula_html)
         more, filled = story.place(fitz.Rect(0, 0, region.width, page_rect.height))
         height = fitz.Rect(filled).height
         count = int(round(height / (size * settings['line_height'])))
@@ -136,7 +147,8 @@ def _fit_value(value, region, label_size, max_lines, page_rect, font_path, setti
         draw_box = fitz.Rect(region.x0, y, region.x1, y + height + size * settings['guard_em'])
         layer = fitz.open()
         p = layer.new_page(width=page_rect.width, height=page_rect.height)
-        spare, applied = p.insert_htmlbox(draw_box, _story(value, size, font_path, settings), scale_low=1)
+        spare, applied = p.insert_htmlbox(
+            draw_box, _story(value, size, font_path, settings, formula_html), scale_low=1)
         if spare < 0 or applied != 1:
             layer.close(); continue
         fonts = p.get_fonts(full=True)
@@ -165,6 +177,24 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
     if any(not is_empty_value(value) and not isinstance(value, str) for value in values.values()):
         raise CoverError('INVALID_SYLLABUS_VALUE: non-empty cover values must be text')
     assets = discover_assets(config, config_path.parent)
+    formula_font = fitz.Font(fontfile=str(assets['font']))
+    formula_html = {}
+    for field in settings['fields']:
+        if is_empty_value(values[field]):
+            continue
+        try:
+            formula_html[field], _ = render_formula_html(
+                values[field], settings=config['qa']['formula'], font=formula_font)
+        except FormulaGlyphError as exc:
+            raise CoverGlyphError(exc.char) from exc
+        # Preflight only painted characters: formula syntax has become HTML.
+        printed = (values[field] if formula_html[field] is None else
+                   unescape(re.sub(r'<[^>]+>', '', formula_html[field])))
+        for char in printed:
+            if char.isspace() or unicodedata.category(char) in ('Cc', 'Cf'):
+                continue
+            if not formula_font.has_glyph(ord(char), fallback=0):
+                raise CoverGlyphError(char)
     result = None
     layers = []
     try:
@@ -193,9 +223,10 @@ def build_cover(template_index, orientation, values, config_path=DEFAULT_CONFIG)
                 continue
             layer, record = _fit_value(values[field], regions[field], sizes[field], limit,
                                        page.rect, assets['font'], settings,
-                                       first_line_row_height=(
-                                           regions[settings['fields'][-2]].height
-                                           if field == settings['fields'][-1] else None))
+                                        first_line_row_height=(
+                                            regions[settings['fields'][-2]].height
+                                            if field == settings['fields'][-1] else None),
+                                       formula_html=formula_html[field])
             layers.append(layer); report['fields'][field] = record
         for field, layer in zip(settings['fields'], layers):
             if layer is None:
