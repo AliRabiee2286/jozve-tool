@@ -9,4 +9,6 @@ This directory preserves the original workbook used by `tests/data/inspection_ev
 
 The owner approved separating historical inspection from validation of the current workbook on 2026-11-13. Historical hash, sheet, header, merged-cell and matched-row assertions remain in place. The live workbook is still discovered uniquely through the production configuration and checked independently; its hash is compared before the inspection checks and at session teardown. Existing step-1 tests also compare live lookup results with workbook cells.
 
-No runtime Git access, cache snapshot, new dependency, or replacement baseline is required. This fixture is historical input, not a baseline for QA rendering. Changes to the current workbook require QA validation in the later planned stages.
+The current workbook's independently measured SHA-256 is pinned in `tests/data/current_asset_manifest.json`; it must not replace either historical hash in the inspection evidence. Both historical hashes are restored from the source commit above.
+
+No runtime Git access, cache snapshot, new dependency, or replacement baseline is required. This fixture is historical input, not a baseline for QA rendering. Changes to the current workbook require independent QA validation.

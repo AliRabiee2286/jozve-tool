@@ -30,7 +30,11 @@ def current_syllabus_readonly():
     """Check the live workbook from inspection setup through session teardown."""
     cfg = load_config(ROOT/'config.yaml')
     path = discover_assets(cfg, ROOT)['syllabus']
+    manifest = json.loads((ROOT/'tests/data/current_asset_manifest.json').read_text(encoding='utf-8'))
+    expected = manifest['assets']['syllabus']
+    assert path.relative_to(ROOT).as_posix() == expected['path']
     before = hashlib.sha256(path.read_bytes()).hexdigest()
+    assert before == expected['sha256']
     yield
     assert discover_assets(cfg, ROOT)['syllabus'] == path
     assert hashlib.sha256(path.read_bytes()).hexdigest() == before
