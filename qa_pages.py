@@ -57,7 +57,7 @@ def fit_qa_content(page, frame, settings):
             'display_matrix': list(display), 'pdf_matrix': list(transform)}
 
 
-def process_qa_pages(source, config_path=DEFAULT_CONFIG, *, frame=None, progress=None):
+def process_qa_pages(source, config_path=DEFAULT_CONFIG, *, frame=None, progress=None, review_dir=None):
     cfg = load_config(config_path)
     settings = cfg['pages']
     frame = frame or QAFrame(config_path)
@@ -70,7 +70,7 @@ def process_qa_pages(source, config_path=DEFAULT_CONFIG, *, frame=None, progress
             raise ValueError('QA_INVALID_SOURCE_PDF')
         out.insert_pdf(original)
         _preserve_rendering_attributes(original, out)
-        baked = bake_annotations(out, settings)
+        baked = bake_annotations(out, settings, review_dir=review_dir)
         for index, page in enumerate(out):
             if progress is not None:
                 progress(index+1, len(out))

@@ -257,6 +257,21 @@ def _file_html(item, index, output, config, metadata, thumbs):
     if code == 'REVIEW':
         action = ('<aside class="notice review"><h3>چه کنم؟</h3><p>فایل منتشر شده است. کنترل‌های توصیه‌ای ردشده را بررسی کنید؛ PDF یا صفحهٔ مشخص‌شده را در تب جدید باز کنید.</p>'
                   + _review_links(item, output) + '</aside>')
+        bake_pages = item.get('bake_review_pages', [])
+        if bake_pages:
+            def image_link(label, path):
+                target = (Path(output).resolve() / path).resolve()
+                if not target.is_relative_to(Path(output).resolve()) or not target.is_file():
+                    return f'<span class="muted">{_text(label)}: تصویر در دسترس نیست</span>'
+                href = './' + quote(target.relative_to(Path(output).resolve()).as_posix(), safe='/')
+                return (f'<a href="{_text(href)}" target="_blank" rel="noopener noreferrer">'
+                        f'{_text(label)}</a>')
+            evidence = []
+            for entry in bake_pages:
+                links = ' · '.join(image_link(label, path) for label, path in entry['images'].items())
+                evidence.append(f'<li>صفحهٔ ورودی {entry["page"]} · بیشینهٔ اختلاف '
+                                f'{entry["max_channel_difference"]} · {_text(entry["reason"])} · {links}</li>')
+            action += '<section class="detail-panel bake-review-evidence"><h3>شواهد بازبینی bake</h3><ul>' + ''.join(evidence) + '</ul></section>'
     elif code == 'BLOCKED':
         action = f'<aside class="notice blocked"><h3>خروجی منتشر نشد</h3><p>{_text(item.get("error", "علت ثبت نشده"))}</p><p>علت خطا را اصلاح و دوباره اجرا کنید. خروجی قدیمی، نتیجهٔ این اجرا نیست.</p></aside>'
     removed_count = sum(len(page.get('removed', [])) for page in item.get('pages', []))
@@ -289,7 +304,8 @@ def _archive(output, html, now, retain):
     root = output / 'reports'
     archive = root / now.strftime('%Y%m%d_%H%M%S_%f')
     archive.mkdir(parents=True, exist_ok=False)
-    archived_html = html.replace('data-pdf-link="true" href="./', 'data-pdf-link="true" href="../../')
+    archived_html = (html.replace('data-pdf-link="true" href="./', 'data-pdf-link="true" href="../../')
+                     .replace('href="./review/', 'href="../../review/'))
     (archive / 'report.html').write_text(archived_html, encoding='utf-8', newline='\n')
     for name in ('report.txt', 'report.json', 'log.txt', 'log.jsonl'):
         if (output / name).is_file():

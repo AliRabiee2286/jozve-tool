@@ -24,6 +24,7 @@ try:
     from naamak import resolve_details, to_output_name
     from cover import build_cover, effective_orientation
     from pages import process_pages, _preserve_rendering_attributes, raster
+    from bake_review import publish_with_bake_review
     from border import clean_border
     from qc import check_pdf
     from events import EventBus
@@ -159,6 +160,7 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
             with _timed_stage(event_bus, 'pages', file_name):
                 content,page_report=process_pages(
                     combined, clean_path=clean,
+                    review_dir=Path(scratch),
                     progress=lambda index, total: event_bus.emit(
                         'stage_progress', file=file_name, stage='pages',
                         index=index, total=total))
@@ -195,8 +197,10 @@ def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
                                public_message='quality control failed - check output/report.txt')
                 return item
             with _timed_stage(event_bus, 'write', file_name):
-                os.replace(temporary,output/name)
-            item['status']='بازبینی' if quality.get('advisory_failed') else 'موفق'
+                bake_review = publish_with_bake_review(temporary, output, page_report['pages'])
+            if bake_review:
+                item['bake_review_pages'] = bake_review
+            item['status']='بازبینی' if quality.get('advisory_failed') or bake_review else 'موفق'
             item['status_code']='REVIEW' if item['status']=='بازبینی' else 'OK'
             if item['status']=='بازبینی':
                 item['review_controls']=quality['advisory_failed']

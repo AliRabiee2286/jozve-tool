@@ -5,6 +5,13 @@ import json
 from syllabus import load_config
 
 
+def _bake_review_lines(item):
+    for page in item.get('bake_review_pages', []):
+        yield (f"صفحهٔ ورودی {page['page']} (بیشینهٔ اختلاف کانال {page['max_channel_difference']}): "
+               f"{page['reason']}")
+        yield '  ' + ' | '.join(f'{label}: {path}' for label, path in page['images'].items())
+
+
 def write_report(output, items, global_warnings):
     lines=['گزارش پردازش جزوه‌ها','']
     lines.extend('هشدار سیلابس: '+w for w in global_warnings)
@@ -42,6 +49,7 @@ def write_report(output, items, global_warnings):
             lines.append('اثر OutputIntents (صرفاً گزارش): '+json.dumps(effect,ensure_ascii=False))
         for page in item.get('pages',[]):
             for removed in page['removed']: lines.append(f"حذف شمارهٔ متنی صفحه {page['page']}: {removed['text']}")
+        lines.extend(_bake_review_lines(item))
         if item['status']=='خطا': lines.append('اگر خروجی قدیمی وجود دارد، نتیجهٔ این اجرا نیست و بازنویسی نشده است.')
     success=sum(i['status']=='موفق' for i in items)
     review=sum(i['status']=='بازبینی' for i in items)
@@ -54,6 +62,7 @@ def write_report(output, items, global_warnings):
             review_lines.append('کنترل‌های ردشده:')
             for control in item.get('qc',{}).get('advisory_failed',[]):
                 review_lines.append(f'- {control}: کنترل توصیه‌ای رد شده است؛ فایل منتشر شده و بازبینی دیداری لازم است.')
+            review_lines.extend(_bake_review_lines(item))
             if item.get('review_image'):
                 review_lines.append('تصویر مرور: '+item['review_image'])
             review_lines.append('')

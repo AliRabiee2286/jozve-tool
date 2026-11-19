@@ -12,6 +12,8 @@ import numpy as np
 import pymupdf as fitz
 from syllabus import DEFAULT_CONFIG, load_config
 from border import clean_border, placements, apply_border
+import bake_proof
+from bake_review import REASON as BAKE_REVIEW_REASON, save_images
 
 
 def _preserve_rendering_attributes(source, destination, destination_start=0, preserve_catalog=True):
@@ -100,29 +102,93 @@ def meaningful_ink(image, settings):
     return ink & (np.max(np.abs(rgb-paper),axis=2)>settings['paper_color_tolerance'])
 
 
-def bake_annotations(document, settings):
+def _bake_failure_reasons(record, threshold):
+    reasons = []
+    if record['annotations_after']:
+        reasons.append('annotations_after')
+    if record['outside_annotation_pixels']:
+        reasons.append('outside_annotation_pixels')
+    if record['max_channel_difference'] > threshold:
+        reasons.append('max_channel_difference')
+    if not record['text_equal']:
+        reasons.append('text_equal')
+    if record['widgets_before'] or record['widgets_after']:
+        reasons.append('widgets_present')
+    if any(record[k+'_before'] != record[k+'_after'] for k in ('widgets', 'images', 'drawings')):
+        reasons.append('structure_changed')
+    return reasons
+
+
+def _bake_decision(record, threshold, review_enabled, proof=None):
+    reasons = _bake_failure_reasons(record, threshold)
+    if not reasons:
+        return 'OK'
+    if (review_enabled and threshold == 5 and proof is True and
+            record['max_channel_difference'] > threshold and
+            not (record['widgets_before'] or record['widgets_after']) and
+            set(reasons) <= {'max_channel_difference', 'outside_annotation_pixels'}):
+        return 'REVIEW'
+    return 'BLOCKED'
+
+
+def bake_annotations(document, settings, *, review_dir=None):
     """Bake on the caller's output copy; reject violations, never rasterize content.
 
     Measures every page and collects all violations before raising.
     Pixel differences up to bake_max_channel_difference are tolerated both
     inside and outside annotation bboxes (Multiply-blend rounding); only
     pixels exceeding the threshold outside bboxes count as blocking
-    outside_annotation_pixels.  Rounding-level outside pixels are recorded
-    separately in outside_rounding_pixels.
+    outside_annotation_pixels. Rounding-level outside pixels are recorded
+    separately in outside_rounding_pixels. At the production cutoff, an exact
+    structural proof can route raster-only failures to human REVIEW.
     """
     threshold = settings['bake_max_channel_difference']
+    review_enabled = (settings.get('bake_structural_review', True) is True and threshold == 5
+                      and review_dir is not None)
     before = []
-    for page in document:
-        before.append({'image': raster(page, settings['diagnostic_dpi']),
-                       'boxes': [list(a.rect * page.rotation_matrix) for a in page.annots() or []],
-                       'widgets': len(list(page.widgets() or [])),
-                       'images': len(page.get_images()), 'drawings': len(page.get_drawings()),
-                       'text': page.get_text()})
-    document.bake(annots=True, widgets=False)
+    proof_doc = None
+    try:
+        for page in document:
+            before.append({'image': raster(page, settings['diagnostic_dpi']),
+                           'boxes': [list(a.rect * page.rotation_matrix) for a in page.annots() or []],
+                           'widgets': len(list(page.widgets() or [])),
+                           'images': len(page.get_images()), 'drawings': len(page.get_drawings()),
+                           'text': page.get_text()})
+        candidates = [i for i, old in enumerate(before) if old['boxes'] and not old['widgets']]
+        if review_enabled and candidates:
+            try:
+                proof_doc = bake_proof.geometry_document(document)
+            except Exception as exc:
+                for index in candidates:
+                    before[index]['proof_error'] = f'{type(exc).__name__}: {exc}'
+            if proof_doc is not None:
+                for index in candidates:
+                    try:
+                        before[index]['proof'] = bake_proof.snapshot(document[index], proof_doc)
+                    except Exception as exc:
+                        before[index]['proof_error'] = f'{type(exc).__name__}: {exc}'
+        document.bake(annots=True, widgets=False)
+    finally:
+        if proof_doc is not None:
+            proof_doc.close()
     result = []
     violations = []
+    post_proof_doc = None
+    if review_enabled and any('proof' in old for old in before):
+        overrides = {old['proof']['page_number']: old['proof']['content_refs']
+                     for old in before if 'proof' in old}
+        try:
+            post_proof_doc = bake_proof.geometry_document(document, overrides)
+        except Exception:
+            post_proof_doc = None
     for page, old in zip(document, before):
-        delta = np.abs(raster(page, settings['diagnostic_dpi']).astype(np.int16)-old['image'].astype(np.int16))
+        page_number = page.number
+        after = raster(page, settings['diagnostic_dpi'])
+        if after.shape != old['image'].shape:
+            violations.append((page.number+1, ['raster_size_changed'], {'max_channel_difference': 255,
+                'raster_before': old['image'].shape, 'raster_after': after.shape}))
+            continue
+        delta = np.abs(after.astype(np.int16)-old['image'].astype(np.int16))
         per_pixel_max = delta.max(axis=2)
         changed = per_pixel_max > 0
         allowed = np.zeros(changed.shape, dtype=bool)
@@ -143,21 +209,30 @@ def bake_annotations(document, settings):
                   'different_pixels': int(changed.sum()), 'max_channel_difference': int(per_pixel_max.max()),
                   'outside_annotation_pixels': int(outside_above.sum()),
                   'outside_rounding_pixels': int(outside_rounding.sum())}
-        failed = False
-        reasons = []
-        if record['annotations_after']:
-            failed = True; reasons.append('annotations_after')
-        if record['outside_annotation_pixels']:
-            failed = True; reasons.append('outside_annotation_pixels')
-        if record['max_channel_difference'] > threshold:
-            failed = True; reasons.append('max_channel_difference')
-        if not record['text_equal']:
-            failed = True; reasons.append('text_equal')
-        if any(record[k+'_before'] != record[k+'_after'] for k in ('widgets', 'images', 'drawings')):
-            failed = True; reasons.append('structure_changed')
-        if failed:
-            violations.append((page.number+1, reasons, record))
+        reasons = _bake_failure_reasons(record, threshold)
+        decision = _bake_decision(record, threshold, review_enabled)
+        if _bake_decision(record, threshold, review_enabled, proof=True) == 'REVIEW':
+            try:
+                if 'proof' not in old:
+                    raise bake_proof.Unproved(old.get('proof_error', 'no same-run AP evidence'))
+                if post_proof_doc is None:
+                    raise bake_proof.Unproved('post-bake geometry copy unavailable')
+                proof = bake_proof.verify(page, old['proof'], post_proof_doc)
+                review = {'reason': BAKE_REVIEW_REASON, 'proof': proof}
+                if review_dir is not None:
+                    visual_diff = np.full_like(after, 255)
+                    visual_diff[changed] = (255, 0, 0)
+                    review['images'] = save_images(Path(review_dir), page_number+1, old['image'],
+                                                   after, visual_diff)
+                record['review'] = review
+                decision = 'REVIEW'
+            except Exception as exc:
+                record['structural_proof_failure'] = f'{type(exc).__name__}: {exc}'
+        if decision == 'BLOCKED':
+            violations.append((page_number+1, reasons, record))
         result.append(record)
+    if post_proof_doc is not None:
+        post_proof_doc.close()
     if violations:
         worst = max(violations, key=lambda v: v[2]['max_channel_difference'])
         raise ValueError(f'Bake verification failed on page {worst[0]}: {worst[2]}')
@@ -230,7 +305,7 @@ def fit_content(page, pieces, settings):
             'pdf_matrix': list(transform)}
 
 
-def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None, progress=None):
+def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None, progress=None, *, review_dir=None):
     """Copy pages, bake, remove footer text, fit uniformly, overlay vector border.
 
     source is a path or an open Document (never mutated). Dimensions, boxes and
@@ -246,7 +321,7 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None, progress=
     try:
         out.insert_pdf(original)
         _preserve_rendering_attributes(original, out)
-        baked = bake_annotations(out, config['pages'])
+        baked = bake_annotations(out, config['pages'], review_dir=review_dir)
         with fitz.open(clean_path) as clean:
             for i, page in enumerate(out):
                 if progress is not None:

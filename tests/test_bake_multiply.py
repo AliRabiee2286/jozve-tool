@@ -239,6 +239,96 @@ def test_threshold_from_config():
             bake_annotations(doc, dict(SETTINGS, bake_max_channel_difference=0))
 
 
+@pytest.mark.parametrize('difference,proof,enabled,expected', [
+    (5, True, True, 'OK'), (6, True, True, 'REVIEW'),
+    (255, True, True, 'REVIEW'), (6, False, True, 'BLOCKED'),
+    (6, None, True, 'BLOCKED'), (6, True, False, 'BLOCKED'),
+])
+def test_bake_numeric_decisions(difference, proof, enabled, expected):
+    from pages import _bake_decision
+    record = {'annotations_after': 0, 'outside_annotation_pixels': int(difference > 5),
+              'max_channel_difference': difference, 'text_equal': True,
+              'widgets_before': 0, 'widgets_after': 0, 'images_before': 1,
+              'images_after': 1, 'drawings_before': 0, 'drawings_after': 0}
+    assert _bake_decision(record, 5, enabled, proof) == expected
+    if expected == 'REVIEW':
+        assert _bake_decision(dict(record, widgets_before=1), 5, enabled, proof) == 'BLOCKED'
+        assert _bake_decision(dict(record, annotations_after=1), 5, enabled, proof) == 'BLOCKED'
+
+
+def _make_structural_proof_pdf():
+    doc = fitz.open()
+    page = doc.new_page(width=240, height=320)
+    page.draw_rect(fitz.Rect(10, 10, 230, 310), color=(0, 0, 0))
+    pix = fitz.Pixmap(fitz.csRGB, fitz.IRect(0, 0, 4, 4), False)
+    pix.clear_with(180)
+    page.insert_image(fitz.Rect(120, 140, 160, 180), pixmap=pix)
+    annot = page.add_highlight_annot(fitz.Rect(30, 60, 120, 80))
+    annot.set_colors(stroke=(1, 1, 0))
+    annot.set_opacity(1)
+    annot.update()
+    doc.xref_set_key(annot.xref, 'BM', 'null')
+    doc.new_page(width=20, height=20)  # PyMuPDF's retained-page bake constraint.
+    return doc
+
+
+@pytest.mark.parametrize('defect', [
+    'remove_highlight', 'double_highlight', 'color', 'opacity',
+    'remove_image', 'shift_1px', 'shift_3px',
+])
+def test_same_run_injected_bake_defects_are_blocked(defect, monkeypatch, tmp_path):
+    import ast
+    import bake_proof
+    import pages
+
+    with _make_structural_proof_pdf() as doc:
+        page = doc[0]
+        image_xref = page.get_images()[0][0]
+        real_bake = fitz.Document.bake
+
+        def inject(document, *args, **kwargs):
+            real_bake(document, *args, **kwargs)
+            page = document[0]
+            content_ref = page.get_contents()[-1]
+            stream = document.xref_stream(content_ref)
+            matches = list(bake_proof._CALL.finditer(stream))
+            assert len(matches) == 1
+            call = matches[0]
+            name = call.group(7).decode('ascii')
+            form_xref = int(document.xref_get_key(page.xref, f'Resources/XObject/{name}')[1].split()[0])
+            if defect == 'remove_highlight':
+                stream = stream[:call.start()] + stream[call.end():]
+                document.update_stream(content_ref, stream)
+            elif defect == 'double_highlight':
+                document.update_stream(content_ref, stream + b'\n' + call.group(0))
+            elif defect == 'color':
+                appearance = document.xref_stream(form_xref)
+                assert b'1 1 0 rg' in appearance
+                document.update_stream(form_xref, appearance.replace(b'1 1 0 rg', b'1 0 0 rg', 1))
+            elif defect == 'opacity':
+                document.xref_set_key(form_xref, 'Resources/ExtGState/H/ca', '0.5')
+            elif defect == 'remove_image':
+                image_data = document.xref_stream(image_xref)
+                document.update_stream(image_xref, b'\x00' * len(image_data))
+            else:
+                values = [float(v) for v in call.groups()[:6]]
+                values[4] += 0.48 if defect == 'shift_1px' else 1.44
+                replacement = (b'q\n' + ' '.join(f'{v:.6f}' for v in values).encode('ascii') +
+                               b' cm\n/' + call.group(7) + b' Do\nQ')
+                document.update_stream(content_ref, stream[:call.start()] + replacement + stream[call.end():])
+
+        monkeypatch.setattr(fitz.Document, 'bake', inject)
+        settings = dict(SETTINGS, bake_structural_review=True)
+        with pytest.raises(ValueError, match='Bake verification failed') as error:
+            pages.bake_annotations(doc, settings, review_dir=tmp_path)
+        record = ast.literal_eval(str(error.value).split(': ', 1)[1])
+        assert record['annotations_after'] == 0
+        assert record['max_channel_difference'] > 5
+        assert 'review' not in record
+        assert (record.get('structural_proof_failure') or
+                any(record[k+'_before'] != record[k+'_after'] for k in ('images', 'drawings')))
+
+
 @pytest.mark.parametrize('level', [5, 6, 16, 17])
 def test_outside_threshold_boundary(monkeypatch, level):
     """Controlled raster deltas verify the inclusive boundary; no REVIEW."""
