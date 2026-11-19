@@ -1,5 +1,6 @@
 """QC of reopened PDFs. Cover content is checked exclusively through rendering."""
 from pathlib import Path
+from difflib import SequenceMatcher
 import hashlib
 import numpy as np
 import pymupdf as fitz
@@ -18,6 +19,72 @@ def image_signature(document,page):
     info=page.get_textpage(flags=fitz.TEXT_PRESERVE_IMAGES).extractIMGINFO(hashes=True)
     uses=sorted((x['digest'].hex(),x['width'],x['height']) for x in info)
     return objects,uses
+
+
+def _line_records(page):
+    """Return page text as line records with unrotated geometry."""
+    result=[]
+    for block in page.get_text('dict')['blocks']:
+        for line in block.get('lines',[]):
+            text=''.join(span['text'] for span in line['spans'])
+            result.append((text,tuple(line['bbox'])))
+    return result
+
+
+def _expected_text_without_removed_footer_lines(page, removed):
+    """Remove only matched footer occurrences from the original plain text.
+
+    dict extraction identifies geometry; plain extraction remains the strict
+    comparison format. Map only exact footer spans between the two formats so
+    differences in diacritic/line assembly elsewhere cannot drop body text.
+    """
+    try:
+        full_text=page.get_text()
+        if not removed:
+            return full_text.rstrip('\n')
+        ref_lines=_line_records(page)
+        pending=list(removed)
+        selected=[]
+        offset=0
+        def same_box(a,b):
+            return len(a)==len(b)==4 and max(abs(x-y) for x,y in zip(a,b))<=0.001
+        for text,box in ref_lines:
+            index=next((i for i,item in enumerate(pending)
+                        if text==item.get('number_line',item['text']) and same_box(box,item['bbox'])),None)
+            if index is not None:
+                selected.append((offset,offset+len(text)+1))
+                pending.pop(index)
+            offset+=len(text)+1
+        if pending:
+            return None
+        geometry_text=''.join(text+'\n' for text,_ in ref_lines)
+        matches=SequenceMatcher(None,geometry_text,full_text,autojunk=False).get_matching_blocks()
+        spans=[]
+        for start,end in selected:
+            block=next((m for m in matches if m.a<=start and end<=m.a+m.size),None)
+            if block is None:
+                return None
+            actual_start=block.b+start-block.a
+            actual_end=actual_start+end-start
+            if actual_start and full_text[actual_start-1]!='\n':
+                return None
+            if full_text[actual_start:actual_end]!=geometry_text[start:end]:
+                return None
+            spans.append((actual_start,actual_end))
+        expected=full_text
+        for start,end in sorted(spans,reverse=True):
+            expected=expected[:start]+expected[end:]
+        return expected.rstrip('\n')
+    except Exception:
+        return None
+
+
+def _text_is_preserved(original,page,removed,retained_text):
+    expected=_expected_text_without_removed_footer_lines(original,removed)
+    if expected is None:
+        return False
+    actual='\n'.join(text for text in page.get_text().splitlines() if text.strip()!=retained_text)
+    return actual==expected
 
 
 def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
@@ -96,10 +163,8 @@ def check_pdf(path, source, record, cover_report, pages_report, expected_cover,
                 check(prefix+'BALATAR.GROUP',cfg['border']['retained_text'] in page.get_text())
                 check(prefix+'نبود شماره متن',not number_candidates(page,
                       {**cfg['pages'],'bottom_fraction':cfg['pages']['qc_bottom_fraction']}))
-                expected=original.get_text()
-                for removed in entry['removed']: expected=expected.replace(removed['text']+'\n','')
-                actual='\n'.join(s for s in page.get_text().splitlines() if s.strip()!=cfg['border']['retained_text'])
-                check(prefix+'متن حفظ شده',actual==expected.rstrip('\n'))
+                text_preserved=_text_is_preserved(original,page,entry['removed'],cfg['border']['retained_text'])
+                check(prefix+'متن حفظ شده',text_preserved)
                 check(prefix+'هش تصاویر و تعداد کاربردها',image_signature(source,original)==image_signature(doc,page))
                 # Work on the reopened in-memory document only; the saved PDF is untouched.
                 streams=page.get_contents(); count=entry['border_stream_count']
