@@ -5,7 +5,8 @@ fitted between the bars; any remaining meaningful ink under a bar is rejected.
 No cover is created or inserted by this module.
 """
 from pathlib import Path
-from collections import Counter
+from collections import Counter, defaultdict
+from typing import NamedTuple
 import re
 import unicodedata
 import numpy as np
@@ -57,12 +58,185 @@ def number_candidates(page, settings):
     return found
 
 
+_TEXT_ORIGIN_TOLERANCE = 0.001  # PDF points. MuPDF rewrites text positions with float rounding.
+
+
+class _PositionedChar(NamedTuple):
+    text: str
+    font: str
+    origin: tuple
+    bbox: fitz.Rect
+
+
+class _TracedGlyph(NamedTuple):
+    char: _PositionedChar
+    glyph_id: int
+    paint_type: int
+
+
+def _number_line_characters(page, found):
+    """Locate the exact occurrences reported by the line detector."""
+    indices = defaultdict(list)
+    for index, item in reversed(list(enumerate(found))):
+        indices[(tuple(item['bbox']), item['text'])].append(index)
+    footers = [[] for _ in found]
+    body = []
+    for block in page.get_text('rawdict')['blocks']:
+        for line in block.get('lines', ()):
+            text = ''.join(char['c'] for span in line['spans'] for char in span['chars'])
+            matched = indices[(tuple(line['bbox']), text)]
+            destination = footers[matched.pop()] if matched else body
+            destination.extend(_PositionedChar(c['c'], s['font'], c['origin'], fitz.Rect(c['bbox']))
+                               for s in line['spans'] for c in s['chars'] if not c.get('synthetic'))
+    return footers, body
+
+
+def _trace_text(page):
+    return [_TracedGlyph(_PositionedChar(chr(code), span['font'], origin, fitz.Rect(box)), glyph, span['type'])
+            for span in page.get_texttrace() for code, glyph, origin, box in span['chars']]
+
+
+def _near_origin(a, b):
+    return max(abs(a[0] - b[0]), abs(a[1] - b[1])) <= _TEXT_ORIGIN_TOLERANCE
+
+
+def _char_key(char):
+    # rawdict can emit an ASCII digit for a glyph whose trace uses Persian or
+    # Arabic digits. Normalize identity for target selection only.
+    text = str(unicodedata.decimal(char.text)) if char.text.isdecimal() else char.text
+    return text, char.font
+
+
+def _trace_without_targets(trace, targets, protected, *, merge_footer_spaces=False):
+    origins = defaultdict(list)
+    body_origins = defaultdict(list)
+    for index, target in enumerate(targets):
+        origins[_char_key(target)].append((index, target.origin))
+    for char in protected:
+        body_origins[_char_key(char)].append(char.origin)
+
+    seen = set()
+    expected = []
+    for glyph in trace:
+        char = glyph.char
+        key = _char_key(char)
+        hits = [i for i, xy in origins.get(key, ()) if _near_origin(xy, char.origin)]
+        has_body_origin = any(_near_origin(xy, char.origin) for xy in body_origins.get(key, ()))
+        if not hits and merge_footer_spaces and char.text.isspace() and not has_body_origin:
+            # The extractor can merge overprinted spaces within a numbered line.
+            hits = [i for i, _ in origins.get(key, ()) if targets[i].bbox.intersects(char.bbox)]
+        if not hits:
+            expected.append(glyph)
+        else:
+            if has_body_origin:
+                return None
+            # Text can be painted twice at the same location (fill and stroke).
+            seen.update(hits)
+    return expected if len(seen) == len(targets) else None
+
+
+def _same_trace(expected, observed):
+    return len(expected) == len(observed) and all(
+        a.char.text == b.char.text and a.char.font == b.char.font and
+        a.glyph_id == b.glyph_id and a.paint_type == b.paint_type and
+        _near_origin(a.char.origin, b.char.origin) for a, b in zip(expected, observed))
+
+
+def _apply_number_boxes(page, boxes):
+    for box in boxes:
+        page.add_redact_annot(box, fill=False, cross_out=False)
+    page.apply_redactions(images=0, graphics=0)
+
+
+def _whitespace_overlap_is_safe(page, boxes, trace, expected):
+    """Resolve space-only edge contacts without mutating the working page."""
+    if expected is None:
+        return False
+    with fitz.open() as probe:
+        probe.insert_pdf(page.parent, from_page=page.number, to_page=page.number)
+        copy = probe[0]
+        if not _same_trace(trace, _trace_text(copy)):
+            return False
+        _apply_number_boxes(copy, boxes)
+        return _same_trace(expected, _trace_text(copy))
+
+
+def _exclude_rect(box, obstacle):
+    intersection = box & obstacle
+    if intersection.is_empty:
+        return [box]
+    return [part for part in (
+        fitz.Rect(box.x0, box.y0, box.x1, intersection.y0),
+        fitz.Rect(box.x0, intersection.y1, box.x1, box.y1),
+        fitz.Rect(box.x0, intersection.y0, intersection.x0, intersection.y1),
+        fitz.Rect(intersection.x1, intersection.y0, box.x1, intersection.y1),
+    ) if not part.is_empty]
+
+
+def _digit_redaction_box(digit, protected):
+    """Place a small hit rectangle inside the digit and outside traced body boxes."""
+    if digit.bbox.is_empty:
+        return None
+    free = [digit.bbox]
+    for glyph in protected:
+        obstacle = glyph.char.bbox
+        if digit.bbox.intersects(obstacle):
+            free = [piece for rect in free for piece in _exclude_rect(rect, obstacle)]
+            if not free:
+                return None
+    area = max(free, key=lambda rect: rect.get_area())
+    center = (area.tl + area.br) / 2
+    # Apply redactions on intersection. Use the central eighth of the available
+    # area to keep the hit away from each boundary.
+    dx, dy = area.width / 16, area.height / 16
+    return (center.x - dx, center.y - dy, center.x + dx, center.y + dy)
+
+
 def remove_numbers(page, settings):
     found = number_candidates(page, settings)
-    for item in found:
-        page.add_redact_annot(item['bbox'], fill=False, cross_out=False)
-    if found:
-        page.apply_redactions(images=0, graphics=0)
+    if not found:
+        return found
+
+    boxes = [fitz.Rect(item['bbox']) for item in found]
+    footers, body = _number_line_characters(page, found)
+    error = f'حذف متن در صفحهٔ محتوا {page.number + 1}'
+    if not all(footers):
+        raise ValueError(f'{error}؛ محل کاراکترهای شماره قابل تطبیق نیست')
+    overlaps = [char for char in body if any(char.bbox.intersects(box) for box in boxes)]
+    if not overlaps:
+        # Preserve the original operators and annotation order for this path.
+        _apply_number_boxes(page, [item['bbox'] for item in found])
+        return found
+
+    if any(kind == fitz.PDF_ANNOT_REDACT for _, kind, _ in page.annot_xrefs()):
+        raise ValueError(f'{error}؛ صفحه کادر حذف از قبل دارد')
+    trace = _trace_text(page)
+    if all(char.text.isspace() for char in overlaps):
+        footer_chars = [char for line in footers for char in line]
+        expected = _trace_without_targets(trace, footer_chars, body, merge_footer_spaces=True)
+        if _whitespace_overlap_is_safe(page, boxes, trace, expected):
+            _apply_number_boxes(page, [item['bbox'] for item in found])
+            if not _same_trace(expected, _trace_text(page)):
+                raise ValueError(f'{error}؛ کاراکترهای بیرون شماره تغییر کردند')
+            return found
+
+    digits = [char for line in footers for char in line if char.text.isdecimal()]
+    protected = body + [char for line in footers for char in line if not char.text.isdecimal()]
+    expected = _trace_without_targets(trace, digits, protected)
+    if not digits or expected is None:
+        raise ValueError(f'{error}؛ ارقام شماره از متن دیگر قابل تفکیک نیستند')
+
+    tight_boxes = [_digit_redaction_box(digit, expected) for digit in digits]
+    if None in tight_boxes:
+        raise ValueError(f'{error}؛ کادر امن برای رقم شماره پیدا نشد')
+    _apply_number_boxes(page, dict.fromkeys(tight_boxes))
+    if not _same_trace(expected, _trace_text(page)):
+        raise ValueError(f'{error}؛ حذف دقیق ارقام با حفظ کاراکترهای دیگر تأیید نشد')
+
+    for item, line in zip(found, footers):
+        removed_digits = ''.join(char.text for char in line if char.text.isdecimal())
+        if removed_digits != item['text']:
+            item.update(number_line=item['text'], text=removed_digits)
     return found
 
 
