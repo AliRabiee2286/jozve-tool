@@ -143,7 +143,7 @@ def _same_trace(expected, observed):
 
 
 def _whitespace_trace_shifts(expected, observed):
-    """Require exact glyph identity; report origin changes only for whitespace glyphs."""
+    """Require exact glyph identity and record allowed whitespace origin changes."""
     if len(expected) != len(observed):
         return None
     shifts = []
@@ -152,9 +152,13 @@ def _whitespace_trace_shifts(expected, observed):
         if (left.text, left.font, before.glyph_id, before.paint_type) != (
                 right.text, right.font, after.glyph_id, after.paint_type):
             return None
-        if left.origin != right.origin:
-            if not left.text.isspace():
+        if not left.text.isspace():
+            if not _near_origin(left.origin, right.origin):
                 return None
+            continue
+        if not abs(left.origin[1] - right.origin[1]) <= _TEXT_ORIGIN_TOLERANCE:
+            return None
+        if left.origin != right.origin:
             shifts.append({'text': left.text, 'font': left.font,
                            'glyph_id': before.glyph_id, 'paint_type': before.paint_type,
                            'origin_before': list(left.origin), 'origin_after': list(right.origin)})

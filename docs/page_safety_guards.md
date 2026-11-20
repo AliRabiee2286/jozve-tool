@@ -14,12 +14,12 @@ REVIEW when their raster difference exceeds the cutoff.
 The no-collision footer path derives the expected glyph trace by removing only
 the detected footer occurrences (text, font, origin). After applying the same
 legacy redaction rectangles, glyph count, Unicode, font, glyph ID, and paint mode
-must match exactly. Origin movement is allowed only for whitespace glyphs; each
-accepted movement records the original and observed origin in the page's
-`trace_whitespace_shifts` evidence. Non-whitespace origins require exact tuple
-equality, without tolerance. An unmatchable target or changed body glyph raises
-`حذف متن` and blocks publication. Trace inspection itself does not write PDF
-objects.
+must match exactly. Step 14 uses the existing `_TEXT_ORIGIN_TOLERANCE` (0.001 pt)
+on both axes for non-whitespace glyphs and only on y for whitespace. Horizontal
+whitespace movement is unrestricted. Each accepted whitespace origin change is
+recorded with its original and observed coordinates in `trace_whitespace_shifts`.
+An unmatchable target or a trace difference outside these rules raises `حذف متن`
+and blocks publication. Trace inspection itself does not write PDF objects.
 
 ## Acceptance procedure
 
@@ -175,7 +175,7 @@ redaction change that could alter the currently byte-identical legacy result.
 Rollback is a local `git revert` of this step's WIP commit; no reset or push is
 needed, and no rollback has been executed. Overall acceptance is **not complete**.
 
-## Latest owner-approved whitespace-only origin exception
+## Previous step-13 verification (commit `9249ce1`)
 
 The follow-up implementation changes only no-collision trace comparison and the
 page evidence record. Glyph count, text, font, glyph ID and paint mode remain
@@ -289,3 +289,87 @@ local `git revert` of this follow-up commit; no reset or push is needed. Unknown
 ENV_1's full successful CLI timing and a complete comparison of 184 newly
 published pages remain unavailable because the CLI blocks five jobs. Acceptance
 is **not complete**.
+
+## Step 14: axis-specific origin tolerance
+
+The owner replaced step 13's exact non-whitespace origin rule after small
+floating-point differences blocked valid customer outputs. Only the
+no-collision comparator changed. The same 0.001-point tolerance applies to
+each non-whitespace axis and to whitespace y, with no new constant. Whitespace
+x changes are allowed and recorded with both original and observed origins.
+The legacy redaction operations, collision guard, QC, bake and report schema
+are unchanged.
+
+### A. Focused tests
+
+| Case | Result |
+|---|---|
+| Non-whitespace x/y changes of 0.00003 pt | Accepted |
+| Non-whitespace x change of 0.01 pt | BLOCKED; no PDF published |
+| Whitespace x change of 0.75 pt | Accepted with before/after evidence |
+| Whitespace y change of 0.002 pt | BLOCKED even with an otherwise allowed x change |
+| Whitespace character, font, glyph ID or paint mode changed | Rejected in all four identity tests |
+| Intentional BODY deletion | BLOCKED; no PDF published |
+| Clean `42` and `Page 42` cases | Serialized bytes equal the legacy result |
+
+All 64 previous test IDs and six new cases passed (70 passed, nine existing
+syllabus warnings, 137.29 seconds). The prior non-whitespace rejection fixture
+now uses 0.01 pt because its former 0.000001 pt is allowed by the new rule.
+The two new behavior cases failed against the old comparator as expected.
+
+### B. Complete customer CLI
+
+`cache/page_safety_step14/customer_cli/report.json`: **1 OK, 7 REVIEW, 0 BLOCKED**
+across eight unique jobs; exit 0 in 815.126 seconds. `physics_math_13.pdf` was OK;
+both math_c files, ENV_1/2/3 and PRE_1/2 were REVIEW. The identical
+`ZAMIN_PRE_2 (1).pdf` shares the canonical `ZAMIN_PRE_2.pdf` result. ENV_1
+published all 46 content pages, including page 44.
+
+### C. Customer output equality and whitespace evidence
+
+All **184 required content pages**, including all 46 ENV_1 pages, matched both
+the pre-step-12 PDFs in `cache/e2e_final2` and the archived step-11 CLI PDFs in
+`cache/footer_redaction_fix/e2e_qc_final`. Raw content streams, RGB pixels at
+150 dpi, extracted text, and deterministic isolated-page bytes all matched.
+The three canonical PRE_2 pages, outside the 184-page set, also matched.
+
+Page numbers below are content page numbers, not PDF indices including the cover.
+These are trace changes observed during redaction, not differences in the final
+PDFs. The complete CLI report records the original and observed coordinates.
+
+| Source | Content pages with recorded whitespace changes | Records |
+|---|---|---:|
+| `ZAMIN_ENV_1.pdf` | 2-3, 5-9, 11-13, 15, 17-18, 21, 23-27, 29-31, 34-46 | 616 |
+| `ZAMIN_ENV_2.pdf` | 3-9, 11, 13-15, 17-18, 20-28, 30-33, 35, 37-38 | 636 |
+| `ZAMIN_ENV_3.pdf` | 2-13, 15, 20-22, 26-27, 29, 32, 34-39, 41, 43 | 617 |
+| `ZAMIN_PRE_1.pdf` | 7-8 | 26 |
+| `ZAMIN_PRE_2.pdf` (outside the 184) | 1 | 1 |
+
+Total: 95 pages and 1,896 records; 94 pages and 1,895 records within the 184.
+The maximum recorded absolute y change was 0.00006103515625 pt. On ENV_1 page 44,
+two space origins are recorded, including the x change from 470.883392 to
+473.319397 pt with unchanged y.
+
+### D. Fresh 383-page regression
+
+`cache/page_safety_step14/regression_cli/report.json`: **24 OK, 6 REVIEW, 0 BLOCKED**;
+exit 0 in 903.134 seconds. All 383 output pages, including covers, match the
+verified baseline (`cache/bake_review_regression_verified`) for the four measures
+above. The 22 legacy PDFs account for 285 pages and the 8 NANO PDFs for 98 pages.
+All 30 file statuses match the verified baseline. All 121 protected file hashes
+and eight deduplicated input-copy hashes remained unchanged.
+
+Evidence is under `cache/page_safety_step14/`: `tests_targeted.xml`,
+`customer_cli/report.json`, `customer_comparison.json`, `step11_comparison.json`,
+`regression_cli/report.json`, and `regression_comparison.json`. None of these
+artifacts is part of the commit.
+
+The prior no-rerun instruction for the regression is superseded. The old
+step-12 output destinations are preserved; the new run used
+`python cache/page_safety_step14/run_acceptance.py regression`, not
+`python cache/page_safety_step12/run_regression.py`. No full pytest, push, branch
+switch, or reset ran. See the superseded command names in the preceding section.
+Horizontal whitespace movement is deliberately unbounded, so trace acceptance
+alone does not prove pixel equality on unseen PDFs. No new performance benchmark
+was requested or run. To roll back only this change, use `git revert` on the
+step-14 commit; that would restore step 13's stricter non-whitespace rule.

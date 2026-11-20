@@ -150,66 +150,77 @@ def test_no_collision_body_loss_blocks_publication(monkeypatch, tmp_path):
     assert not (output / Path(result['output'])).exists()
 
 
-def test_no_collision_whitespace_origin_shift_is_allowed_and_recorded(monkeypatch, tmp_path):
+def _run_no_collision_origin_shift(monkeypatch, tmp_path, *, whitespace, dx=0, dy=0):
     source_path = tmp_path / 'physics_thermo_8.pdf'
     with _separated_footer() as source:
         source.save(source_path)
     original_trace = pages._trace_text
     shifted = []
 
-    def move_whitespace(page):
+    def move_origin(page):
         trace = original_trace(page)
         if page.number == 0 and not pages.number_candidates(page, SETTINGS) and not shifted:
-            index = next(i for i,glyph in enumerate(trace) if glyph.char.text.isspace())
+            index = next(i for i, glyph in enumerate(trace) if glyph.char.text.isspace() == whitespace)
             glyph = trace[index]
-            char = glyph.char._replace(origin=(glyph.char.origin[0] + 0.75,glyph.char.origin[1]))
+            x, y = glyph.char.origin
+            char = glyph.char._replace(origin=(x + dx, y + dy))
             trace[index] = glyph._replace(char=char)
-            shifted.append(True)
+            shifted.append({'text': char.text, 'font': char.font,
+                            'glyph_id': glyph.glyph_id, 'paint_type': glyph.paint_type,
+                            'origin_before': [x, y], 'origin_after': list(char.origin)})
         return trace
 
-    monkeypatch.setattr(pages, '_trace_text', move_whitespace)
+    monkeypatch.setattr(pages, '_trace_text', move_origin)
     output = tmp_path / 'published'
     output.mkdir()
     with warnings.catch_warnings():
         warnings.simplefilter('ignore', UserWarning)
         result = process_job([source_path], None, Syllabus(), CONFIG, output, set())
-    assert shifted
-    content_entry = next(entry for entry in result.get('pages',[])
-                         if entry['page']==1)
-    assert result['status_code'] in ('OK','REVIEW'), result
-    page = content_entry
-    evidence = page['trace_whitespace_shifts']
-    assert len(evidence) == 1
-    assert evidence[0]['text'].isspace()
-    assert evidence[0]['origin_before'] != evidence[0]['origin_after']
-    assert evidence[0]['font'] and isinstance(evidence[0]['glyph_id'],int)
-    assert page['removed'][0]['trace_whitespace_shifts'] == evidence
+    assert len(shifted) == 1
+    return result, output / result['output'], shifted[0]
+
+
+def test_no_collision_whitespace_origin_shift_is_allowed_and_recorded(monkeypatch, tmp_path):
+    result, output, shift = _run_no_collision_origin_shift(monkeypatch, tmp_path, whitespace=True, dx=0.75)
+    assert result['status_code'] in ('OK', 'REVIEW'), result
+    assert output.is_file()
+    page, = result['pages']
+    assert page['trace_whitespace_shifts'] == [shift]
+    assert page['removed'][0]['trace_whitespace_shifts'] == [shift]
 
 
 def test_no_collision_non_whitespace_origin_shift_blocks_publication(monkeypatch, tmp_path):
-    source_path = tmp_path / 'physics_thermo_8.pdf'
-    with _separated_footer() as source:
-        source.save(source_path)
-    original_trace = pages._trace_text
-    shifted = []
-
-    def move_letter(page):
-        trace = original_trace(page)
-        if page.number == 0 and not pages.number_candidates(page, SETTINGS) and not shifted:
-            index = next(i for i,glyph in enumerate(trace) if not glyph.char.text.isspace())
-            glyph = trace[index]
-            char = glyph.char._replace(origin=(glyph.char.origin[0] + 0.000001,glyph.char.origin[1]))
-            trace[index] = glyph._replace(char=char)
-            shifted.append(True)
-        return trace
-
-    monkeypatch.setattr(pages, '_trace_text', move_letter)
-    output = tmp_path / 'published'
-    output.mkdir()
-    with warnings.catch_warnings():
-        warnings.simplefilter('ignore', UserWarning)
-        result = process_job([source_path], None, Syllabus(), CONFIG, output, set())
-    assert shifted
+    result, output, _ = _run_no_collision_origin_shift(monkeypatch, tmp_path, whitespace=False, dx=0.01)
     assert result['status_code'] == 'BLOCKED', result
     assert 'حذف متن' in result['error']
-    assert not (output / Path(result['output'])).exists()
+    assert not output.exists()
+
+
+def test_no_collision_non_whitespace_rounding_is_allowed(monkeypatch, tmp_path):
+    result, output, _ = _run_no_collision_origin_shift(monkeypatch, tmp_path, whitespace=False,
+                                                       dx=0.00003, dy=-0.00003)
+    assert result['status_code'] in ('OK', 'REVIEW'), result
+    assert output.is_file()
+    page, = result['pages']
+    assert page['trace_whitespace_shifts'] == []
+
+
+def test_no_collision_whitespace_vertical_shift_blocks_publication(monkeypatch, tmp_path):
+    result, output, _ = _run_no_collision_origin_shift(monkeypatch, tmp_path, whitespace=True,
+                                                       dx=0.75, dy=-0.002)
+    assert result['status_code'] == 'BLOCKED', result
+    assert 'حذف متن' in result['error']
+    assert not output.exists()
+
+
+@pytest.mark.parametrize('field, value', [('text', '\u00a0'), ('font', 'OtherFont'),
+                                          ('glyph_id', 4), ('paint_type', 1)])
+def test_whitespace_shift_still_requires_exact_glyph_identity(field, value):
+    glyph = pages._TracedGlyph(pages._PositionedChar(' ', 'Helvetica', (0., 0.), fitz.Rect()), 3, 0)
+    shifted = glyph._replace(char=glyph.char._replace(origin=(0.75, 0.00003)))
+    assert pages._whitespace_trace_shifts([glyph], [shifted])
+    if field in ('text', 'font'):
+        shifted = shifted._replace(char=shifted.char._replace(**{field: value}))
+    else:
+        shifted = shifted._replace(**{field: value})
+    assert pages._whitespace_trace_shifts([glyph], [shifted]) is None
