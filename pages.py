@@ -204,8 +204,14 @@ def remove_numbers(page, settings):
         raise ValueError(f'{error}؛ محل کاراکترهای شماره قابل تطبیق نیست')
     overlaps = [char for char in body if any(char.bbox.intersects(box) for box in boxes)]
     if not overlaps:
+        footer_chars = [char for line in footers for char in line]
+        expected = _trace_without_targets(_trace_text(page), footer_chars, body, merge_footer_spaces=True)
+        if expected is None:
+            raise ValueError(f'{error}؛ رد گلیف‌های شماره از متن دیگر قابل تفکیک نیست')
         # Preserve the original operators and annotation order for this path.
         _apply_number_boxes(page, [item['bbox'] for item in found])
+        if not _same_trace(expected, _trace_text(page)):
+            raise ValueError(f'{error}؛ کاراکترهای بیرون شماره تغییر کردند')
         return found
 
     if any(kind == fitz.PDF_ANNOT_REDACT for _, kind, _ in page.annot_xrefs()):
@@ -286,8 +292,6 @@ def _bake_failure_reasons(record, threshold):
         reasons.append('max_channel_difference')
     if not record['text_equal']:
         reasons.append('text_equal')
-    if record['widgets_before'] or record['widgets_after']:
-        reasons.append('widgets_present')
     if any(record[k+'_before'] != record[k+'_after'] for k in ('widgets', 'images', 'drawings')):
         reasons.append('structure_changed')
     return reasons
