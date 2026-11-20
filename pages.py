@@ -142,6 +142,25 @@ def _same_trace(expected, observed):
         _near_origin(a.char.origin, b.char.origin) for a, b in zip(expected, observed))
 
 
+def _whitespace_trace_shifts(expected, observed):
+    """Require exact glyph identity; report origin changes only for whitespace glyphs."""
+    if len(expected) != len(observed):
+        return None
+    shifts = []
+    for before, after in zip(expected, observed):
+        left, right = before.char, after.char
+        if (left.text, left.font, before.glyph_id, before.paint_type) != (
+                right.text, right.font, after.glyph_id, after.paint_type):
+            return None
+        if left.origin != right.origin:
+            if not left.text.isspace():
+                return None
+            shifts.append({'text': left.text, 'font': left.font,
+                           'glyph_id': before.glyph_id, 'paint_type': before.paint_type,
+                           'origin_before': list(left.origin), 'origin_after': list(right.origin)})
+    return shifts
+
+
 def _apply_number_boxes(page, boxes):
     for box in boxes:
         page.add_redact_annot(box, fill=False, cross_out=False)
@@ -210,8 +229,11 @@ def remove_numbers(page, settings):
             raise ValueError(f'{error}؛ رد گلیف‌های شماره از متن دیگر قابل تفکیک نیست')
         # Preserve the original operators and annotation order for this path.
         _apply_number_boxes(page, [item['bbox'] for item in found])
-        if not _same_trace(expected, _trace_text(page)):
+        shifts = _whitespace_trace_shifts(expected, _trace_text(page))
+        if shifts is None:
             raise ValueError(f'{error}؛ کاراکترهای بیرون شماره تغییر کردند')
+        if shifts:
+            found[0]['trace_whitespace_shifts'] = shifts
         return found
 
     if any(kind == fitz.PDF_ANNOT_REDACT for _, kind, _ in page.annot_xrefs()):
@@ -522,8 +544,11 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None, progress=
                     raise ValueError(f'Ink remains under strips on page {i+1}: {fitted_coverage}')
                 streams_before = len(page.get_contents())
                 applied = apply_border(page, clean, config['border'])
+                trace_whitespace_shifts = [shift for item in removed
+                                           for shift in item.get('trace_whitespace_shifts', [])]
                 entry = {'page': i+1, 'size': list(page.rect), 'rotation': page.rotation,
                          'removed': removed, 'image_candidates': image_candidates,
+                         'trace_whitespace_shifts': trace_whitespace_shifts,
                          'bake': baked[i], 'paper_rule': measure_paper_rule(original[i], config['pages']),
                          'coverage_original': before, 'coverage_after_number_removal': after,
                          'fit': fitted, 'coverage_after_fit': fitted_coverage,

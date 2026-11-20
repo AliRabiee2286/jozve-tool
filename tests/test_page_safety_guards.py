@@ -148,3 +148,68 @@ def test_no_collision_body_loss_blocks_publication(monkeypatch, tmp_path):
     assert result['status_code'] == 'BLOCKED', result
     assert 'حذف متن' in result['error']
     assert not (output / Path(result['output'])).exists()
+
+
+def test_no_collision_whitespace_origin_shift_is_allowed_and_recorded(monkeypatch, tmp_path):
+    source_path = tmp_path / 'physics_thermo_8.pdf'
+    with _separated_footer() as source:
+        source.save(source_path)
+    original_trace = pages._trace_text
+    shifted = []
+
+    def move_whitespace(page):
+        trace = original_trace(page)
+        if page.number == 0 and not pages.number_candidates(page, SETTINGS) and not shifted:
+            index = next(i for i,glyph in enumerate(trace) if glyph.char.text.isspace())
+            glyph = trace[index]
+            char = glyph.char._replace(origin=(glyph.char.origin[0] + 0.75,glyph.char.origin[1]))
+            trace[index] = glyph._replace(char=char)
+            shifted.append(True)
+        return trace
+
+    monkeypatch.setattr(pages, '_trace_text', move_whitespace)
+    output = tmp_path / 'published'
+    output.mkdir()
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', UserWarning)
+        result = process_job([source_path], None, Syllabus(), CONFIG, output, set())
+    assert shifted
+    content_entry = next(entry for entry in result.get('pages',[])
+                         if entry['page']==1)
+    assert result['status_code'] in ('OK','REVIEW'), result
+    page = content_entry
+    evidence = page['trace_whitespace_shifts']
+    assert len(evidence) == 1
+    assert evidence[0]['text'].isspace()
+    assert evidence[0]['origin_before'] != evidence[0]['origin_after']
+    assert evidence[0]['font'] and isinstance(evidence[0]['glyph_id'],int)
+    assert page['removed'][0]['trace_whitespace_shifts'] == evidence
+
+
+def test_no_collision_non_whitespace_origin_shift_blocks_publication(monkeypatch, tmp_path):
+    source_path = tmp_path / 'physics_thermo_8.pdf'
+    with _separated_footer() as source:
+        source.save(source_path)
+    original_trace = pages._trace_text
+    shifted = []
+
+    def move_letter(page):
+        trace = original_trace(page)
+        if page.number == 0 and not pages.number_candidates(page, SETTINGS) and not shifted:
+            index = next(i for i,glyph in enumerate(trace) if not glyph.char.text.isspace())
+            glyph = trace[index]
+            char = glyph.char._replace(origin=(glyph.char.origin[0] + 0.000001,glyph.char.origin[1]))
+            trace[index] = glyph._replace(char=char)
+            shifted.append(True)
+        return trace
+
+    monkeypatch.setattr(pages, '_trace_text', move_letter)
+    output = tmp_path / 'published'
+    output.mkdir()
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', UserWarning)
+        result = process_job([source_path], None, Syllabus(), CONFIG, output, set())
+    assert shifted
+    assert result['status_code'] == 'BLOCKED', result
+    assert 'حذف متن' in result['error']
+    assert not (output / Path(result['output'])).exists()
