@@ -1,8 +1,5 @@
 """Offline Windows CLI. Publish an output only after the saved PDF passes QC."""
-import argparse
-from contextlib import ExitStack
-import json
-import logging
+from contextlib import contextmanager, ExitStack
 import os
 from pathlib import Path
 import shutil
@@ -10,18 +7,37 @@ import subprocess
 import sys
 import tempfile
 import time
-from PIL import Image
+import webbrowser
 import warnings
-import numpy as np
-import pymupdf as fitz
-from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets, is_empty_value
-from naamak import resolve_details, to_output_name
-from cover import build_cover, effective_orientation
-from pages import process_pages, _preserve_rendering_attributes, raster
-from border import clean_border
-from qc import check_pdf
+from doctor import EnglishParser, english, run_doctor
 
 ROOT=Path(__file__).resolve().parent
+
+if __name__ == '__main__' and sys.argv[1:2] == ['doctor']:
+    raise SystemExit(run_doctor(ROOT, sys.argv[2:]))
+
+try:
+    from PIL import Image
+    import numpy as np
+    import pymupdf as fitz
+    from syllabus import DEFAULT_CONFIG, Syllabus, NotFoundError, load_config, discover_assets, is_empty_value
+    from naamak import resolve_details, to_output_name
+    from cover import build_cover, effective_orientation
+    from pages import process_pages, _preserve_rendering_attributes, raster
+    from bake_review import publish_with_bake_review
+    from border import clean_border
+    from qc import check_pdf
+    from events import EventBus
+    from logging_setup import setup_logging
+    from report_text import write_report
+    from report_html import write_html_report
+    from ui import TerminalUI
+    from qa_labels import qa_subject_label
+except Exception:
+    if __name__ != '__main__':
+        raise
+    print('E200  required package unavailable - run python main.py doctor', file=sys.stderr)
+    raise SystemExit(2)
 
 
 def clear_review_artifacts(output):
@@ -83,12 +99,34 @@ def safe_output(path,cfg):
     return path
 
 
-def process_job(paths, namak, syllabus, cfg, output, claimed):
+@contextmanager
+def _timed_stage(event_bus, stage, file_name):
+    started = time.perf_counter()
+    event_bus.emit('stage_started', file=file_name, stage=stage)
+    try:
+        yield
+    except BaseException as exc:
+        event_bus.emit('stage_finished', file=file_name, stage=stage,
+                       seconds=round(time.perf_counter()-started, 4), ok=False,
+                       error=str(exc))
+        raise
+    else:
+        event_bus.emit('stage_finished', file=file_name, stage=stage,
+                       seconds=round(time.perf_counter()-started, 4), ok=True)
+
+
+def process_job(paths, namak, syllabus, cfg, output, claimed, event_bus=None):
+    event_bus = event_bus or EventBus()
+    file_name = ', '.join(p.name for p in paths)
     item={'files':[p.name for p in paths],'status':'خطا','status_code':'BLOCKED','warnings':[]}
     try:
-        match=resolve_details(namak or paths[0].stem,syllabus)
-        canonical=match['namak']; suffix=match['suffix']
-        record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
+        with _timed_stage(event_bus, 'resolve', file_name):
+            match=resolve_details(namak or paths[0].stem,syllabus)
+            canonical=match['namak']; suffix=match['suffix']
+            record=syllabus.find(canonical); name=to_output_name(canonical,suffix=suffix)
+        if record.get('kind') in cfg['qa']['kinds']:
+            from qa_pipeline import process_qa_job
+            return process_qa_job(paths,record,match,syllabus,cfg,output,claimed,event_bus,convert_office,_timed_stage)
         item['warnings'].extend(syllabus.lookup_warnings)
         empty=[field for field in cfg['cover']['fields'] if is_empty_value(record[field])]
         if empty:
@@ -114,9 +152,19 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
             orientation=effective_orientation(combined[0])
             item.update(orientation=orientation,input_pages=len(combined),output_pages=len(combined)+1)
             values={key:record[key] for key in cfg['cover']['fields']}
-            cover,cover_report=build_cover(record['template_index'],orientation,values);stack.enter_context(cover)
-            clean,_=clean_border(cache_dir=scratch)
-            content,page_report=process_pages(combined,clean_path=clean);stack.enter_context(content)
+            with _timed_stage(event_bus, 'cover', file_name):
+                cover,cover_report=build_cover(record['template_index'],orientation,values)
+            stack.enter_context(cover)
+            with _timed_stage(event_bus, 'border', file_name):
+                clean,_=clean_border(cache_dir=scratch)
+            with _timed_stage(event_bus, 'pages', file_name):
+                content,page_report=process_pages(
+                    combined, clean_path=clean,
+                    review_dir=Path(scratch),
+                    progress=lambda index, total: event_bus.emit(
+                        'stage_progress', file=file_name, stage='pages',
+                        index=index, total=total))
+            stack.enter_context(content)
             item['warnings'].extend(page_report['warnings']);item['pages']=page_report['pages']
             item['cover']=cover_report
             result=stack.enter_context(fitz.open(stream=cover.tobytes(),filetype='pdf'))
@@ -136,144 +184,532 @@ def process_job(paths, namak, syllabus, cfg, output, claimed):
                     'max_channel_difference':int(delta.max())})
             item['output_intents_effect']=effects
             temporary=Path(scratch)/name
-            result.save(temporary,garbage=4,deflate=True)
-            quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,
-                              expected_content_renders=baseline,output_suffix=suffix)
+            with _timed_stage(event_bus, 'qc', file_name):
+                result.save(temporary,garbage=4,deflate=True)
+                quality=check_pdf(temporary,combined,record,cover_report,page_report,cover,
+                                  expected_content_renders=baseline,output_suffix=suffix)
             item['qc']=quality
             if quality.get('blocking_failed'):
                 item['error']='کنترل‌های بلاک‌کننده رد شد: '+', '.join(quality['blocking_failed'])
                 item['status_code']='BLOCKED'
+                event_bus.emit('error', file=file_name, stage='qc', code='E102',
+                               message=item['error'],
+                               public_message='quality control failed - check output/report.txt')
                 return item
-            os.replace(temporary,output/name)
-            item['status']='بازبینی' if quality.get('advisory_failed') else 'موفق'
+            with _timed_stage(event_bus, 'write', file_name):
+                bake_review = publish_with_bake_review(temporary, output, page_report['pages'])
+            if bake_review:
+                item['bake_review_pages'] = bake_review
+            item['status']='بازبینی' if quality.get('advisory_failed') or bake_review else 'موفق'
             item['status_code']='REVIEW' if item['status']=='بازبینی' else 'OK'
             if item['status']=='بازبینی':
                 item['review_controls']=quality['advisory_failed']
     except NotFoundError:
         item['error']='نامک در سیلابس پیدا نشد؛ نام فایل یا --namak را بررسی کنید'
+        event_bus.emit('error', file=file_name, stage='resolve', code='E101',
+                       message=item['error'],
+                       public_message='namak not found in syllabus - check the input file name')
     except Exception as exc:
         item['warnings'].extend(getattr(syllabus,'lookup_warnings',[]))
         item['error']=str(exc)
+        event_bus.emit('error', file=file_name, stage='run', code='E199',
+                       message=item['error'],
+                       public_message='processing failed - check output/report.txt')
     return item
 
 
-def write_report(output,items,global_warnings):
-    lines=['گزارش پردازش جزوه‌ها','']
-    lines.extend('هشدار سیلابس: '+w for w in global_warnings)
-    for item in items:
-        lines+=['',f"{item['status']}: {', '.join(item['files'])}"]
-        for key,label in [('namak','نامک'),('sheet','رشته'),('orientation','جهت'),('input_pages','صفحات ورودی'),('output_pages','صفحات خروجی'),('seconds','زمان (ثانیه)'),('output','نام خروجی'),('error','علت خطا')]:
-            if key in item:
-                value={'portrait':'عمودی','landscape':'افقی'}.get(item[key],item[key]) if key=='orientation' else item[key]
-                lines.append(f'{label}: {value}')
-        for key,passed in item.get('qc',{}).get('checks',{}).items(): lines.append(f"  {key}: {'قبول' if passed else 'رد'}")
-        if item.get('qc',{}).get('blocking_failed'):
-            lines.append('کنترل‌های بلاک‌کنندهٔ ردشده: '+', '.join(item['qc']['blocking_failed']))
-        if item.get('qc',{}).get('advisory_failed'):
-            lines.append('کنترل‌های توصیه‌ای ردشده: '+', '.join(item['qc']['advisory_failed']))
-        for detail in item.get('qc',{}).get('details',[]): lines.append(json.dumps(detail,ensure_ascii=False))
-        image_warnings=[w for w in item.get('warnings',[]) if w['kind']=='image_number_unknown']
-        if image_warnings:
-            affected=sorted({w['page'] for w in image_warnings})
-            lines.append(f'شمارهٔ تصویری نامعلوم: {len(affected)} صفحه ({", ".join(map(str,affected))})؛ '
-                         'علت هشدار: تصویر کوچک در پایین صفحه؛ ماهیت تصویر نامعلوم؛ تصویر حذف نشد.')
-        for warning in item.get('warnings',[]):
-            if warning['kind']=='empty_cover_fields':
-                cfg=load_config()
-                names='، '.join(cfg['headers'][field][0] for field in warning['fields'])
-                lines.append('مقدار خالی در سیلابس: '+names)
-            elif warning['kind']=='syllabus_source_conflict':
-                lines.append('هشدار تعارض سیلابس: مقدار شیت رشته‌ای معتبر است؛ '+
-                             'syllabus source conflict: subject sheet takes priority')
-            elif warning['kind']!='image_number_unknown':
-                lines.append('هشدار: '+json.dumps(warning,ensure_ascii=False))
-        for effect in item.get('output_intents_effect',[]):
-            lines.append('اثر OutputIntents (صرفاً گزارش): '+json.dumps(effect,ensure_ascii=False))
-        for page in item.get('pages',[]):
-            for removed in page['removed']: lines.append(f"حذف شمارهٔ متنی صفحه {page['page']}: {removed['text']}")
-        if item['status']=='خطا': lines.append('اگر خروجی قدیمی وجود دارد، نتیجهٔ این اجرا نیست و بازنویسی نشده است.')
-    success=sum(i['status']=='موفق' for i in items)
-    review=sum(i['status']=='بازبینی' for i in items)
-    blocked=sum(i['status']=='خطا' for i in items)
-    review_items=[i for i in items if i['status']=='بازبینی']
-    if review_items:
-        review_lines=['گزارش فایل‌های نیازمند بازبینی','']
-        for item in review_items:
-            review_lines.append('فایل: '+item.get('output',', '.join(item['files'])))
-            review_lines.append('کنترل‌های ردشده:')
-            for control in item.get('qc',{}).get('advisory_failed',[]):
-                review_lines.append(f'- {control}: کنترل توصیه‌ای رد شده است؛ فایل منتشر شده و بازبینی دیداری لازم است.')
-            if item.get('review_image'):
-                review_lines.append('تصویر مرور: '+item['review_image'])
-            review_lines.append('')
-        (output/'REVIEW.txt').write_text('\n'.join(review_lines),encoding='utf-8-sig')
-    else:
-        (output/'REVIEW.txt').unlink(missing_ok=True)
-    summary=f'خلاصه: {success} موفق؛ {review} بازبینی؛ {blocked} خطا | OK={success} REVIEW={review} BLOCKED={blocked}'
-    lines+=['',summary]
-    (output/'report.txt').write_text('\n'.join(lines)+'\n',encoding='utf-8-sig')
-    (output/'report.json').write_text(json.dumps({'items':items,'summary':summary,
-        'counts':{'OK':success,'REVIEW':review,'BLOCKED':blocked}},ensure_ascii=False,indent=2),encoding='utf-8')
-    return summary
+def _jobs(args, cfg):
+    if args.merge:
+        return [([path.resolve() for path in args.merge], args.namak)]
+    input_path=(args.input or ROOT/cfg['paths']['input']).resolve()
+    if not input_path.exists(): raise FileNotFoundError('مسیر ورودی پیدا نشد')
+    files=[input_path] if input_path.is_file() else sorted(path for path in input_path.iterdir() if path.is_file() and
+        path.suffix.lower() in ['.pdf',*cfg['cli']['office_extensions']] and not path.name.lower().startswith(cfg['cli']['ignore_prefix'].lower()))
+    jobs=[([path],None) for path in files if not path.name.lower().startswith(cfg['cli']['ignore_prefix'].lower())]
+    if not jobs: raise ValueError('فایل ورودی قابل پردازش وجود ندارد')
+    return jobs
+
+
+def _dry_run(args, cfg):
+    try:
+        jobs=_jobs(args,cfg)
+        discover_assets(cfg,ROOT)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore',UserWarning);syllabus=Syllabus()
+        blocked=0
+        print('Dry run: filename/syllabus mapping only; no PDFs or reports will be created')
+        for paths,namak in jobs:
+            files=', '.join(path.name for path in paths)
+            try:
+                match=resolve_details(namak or paths[0].stem,syllabus)
+                record=syllabus.find(match['namak'])
+                field=qa_subject_label(record['sheet'],cfg) or cfg.get('field_labels_en',{}).get(record['sheet'],f"field #{record['template_index']}")
+                print(english(f"MATCH | {files} | {match['namak']} | {field} | {record.get('kind', 'note')}"))
+            except NotFoundError:
+                blocked+=1
+                print(english(f'E101  {files}: namak not found in syllabus - check the input file name'))
+            except Exception:
+                blocked+=1
+                print(english(f'E199  {files}: mapping failed - check the syllabus record'))
+        return int(bool(blocked))
+    except KeyboardInterrupt:
+        print('Interrupted')
+        return 130
+    except Exception:
+        print('E201  dry-run startup failed - check configuration, assets and input path')
+        return 2
 
 
 def main(argv=None):
     for stream in (sys.stdout,sys.stderr):
         if hasattr(stream,'reconfigure'): stream.reconfigure(encoding='utf-8',errors='replace')
-    parser=argparse.ArgumentParser(description='آماده‌سازی آفلاین جزوه‌ها')
+    argv=sys.argv[1:] if argv is None else argv
+    if argv[:1] == ['doctor']:
+        return run_doctor(ROOT,argv[1:])
+    parser=EnglishParser(description='Offline lesson note processor',epilog='Diagnostics: python main.py doctor')
     parser.add_argument('--input',type=Path);parser.add_argument('--output',type=Path)
     parser.add_argument('--merge',nargs='+',type=Path);parser.add_argument('--namak')
+    parser.add_argument('--ui',choices=('auto','fancy','compat','plain'),default='auto')
+    parser.add_argument('--plain',action='store_true',help='Use plain English terminal output')
+    verbosity=parser.add_mutually_exclusive_group()
+    verbosity.add_argument('--quiet',action='store_true',help='Hide per-file terminal updates')
+    verbosity.add_argument('--verbose',action='store_true',help='Show stage timing updates in plain/compat mode')
+    parser.add_argument('--no-color',action='store_true',help='Disable color and use plain output')
+    parser.add_argument('--open-report',action='store_true',help='Open the current HTML report after processing')
+    parser.add_argument('--dry-run',action='store_true',help='List filename/syllabus matches without writing output')
+    parser.add_argument('--version',action='store_true',help='Print the configured tool version and exit')
+    thumbnails=parser.add_mutually_exclusive_group()
+    thumbnails.add_argument('--thumbs',choices=('review','all'),default='review',
+                            help='Include HTML thumbnails for REVIEW files or all published files')
+    thumbnails.add_argument('--no-thumbs',dest='thumbs',action='store_const',const='none',
+                            help='Do not render any HTML thumbnails')
     args=parser.parse_args(argv)
-    if args.merge and (not args.namak or args.input): parser.error('--merge نیازمند --namak است و با --input جمع نمی‌شود')
-    if args.namak and not args.merge: parser.error('--namak فقط همراه --merge است')
-    cfg=load_config();output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
-    clear_review_artifacts(output)
-    logger=logging.getLogger('jozve');logger.setLevel(logging.INFO);logger.propagate=False
-    handler=logging.FileHandler(output/'log.txt',encoding='utf-8');logger.addHandler(handler)
+    if args.merge and (not args.namak or args.input): parser.error('--merge requires --namak and cannot be combined with --input')
+    if args.namak and not args.merge: parser.error('--namak requires --merge')
+    try:
+        cfg=load_config()
+        if args.version:
+            print(english('jozve-tool '+cfg['tool_version']))
+            return 0
+        if args.dry_run:
+            return _dry_run(args,cfg)
+        output=safe_output(args.output or ROOT/cfg['paths']['output'],cfg)
+        clear_review_artifacts(output)
+        event_bus=EventBus()
+        logger=setup_logging(output,event_bus=event_bus)
+    except KeyboardInterrupt:
+        print('Interrupted')
+        return 130
+    except Exception:
+        print('E201  startup failed - check configuration and output permissions',file=sys.stderr)
+        return 2
+    report_display_path=(output.relative_to(ROOT)/'report.html').as_posix().replace('/','\\')
+    ui=TerminalUI('plain' if args.plain else args.ui, quiet=args.quiet, verbose=args.verbose,
+                  no_color=args.no_color,config=cfg,report_path=report_display_path)
+    ui.attach(event_bus)
+    ui.start()
     items=[];global_warnings=[]
+    run_started=time.perf_counter()
+    interrupted=False;startup_failed=False;report_path=None;run_finished_emitted=False
+    event_bus.emit('run_started',stage='run',files=0)
     try:
         assets=discover_assets(cfg,ROOT)
-        logger.info('شروع اجرا؛ منابع یکتا: %s',', '.join(assets))
+        logger.record_versions()
+        logger.record_assets(assets)
         with warnings.catch_warnings():
             warnings.simplefilter('ignore',UserWarning);syllabus=Syllabus()
         global_warnings=syllabus.warnings
+        for warning in global_warnings:
+            event_bus.emit('warning',stage='resolve',kind='syllabus',message=warning,
+                           public_message='syllabus configuration warning - see output/report.txt')
         (ROOT/cfg['paths']['cache']).mkdir(parents=True,exist_ok=True)
         claimed=set()
-        if args.merge: jobs=[([p.resolve() for p in args.merge],args.namak)]
-        else:
-            input_path=(args.input or ROOT/cfg['paths']['input']).resolve()
-            if not input_path.exists(): raise FileNotFoundError('مسیر ورودی پیدا نشد')
-            files=[input_path] if input_path.is_file() else sorted(p for p in input_path.iterdir() if p.is_file() and
-                p.suffix.lower() in ['.pdf',*cfg['cli']['office_extensions']] and not p.name.lower().startswith(cfg['cli']['ignore_prefix'].lower()))
-            jobs=[([p],None) for p in files if not p.name.lower().startswith(cfg['cli']['ignore_prefix'].lower())]
-        if not jobs: raise ValueError('فایل ورودی قابل پردازش وجود ندارد')
-        for paths,namak in jobs:
-            print('در حال پردازش: '+', '.join(p.name for p in paths),flush=True)
+        jobs=_jobs(args,cfg)
+        for index,(paths,namak) in enumerate(jobs,1):
+            file_name=', '.join(p.name for p in paths)
+            event_bus.emit('file_started',file=file_name,index=index,total=len(jobs))
             started=time.perf_counter()
-            item=process_job(paths,namak,syllabus,cfg,output,claimed)
+            item=process_job(paths,namak,syllabus,cfg,output,claimed,event_bus=event_bus)
             item['seconds']=round(time.perf_counter()-started,2)
             items.append(item)
             for warning in item.get('warnings',[]):
+                kind=warning.get('kind','unknown')
                 if warning['kind']=='empty_cover_fields':
                     message='empty syllabus values: '+', '.join(warning['fields'])
-                    print('WARNING: '+message,flush=True);logger.warning(message)
+                    stage='resolve'
                 elif warning['kind']=='syllabus_source_conflict':
                     message='syllabus source conflict: subject sheet takes priority'
-                    print('WARNING: '+message,flush=True);logger.warning(message)
+                    stage='resolve'
+                else:
+                    message=f'{kind}: {warning}'
+                    stage='pages'
+                event_bus.emit('warning',file=file_name,stage=stage,kind=kind,message=message,
+                               public_message=message)
             if item.get('status')=='بازبینی' and item.get('output'):
                 try:
                     item['review_image']=write_review_image(output/item['output'],output)
                 except Exception as exc:
-                    item.setdefault('warnings',[]).append({'kind':'review_image_error','detail':str(exc)})
-            logger.info('%s: %s %s',item['status'],', '.join(item['files']),item.get('error',''))
+                    warning={'kind':'review_image_error','detail':str(exc)}
+                    item.setdefault('warnings',[]).append(warning)
+                    event_bus.emit('warning',file=file_name,stage='write',kind=warning['kind'],
+                                   message=warning['detail'])
+            event_bus.emit('file_done',file=file_name,status=item['status'],
+                           status_code=item.get('status_code'),seconds=item['seconds'],item=item)
+    except KeyboardInterrupt:
+        interrupted=True
+        event_bus.emit('error',file='',stage='run',code='E130',message='اجرای کاربر متوقف شد',
+                       public_message='interrupted - no partial file was published')
     except Exception as exc:
+        startup_failed=True
         items.append({'files':['راه‌اندازی'],'status':'خطا','error':str(exc)})
-        logger.error('خطای راه‌اندازی: %s',exc)
+        event_bus.emit('error',file='',stage='run',code='E201',message=str(exc),
+                       public_message='startup failed - check output/report.txt')
+    try:
+        summary=write_report(output,items,global_warnings)
+        counts={'OK':sum(i['status']=='موفق' for i in items),
+                'REVIEW':sum(i['status']=='بازبینی' for i in items),
+                'BLOCKED':sum(i['status']=='خطا' for i in items)}
+        logger.flush_warnings()
+        event_bus.emit('run_finished',summary=summary,counts=counts,
+                       total_seconds=time.perf_counter()-run_started,
+                       interrupted=interrupted,report_available=False)
+        run_finished_emitted=True
+        try:
+            report_path=write_html_report(output,items,global_warnings,thumbs=args.thumbs,config=cfg,
+                                          elapsed=time.perf_counter()-run_started,interrupted=interrupted)
+        except Exception as exc:
+            logger.error('ساخت گزارش HTML ناموفق بود: '+str(exc),stage='report')
+            event_bus.emit('warning',stage='report',kind='html_report_error',
+                           message='ساخت گزارش HTML ناموفق بود',
+                           public_message='HTML report unavailable - see log.txt')
+        if report_path is not None:
+            ui.set_report_available(report_display_path)
+        if args.open_report and report_path is not None:
+            try:
+                if not webbrowser.open(report_path.resolve().as_uri()):
+                    raise OSError('Browser did not accept the report')
+            except Exception:
+                logger.warning('بازکردن گزارش در مرورگر ناموفق بود',stage='report')
+                event_bus.emit('warning',stage='report',public_message='Cannot open report - open report.html manually')
+    except KeyboardInterrupt:
+        event_bus.emit('error',stage='report',code='E130',message='ثبت گزارش متوقف شد',
+                       public_message='Interrupted - report writing stopped')
+        counts={'OK':sum(i['status']=='موفق' for i in items),
+                'REVIEW':sum(i['status']=='بازبینی' for i in items),
+                'BLOCKED':sum(i['status']=='خطا' for i in items)}
+        if not run_finished_emitted:
+            event_bus.emit('run_finished',summary='Interrupted',counts=counts,
+                           total_seconds=time.perf_counter()-run_started,
+                           interrupted=True,report_available=False)
+        return 130
+    except Exception as exc:
+        logger.error('ثبت گزارش ناموفق بود: '+str(exc),stage='report')
+        event_bus.emit('error',stage='report',code='E202',message=str(exc),
+                       public_message='report writing failed - check output permissions')
+        return 2
     finally:
-        logger.removeHandler(handler);handler.close()
-    print(write_report(output,items,global_warnings))
-    return int(any(i['status']=='خطا' for i in items))
+        logger.close()
+        ui.close()
+    return 130 if interrupted else 2 if startup_failed else int(any(i['status']=='خطا' for i in items))
+
+
+# Optional startup splash: the silhouette comes from the supplied Balatar logo.
+_SPLASH_MASK = (
+    '..............##..............', '.............####.............',
+    '............######............', '...........########...........',
+    '..........####..####..........', '.........####....####.........',
+    '........####......####........', '........###........###........',
+    '.......###..........###.......', '......####..........####......',
+    '......###............###......', '.....###..............###.....',
+    '.....###..............###.....', '....###................###....',
+    '....###................###....', '...###..................###...',
+    '...###.......####.......###...', '...##......########......##...',
+    '..###....############....###..', '..###...######..######...###..',
+    '..##...####........####...##..', '.###...###..........###...###.',
+    '.###..###............###..###.', '.###..###............###..###.',
+    '.##..###..............###..##.', '###..###......##......###..###',
+    '###..###.....####.....###..###', '###..###....######....###..###',
+    '###..###...########...###..###', '###..##...####..####..###..###',
+    '###.....#####....####.###..###', '###...######......###.###..###',
+    '###.######............####.###', '#########............#########',
+    '##########..........##########', '####...####........####...####',
+    '#.......####......####.......#', '.........############.........',
+    '..........##########..........', '............######............',
+)
+
+
+def _show_startup_splash(argv, stream=None, environ=None):
+    """Show a short truecolor animation only in an interactive modern terminal."""
+    stream = sys.stdout if stream is None else stream
+    environ = os.environ if environ is None else environ
+    if any(arg in argv for arg in ('--quiet', '--plain', '--no-color', '--dry-run',
+                                  '--version', '--help', '-h')) or 'NO_COLOR' in environ:
+        return
+    for index, arg in enumerate(argv):
+        if arg in ('--ui=plain', '--ui=compat') or (
+                arg == '--ui' and index + 1 < len(argv) and argv[index + 1] in ('plain', 'compat')):
+            return
+    try:
+        from ui import _modern_terminal, _rich_modules
+        if not stream.isatty() or not _modern_terminal(environ) or _rich_modules() is None:
+            return
+        size = shutil.get_terminal_size((80, 24))
+        if size.lines < 24 or size.columns < 36:
+            return
+        '▀▄█'.encode(stream.encoding or 'utf-8')
+    except (AttributeError, LookupError, OSError, UnicodeError):
+        return
+    # Keep the supplied mark's aspect ratio and derive every final frame from
+    # its alpha channel; the built-in mask is only a safe rendering fallback.
+    # Leave room for flight, label, and a blank last terminal row.
+    height = min(40, (size.lines - 11) * 2)
+    height -= height % 2
+    width = min(size.columns - 8, round(height * 0.88))
+    mask = _SPLASH_MASK
+    try:
+        from base64 import b64decode
+        from io import BytesIO
+        from report_html import _BALATAR_LOGO_PNG
+        with Image.open(BytesIO(b64decode(_BALATAR_LOGO_PNG))) as image:
+            alpha = image.getchannel('A').resize((width, height), Image.Resampling.LANCZOS)
+            mask = tuple(''.join('#' if alpha.getpixel((x, y)) > 90 else '.'
+                                 for x in range(width)) for y in range(height))
+    except Exception:
+        # Resize the conservative embedded silhouette if the image asset is absent.
+        source_height = len(mask)
+        source_width = len(mask[0])
+        mask = tuple(''.join(
+            '#' if mask[min(source_height - 1, round(y * (source_height - 1) / max(1, height - 1)))][
+                min(source_width - 1, round(x * (source_width - 1) / max(1, width - 1)))] == '#'
+            else '.' for x in range(width)) for y in range(height))
+
+    rows_high = height // 2
+    final_top = max(1, (size.lines - rows_high - 3) // 2 - max(1, size.lines // 12))
+    travel_pixels = min(12, max(8, (size.lines - rows_high - 3) * 2))
+    final_pixel = final_top * 2
+    start_pixel = final_pixel + travel_pixels
+    columns = size.columns - 1
+    background = (8, 13, 29)
+    bg_sgr = f'\x1b[48;2;{background[0]};{background[1]};{background[2]}m'
+    reset = '\x1b[0m'
+
+    def _rgb(x, y, shine=0.0, dim=1.0):
+        xratio = x / max(1, width - 1)
+        yratio = y / max(1, height - 1)
+        blend = 0.42 * xratio + 0.58 * yratio
+        color = (77 + 78 * blend, 124 - 32 * blend, 255)
+        light = max(0.0, min(1.0, shine)) * 0.48
+        return tuple(max(16, min(255, int((channel + (255 - channel) * light) * dim)))
+                     for channel in color)
+
+    def _put(canvas, x, y, glyph, color, lower_color=None):
+        if 0 <= x < columns and 0 <= y < size.lines - 1:
+            r, g, b = color
+            code = f'\x1b[38;2;{r};{g};{b}m'
+            if lower_color is not None:
+                lr, lg, lb = lower_color
+                code += f'\x1b[48;2;{lr};{lg};{lb}m'
+            else:
+                code += bg_sgr
+            canvas[y][x] = code + glyph + bg_sgr
+
+    def _revealed(x, y, reveal):
+        # Fractional coverage interpolates motion between half-cell samples.
+        import math
+        base = math.floor(y)
+        fraction = y - base
+        coverage = 0.0
+        for sample, weight in ((base, 1 - fraction), (base + 1, fraction)):
+            if 0 <= sample < height and mask[sample][x] == '#':
+                diagonal = 0.38 * x / max(1, width - 1) + 0.62 * sample / max(1, height - 1)
+                if diagonal <= reveal:
+                    coverage += weight
+        return coverage
+
+    def _paint_logo(canvas, top_pixel, reveal=1.0, scan=None, dim=1.0, outline=False):
+        for cell_y in range(size.lines - 1):
+            source_top = cell_y * 2 - top_pixel
+            source_bottom = source_top + 1
+            for x in range(width):
+                top_on = _revealed(x, source_top, reveal)
+                bottom_on = _revealed(x, source_bottom, reveal)
+                if not (top_on or bottom_on):
+                    continue
+                if outline:
+                    source_y = round(source_top if top_on else source_bottom)
+                    neighbors = ((x - 1, source_y), (x + 1, source_y),
+                                 (x, source_y - 1), (x, source_y + 1))
+                    if all(0 <= nx < width and 0 <= ny < height and mask[ny][nx] == '#'
+                           for nx, ny in neighbors):
+                        continue
+                shine = 0.0
+                if scan is not None:
+                    source_y = source_top if top_on else source_bottom
+                    diagonal = 0.38 * x / max(1, width - 1) + 0.62 * source_y / max(1, height - 1)
+                    shine = max(0.0, 1.0 - abs(diagonal - scan) / 0.09)
+                def covered(y, coverage):
+                    color = _rgb(x, y, shine, dim)
+                    return tuple(round(background[i] + (color[i] - background[i]) * coverage)
+                                 for i in range(3))
+                _put(canvas, x + (columns - width) // 2, cell_y, '▀',
+                     covered(source_top, top_on), covered(source_bottom, bottom_on))
+
+    def _paint_trail(canvas, top_pixel, extent, strength=1.0):
+        base_row = int((top_pixel + height + 1) // 2)
+        center = columns // 2
+        extent = max(0, min(extent, size.lines - base_row))
+        import math
+        nozzle = max(2, min(4, width // 7))
+        for step in range(extent):
+            depth = step / max(1, extent - 1)
+            # Broad plasma cone with a bright core and a cool, fading envelope.
+            radius = max(0.65, nozzle * (1 - depth) ** 0.65)
+            pulse = 0.92 + 0.08 * math.sin(frame_number * 0.45 - step * 0.9)
+            for dx in range(-nozzle - 1, nozzle + 2):
+                edge = abs(dx) / radius
+                if edge > 1.35:
+                    continue
+                core = max(0.0, 1 - edge * 1.7) * (1 - depth)
+                palette = (int(85 + 160 * core + 65 * min(1, edge)),
+                           int(125 + 125 * core + 75 * (1 - min(1, edge))), 255)
+                opacity = strength * (1 - depth * 0.85) * max(0.0, 1 - edge / 1.4) * pulse
+                color = tuple(round(background[k] + (v - background[k]) * opacity)
+                              for k, v in enumerate(palette))
+                glyph = '█' if core > 0.45 else '▓' if edge < 0.65 else '▒' if edge < 1 else '░'
+                _put(canvas, center + dx, base_row + step, glyph, color)
+
+    # Compact geometric lettering: five pixel rows, rendered in three cell rows.
+    letters = {
+        'B': ('11110','10001','11110','10001','11110'),
+        'A': ('01110','10001','11111','10001','10001'),
+        'L': ('10000','10000','10000','10000','11111'),
+        'T': ('11111','00100','00100','00100','00100'),
+        'R': ('11110','10001','11110','10100','10010'),
+    }
+    name_pixels = tuple('0'.join(letters[ch][row] for ch in 'BALATAR') for row in range(5))
+
+    def _paint_warp(canvas, t):
+        import math
+        q = max(0.0, min(1.0, (t - 2.5) / 0.8))
+        fade = max(0.0, min(1.0, (3.8 - t) / 0.5))
+        if t < 1.7 or fade <= 0:
+            return
+        cx, cy = columns / 2, (size.lines - 2) / 2
+        # Deterministic perspective rays accelerate outward from a vanishing point.
+        for i in range(42):
+            angle = i * 2.399963
+            radius = (0.18 + ((i * 0.618034 + q * q * 1.6) % 0.82))
+            length = 1 + int(15 * q * q)
+            for j in range(length):
+                depth = radius - j * 0.018
+                x = round(cx + math.cos(angle) * depth * columns * 0.7)
+                y = round(cy + math.sin(angle) * depth * (size.lines - 2) * 0.7)
+                # Keep the central mark legible throughout the jump.
+                if abs(x - cx) < width / 2 + 2 and abs(y - cy) < rows_high / 2 + 1:
+                    continue
+                light = fade * (0.20 + 0.80 * q) * (1 - j / max(1, length))
+                color = tuple(round(background[k] + (v - background[k]) * light)
+                              for k, v in enumerate((130, 210, 255)))
+                _put(canvas, x, y, '·' if length == 1 else '▀', color)
+        pulse = max(0.0, 1 - abs(t - 2.72) / 0.14)
+        if pulse:
+            for x in range(columns):
+                light = pulse * max(0.0, 1 - abs(x - cx) / (columns / 2))
+                if abs(x - cx) > width / 2 + 2:
+                    _put(canvas, x, round(cy), '─', (int(140 * light), int(200 * light), int(255 * light)))
+
+    def _show_frame(top_pixel, reveal=1.0, scan=None, ghosts=(), trail=0,
+                    trail_strength=1.0, name_strength=None, science_strength=0.0):
+        nonlocal frame_number
+        canvas = [[' ' for _ in range(columns)] for _ in range(size.lines - 1)]
+        _paint_warp(canvas, frame_number / 30.0)
+        if science_strength > 0:
+            tone = tuple(int(c * science_strength) for c in (48, 94, 140))
+            for side in (-1, 1):
+                anchor = columns // 2 + side * (width // 2 + 3)
+                for dx, dy, glyph in ((0, 0, '+'), (side, 1, '.'), (side * 2, 2, '+'),
+                                      (side, 3, '.'), (0, 4, '+')):
+                    _put(canvas, anchor + dx, final_top + 2 + dy, glyph, tone)
+        for ghost_pixel, ghost_dim in ghosts:
+            _paint_logo(canvas, ghost_pixel, dim=ghost_dim, outline=True)
+        if trail:
+            _paint_trail(canvas, top_pixel, trail, trail_strength)
+        _paint_logo(canvas, top_pixel, reveal=reveal, scan=scan)
+        if name_strength is not None:
+            q = max(0.0, min(1.0, name_strength))
+            name_width = len(name_pixels[0])
+            # A narrower terminal uses the readable text fallback.
+            if columns < name_width + 2:
+                label = 'BALATAR'
+                for i, ch in enumerate(label):
+                    _put(canvas, (columns - len(label)) // 2 + i,
+                         final_top + rows_high + 1, ch, (180, 195, 255))
+            else:
+                origin = (columns - name_width) // 2
+                for row in range(3):
+                    for x in range(name_width):
+                        colors = []
+                        for py in (row * 2, row * 2 + 1):
+                            on = py < 5 and name_pixels[py][x] == '1'
+                            shine = max(0.0, 1 - abs(x / name_width - (q * 1.4 - 0.2)) / 0.15) if q < 1 else 0
+                            base = (95 + int(85 * x / name_width), 160, 255)
+                            colors.append(tuple(round(background[k] +
+                                ((v + (255 - v) * shine) - background[k]) * q)
+                                if on else background[k] for k, v in enumerate(base)))
+                        _put(canvas, origin + x, final_top + rows_high + 1 + row,
+                             '▀', colors[0], colors[1])
+        lines = [bg_sgr + ''.join(line) + reset for line in canvas]
+        stream.write('\x1b[H' + '\n'.join(lines))
+        stream.flush()
+        frame_number += 1
+        time.sleep(max(0.0, started + frame_number / 30.0 - time.monotonic()))
+
+    frame_number = 0
+    final_hold_started = None
+    started = time.monotonic()
+    def flight_position(t):
+        # Quintic trajectory: zero velocity and acceleration at both ends.
+        q = max(0.0, min(1.0, (t - 2.5) / 1.2))
+        eased = q * q * q * (10 + q * (-15 + 6 * q))
+        return start_pixel + 2 - (start_pixel + 2 - final_pixel) * eased
+
+    try:
+        stream.write('\x1b[?25l\x1b[2J' + bg_sgr)
+        for frame in range(168):
+            t = frame / 30.0
+            reveal = min(1.0, 0.08 + 0.92 * t / 1.7)
+            top_pixel, ghosts, trail, strength = start_pixel, (), 0, 0.0
+            if 2.2 <= t < 2.5:
+                q = (t - 2.2) / 0.3
+                top_pixel += 2 * q * q * q * (10 + q * (-15 + 6 * q))
+                trail, strength = 2, q
+            elif t >= 2.5:
+                q = min(1.0, (t - 2.5) / 1.2)
+                top_pixel = flight_position(t)
+                speed = 16 * q * q * (1 - q) * (1 - q)
+                ghosts = ((flight_position(t - 0.09), 0.28 * speed),
+                          (flight_position(t - 0.18), 0.13 * speed)) if speed > 0.01 else ()
+                trail = round(16 * speed)
+                strength = min(1.0, 1.25 * speed + 0.15 * (1 - q))
+            _show_frame(top_pixel, reveal=reveal, scan=t / 1.9 if t < 2.2 else None,
+                        ghosts=ghosts, trail=trail, trail_strength=strength,
+                        name_strength=min(1.0, (t - 3.7) / 0.9) if t >= 3.7 else None,
+                        science_strength=max(0.0, 1 - t / 1.7))
+            if t >= 4.6 and final_hold_started is None:
+                final_hold_started = time.monotonic()
+        # Guarantee a readable final card even when rendering misses deadlines.
+        if final_hold_started is not None:
+            time.sleep(max(0.0, 0.7 - (time.monotonic() - final_hold_started)))
+    except (OSError, UnicodeError):
+        pass
+    finally:
+        try:
+            stream.write('\x1b[0m\x1b[?25h\x1b[2J\x1b[H')
+            stream.flush()
+        except (OSError, UnicodeError):
+            pass
 
 
 if __name__=='__main__':
+    _show_startup_splash(sys.argv[1:])
     raise SystemExit(main())

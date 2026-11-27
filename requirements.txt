@@ -5,3 +5,4 @@ pyyaml==6.0.3
 pytest==9.1.1
 numpy==1.26.4
 Pillow==12.0.0
+rich==13.9.4

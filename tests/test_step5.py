@@ -110,7 +110,7 @@ def test_empty_input(context):
     empty = DATA / 'empty'; empty.mkdir(exist_ok=True)
     out = OUT / 'empty'
     run = subprocess.run([sys.executable, str(ROOT/'main.py'), '--input', str(empty), '--output', str(out)], capture_output=True, timeout=120)
-    assert run.returncode == 1
+    assert run.returncode == 2
     report = json.loads((out/'report.json').read_text(encoding='utf-8'))
     assert 'وجود ندارد' in report['items'][0]['error']
     assert not list(out.glob('*.pdf'))

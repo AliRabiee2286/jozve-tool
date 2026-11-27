@@ -1,0 +1,201 @@
+{
+  "python": "3.12.10",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "packages": {
+    "PyMuPDF": "1.28.2",
+    "openpyxl": "3.1.5",
+    "numpy": "1.26.4"
+  },
+  "note": "One sequential run per input, existing caches retained. frame is nested QAFrame.apply time inside cover/pages; do not add it to parent times. QC reference drawing is included only in qc. border is the existing legacy preparation stage.",
+  "results": [
+    {
+      "source": "input/ai_par_2.pdf",
+      "sha256": "93f178787305cb064daf378127eca1b5fa0d45af50671eef0df1adb2f11b2f3b",
+      "kind": "note",
+      "status": "OK",
+      "input_pages": 3,
+      "seconds": {
+        "resolve": 0.0972,
+        "cover": 0.9717,
+        "border": 0.1862,
+        "frame": 0,
+        "pages": 4.452,
+        "qc": 4.2974,
+        "write": 0.0013
+      },
+      "wall_seconds": 11.772879100000864,
+      "events": [
+        {
+          "file": "ai_par_2.pdf",
+          "stage": "resolve",
+          "seconds": 0.0972,
+          "ok": true
+        },
+        {
+          "file": "ai_par_2.pdf",
+          "stage": "cover",
+          "seconds": 0.9717,
+          "ok": true
+        },
+        {
+          "file": "ai_par_2.pdf",
+          "stage": "border",
+          "seconds": 0.1862,
+          "ok": true
+        },
+        {
+          "file": "ai_par_2.pdf",
+          "stage": "pages",
+          "seconds": 4.452,
+          "ok": true
+        },
+        {
+          "file": "ai_par_2.pdf",
+          "stage": "qc",
+          "seconds": 4.2974,
+          "ok": true
+        },
+        {
+          "file": "ai_par_2.pdf",
+          "stage": "write",
+          "seconds": 0.0013,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "source": "tests/data/qa/shimi_physic_20_pasokh.pdf",
+      "sha256": "609660062061c66a86889df084e8e179bac50f30694bdec0343fa60a8dc62e81",
+      "kind": "pasokh",
+      "status": "OK",
+      "input_pages": 1,
+      "seconds": {
+        "resolve": 0.0905,
+        "cover": 3.9056,
+        "border": 0,
+        "frame": 0.0738,
+        "pages": 1.2799,
+        "qc": 5.4923,
+        "write": 0.0008
+      },
+      "wall_seconds": 11.2024621999999,
+      "events": [
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "resolve",
+          "seconds": 0.0905,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "frame",
+          "seconds": 0.0243,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "frame",
+          "seconds": 0.0214,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "cover",
+          "seconds": 3.9056,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "frame",
+          "seconds": 0.0281,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "pages",
+          "seconds": 1.2799,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "qc",
+          "seconds": 5.4923,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_pasokh.pdf",
+          "stage": "write",
+          "seconds": 0.0008,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "source": "tests/data/qa/shimi_physic_20_soul.pdf",
+      "sha256": "c861948e8662ad139319c507e7636ce2a4b16a00e635fe311013ec462630de17",
+      "kind": "soal",
+      "status": "REVIEW",
+      "input_pages": 1,
+      "seconds": {
+        "resolve": 0.0688,
+        "cover": 2.9798,
+        "border": 0,
+        "frame": 0.08159999999999999,
+        "pages": 1.139,
+        "qc": 5.6359,
+        "write": 0.0015
+      },
+      "wall_seconds": 10.190566299999773,
+      "events": [
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "resolve",
+          "seconds": 0.0688,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "frame",
+          "seconds": 0.0235,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "frame",
+          "seconds": 0.018,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "cover",
+          "seconds": 2.9798,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "frame",
+          "seconds": 0.0401,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "pages",
+          "seconds": 1.139,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "qc",
+          "seconds": 5.6359,
+          "ok": true
+        },
+        {
+          "file": "shimi_physic_20_soul.pdf",
+          "stage": "write",
+          "seconds": 0.0015,
+          "ok": true
+        }
+      ]
+    }
+  ]
+}

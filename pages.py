@@ -5,13 +5,16 @@ fitted between the bars; any remaining meaningful ink under a bar is rejected.
 No cover is created or inserted by this module.
 """
 from pathlib import Path
-from collections import Counter
+from collections import Counter, defaultdict
+from typing import NamedTuple
 import re
 import unicodedata
 import numpy as np
 import pymupdf as fitz
 from syllabus import DEFAULT_CONFIG, load_config
 from border import clean_border, placements, apply_border
+import bake_proof
+from bake_review import REASON as BAKE_REVIEW_REASON, save_images
 
 
 def _preserve_rendering_attributes(source, destination, destination_start=0, preserve_catalog=True):
@@ -55,12 +58,217 @@ def number_candidates(page, settings):
     return found
 
 
+_TEXT_ORIGIN_TOLERANCE = 0.001  # PDF points. MuPDF rewrites text positions with float rounding.
+
+
+class _PositionedChar(NamedTuple):
+    text: str
+    font: str
+    origin: tuple
+    bbox: fitz.Rect
+
+
+class _TracedGlyph(NamedTuple):
+    char: _PositionedChar
+    glyph_id: int
+    paint_type: int
+
+
+def _number_line_characters(page, found):
+    """Locate the exact occurrences reported by the line detector."""
+    indices = defaultdict(list)
+    for index, item in reversed(list(enumerate(found))):
+        indices[(tuple(item['bbox']), item['text'])].append(index)
+    footers = [[] for _ in found]
+    body = []
+    for block in page.get_text('rawdict')['blocks']:
+        for line in block.get('lines', ()):
+            text = ''.join(char['c'] for span in line['spans'] for char in span['chars'])
+            matched = indices[(tuple(line['bbox']), text)]
+            destination = footers[matched.pop()] if matched else body
+            destination.extend(_PositionedChar(c['c'], s['font'], c['origin'], fitz.Rect(c['bbox']))
+                               for s in line['spans'] for c in s['chars'] if not c.get('synthetic'))
+    return footers, body
+
+
+def _trace_text(page):
+    return [_TracedGlyph(_PositionedChar(chr(code), span['font'], origin, fitz.Rect(box)), glyph, span['type'])
+            for span in page.get_texttrace() for code, glyph, origin, box in span['chars']]
+
+
+def _near_origin(a, b):
+    return max(abs(a[0] - b[0]), abs(a[1] - b[1])) <= _TEXT_ORIGIN_TOLERANCE
+
+
+def _char_key(char):
+    # rawdict can emit an ASCII digit for a glyph whose trace uses Persian or
+    # Arabic digits. Normalize identity for target selection only.
+    text = str(unicodedata.decimal(char.text)) if char.text.isdecimal() else char.text
+    return text, char.font
+
+
+def _trace_without_targets(trace, targets, protected, *, merge_footer_spaces=False):
+    origins = defaultdict(list)
+    body_origins = defaultdict(list)
+    for index, target in enumerate(targets):
+        origins[_char_key(target)].append((index, target.origin))
+    for char in protected:
+        body_origins[_char_key(char)].append(char.origin)
+
+    seen = set()
+    expected = []
+    for glyph in trace:
+        char = glyph.char
+        key = _char_key(char)
+        hits = [i for i, xy in origins.get(key, ()) if _near_origin(xy, char.origin)]
+        has_body_origin = any(_near_origin(xy, char.origin) for xy in body_origins.get(key, ()))
+        if not hits and merge_footer_spaces and char.text.isspace() and not has_body_origin:
+            # The extractor can merge overprinted spaces within a numbered line.
+            hits = [i for i, _ in origins.get(key, ()) if targets[i].bbox.intersects(char.bbox)]
+        if not hits:
+            expected.append(glyph)
+        else:
+            if has_body_origin:
+                return None
+            # Text can be painted twice at the same location (fill and stroke).
+            seen.update(hits)
+    return expected if len(seen) == len(targets) else None
+
+
+def _same_trace(expected, observed):
+    return len(expected) == len(observed) and all(
+        a.char.text == b.char.text and a.char.font == b.char.font and
+        a.glyph_id == b.glyph_id and a.paint_type == b.paint_type and
+        _near_origin(a.char.origin, b.char.origin) for a, b in zip(expected, observed))
+
+
+def _whitespace_trace_shifts(expected, observed):
+    """Require exact glyph identity and record allowed whitespace origin changes."""
+    if len(expected) != len(observed):
+        return None
+    shifts = []
+    for before, after in zip(expected, observed):
+        left, right = before.char, after.char
+        if (left.text, left.font, before.glyph_id, before.paint_type) != (
+                right.text, right.font, after.glyph_id, after.paint_type):
+            return None
+        if not left.text.isspace():
+            if not _near_origin(left.origin, right.origin):
+                return None
+            continue
+        if not abs(left.origin[1] - right.origin[1]) <= _TEXT_ORIGIN_TOLERANCE:
+            return None
+        if left.origin != right.origin:
+            shifts.append({'text': left.text, 'font': left.font,
+                           'glyph_id': before.glyph_id, 'paint_type': before.paint_type,
+                           'origin_before': list(left.origin), 'origin_after': list(right.origin)})
+    return shifts
+
+
+def _apply_number_boxes(page, boxes):
+    for box in boxes:
+        page.add_redact_annot(box, fill=False, cross_out=False)
+    page.apply_redactions(images=0, graphics=0)
+
+
+def _whitespace_overlap_is_safe(page, boxes, trace, expected):
+    """Resolve space-only edge contacts without mutating the working page."""
+    if expected is None:
+        return False
+    with fitz.open() as probe:
+        probe.insert_pdf(page.parent, from_page=page.number, to_page=page.number)
+        copy = probe[0]
+        if not _same_trace(trace, _trace_text(copy)):
+            return False
+        _apply_number_boxes(copy, boxes)
+        return _same_trace(expected, _trace_text(copy))
+
+
+def _exclude_rect(box, obstacle):
+    intersection = box & obstacle
+    if intersection.is_empty:
+        return [box]
+    return [part for part in (
+        fitz.Rect(box.x0, box.y0, box.x1, intersection.y0),
+        fitz.Rect(box.x0, intersection.y1, box.x1, box.y1),
+        fitz.Rect(box.x0, intersection.y0, intersection.x0, intersection.y1),
+        fitz.Rect(intersection.x1, intersection.y0, box.x1, intersection.y1),
+    ) if not part.is_empty]
+
+
+def _digit_redaction_box(digit, protected):
+    """Place a small hit rectangle inside the digit and outside traced body boxes."""
+    if digit.bbox.is_empty:
+        return None
+    free = [digit.bbox]
+    for glyph in protected:
+        obstacle = glyph.char.bbox
+        if digit.bbox.intersects(obstacle):
+            free = [piece for rect in free for piece in _exclude_rect(rect, obstacle)]
+            if not free:
+                return None
+    area = max(free, key=lambda rect: rect.get_area())
+    center = (area.tl + area.br) / 2
+    # Apply redactions on intersection. Use the central eighth of the available
+    # area to keep the hit away from each boundary.
+    dx, dy = area.width / 16, area.height / 16
+    return (center.x - dx, center.y - dy, center.x + dx, center.y + dy)
+
+
 def remove_numbers(page, settings):
     found = number_candidates(page, settings)
-    for item in found:
-        page.add_redact_annot(item['bbox'], fill=False, cross_out=False)
-    if found:
-        page.apply_redactions(images=0, graphics=0)
+    if not found:
+        return found
+
+    boxes = [fitz.Rect(item['bbox']) for item in found]
+    footers, body = _number_line_characters(page, found)
+    error = f'حذف متن در صفحهٔ محتوا {page.number + 1}'
+    if not all(footers):
+        raise ValueError(f'{error}؛ محل کاراکترهای شماره قابل تطبیق نیست')
+    overlaps = [char for char in body if any(char.bbox.intersects(box) for box in boxes)]
+    if not overlaps:
+        footer_chars = [char for line in footers for char in line]
+        expected = _trace_without_targets(_trace_text(page), footer_chars, body, merge_footer_spaces=True)
+        if expected is None:
+            raise ValueError(f'{error}؛ رد گلیف‌های شماره از متن دیگر قابل تفکیک نیست')
+        # Preserve the original operators and annotation order for this path.
+        _apply_number_boxes(page, [item['bbox'] for item in found])
+        shifts = _whitespace_trace_shifts(expected, _trace_text(page))
+        if shifts is None:
+            raise ValueError(f'{error}؛ کاراکترهای بیرون شماره تغییر کردند')
+        if shifts:
+            found[0]['trace_whitespace_shifts'] = shifts
+        return found
+
+    if any(kind == fitz.PDF_ANNOT_REDACT for _, kind, _ in page.annot_xrefs()):
+        raise ValueError(f'{error}؛ صفحه کادر حذف از قبل دارد')
+    trace = _trace_text(page)
+    if all(char.text.isspace() for char in overlaps):
+        footer_chars = [char for line in footers for char in line]
+        expected = _trace_without_targets(trace, footer_chars, body, merge_footer_spaces=True)
+        if _whitespace_overlap_is_safe(page, boxes, trace, expected):
+            _apply_number_boxes(page, [item['bbox'] for item in found])
+            if not _same_trace(expected, _trace_text(page)):
+                raise ValueError(f'{error}؛ کاراکترهای بیرون شماره تغییر کردند')
+            return found
+
+    digits = [char for line in footers for char in line if char.text.isdecimal()]
+    protected = body + [char for line in footers for char in line if not char.text.isdecimal()]
+    expected = _trace_without_targets(trace, digits, protected)
+    if not digits or expected is None:
+        raise ValueError(f'{error}؛ ارقام شماره از متن دیگر قابل تفکیک نیستند')
+
+    tight_boxes = [_digit_redaction_box(digit, expected) for digit in digits]
+    if None in tight_boxes:
+        raise ValueError(f'{error}؛ کادر امن برای رقم شماره پیدا نشد')
+    _apply_number_boxes(page, dict.fromkeys(tight_boxes))
+    if not _same_trace(expected, _trace_text(page)):
+        raise ValueError(f'{error}؛ حذف دقیق ارقام با حفظ کاراکترهای دیگر تأیید نشد')
+
+    for item, line in zip(found, footers):
+        removed_digits = ''.join(char.text for char in line if char.text.isdecimal())
+        if removed_digits != item['text']:
+            item.update(number_line=item['text'], text=removed_digits)
     return found
 
 
@@ -100,40 +308,138 @@ def meaningful_ink(image, settings):
     return ink & (np.max(np.abs(rgb-paper),axis=2)>settings['paper_color_tolerance'])
 
 
-def bake_annotations(document, settings):
-    """Bake on the caller's output copy; reject violations, never rasterize content."""
+def _bake_failure_reasons(record, threshold):
+    reasons = []
+    if record['annotations_after']:
+        reasons.append('annotations_after')
+    if record['outside_annotation_pixels']:
+        reasons.append('outside_annotation_pixels')
+    if record['max_channel_difference'] > threshold:
+        reasons.append('max_channel_difference')
+    if not record['text_equal']:
+        reasons.append('text_equal')
+    if any(record[k+'_before'] != record[k+'_after'] for k in ('widgets', 'images', 'drawings')):
+        reasons.append('structure_changed')
+    return reasons
+
+
+def _bake_decision(record, threshold, review_enabled, proof=None):
+    reasons = _bake_failure_reasons(record, threshold)
+    if not reasons:
+        return 'OK'
+    if (review_enabled and threshold == 5 and proof is True and
+            record['max_channel_difference'] > threshold and
+            not (record['widgets_before'] or record['widgets_after']) and
+            set(reasons) <= {'max_channel_difference', 'outside_annotation_pixels'}):
+        return 'REVIEW'
+    return 'BLOCKED'
+
+
+def bake_annotations(document, settings, *, review_dir=None):
+    """Bake on the caller's output copy; reject violations, never rasterize content.
+
+    Measures every page and collects all violations before raising.
+    Pixel differences up to bake_max_channel_difference are tolerated both
+    inside and outside annotation bboxes (Multiply-blend rounding); only
+    pixels exceeding the threshold outside bboxes count as blocking
+    outside_annotation_pixels. Rounding-level outside pixels are recorded
+    separately in outside_rounding_pixels. At the production cutoff, an exact
+    structural proof can route raster-only failures to human REVIEW.
+    """
+    threshold = settings['bake_max_channel_difference']
+    review_enabled = (settings.get('bake_structural_review', True) is True and threshold == 5
+                      and review_dir is not None)
     before = []
-    for page in document:
-        before.append({'image': raster(page, settings['diagnostic_dpi']),
-                       'boxes': [list(a.rect * page.rotation_matrix) for a in page.annots() or []],
-                       'widgets': len(list(page.widgets() or [])),
-                       'images': len(page.get_images()), 'drawings': len(page.get_drawings()),
-                       'text': page.get_text()})
-    document.bake(annots=True, widgets=False)
+    proof_doc = None
+    try:
+        for page in document:
+            before.append({'image': raster(page, settings['diagnostic_dpi']),
+                           'boxes': [list(a.rect * page.rotation_matrix) for a in page.annots() or []],
+                           'widgets': len(list(page.widgets() or [])),
+                           'images': len(page.get_images()), 'drawings': len(page.get_drawings()),
+                           'text': page.get_text()})
+        candidates = [i for i, old in enumerate(before) if old['boxes'] and not old['widgets']]
+        if review_enabled and candidates:
+            try:
+                proof_doc = bake_proof.geometry_document(document)
+            except Exception as exc:
+                for index in candidates:
+                    before[index]['proof_error'] = f'{type(exc).__name__}: {exc}'
+            if proof_doc is not None:
+                for index in candidates:
+                    try:
+                        before[index]['proof'] = bake_proof.snapshot(document[index], proof_doc)
+                    except Exception as exc:
+                        before[index]['proof_error'] = f'{type(exc).__name__}: {exc}'
+        document.bake(annots=True, widgets=False)
+    finally:
+        if proof_doc is not None:
+            proof_doc.close()
     result = []
+    violations = []
+    post_proof_doc = None
+    if review_enabled and any('proof' in old for old in before):
+        overrides = {old['proof']['page_number']: old['proof']['content_refs']
+                     for old in before if 'proof' in old}
+        try:
+            post_proof_doc = bake_proof.geometry_document(document, overrides)
+        except Exception:
+            post_proof_doc = None
     for page, old in zip(document, before):
-        delta = np.abs(raster(page, settings['diagnostic_dpi']).astype(np.int16)-old['image'].astype(np.int16))
-        changed = np.any(delta != 0, axis=2)
+        page_number = page.number
+        after = raster(page, settings['diagnostic_dpi'])
+        if after.shape != old['image'].shape:
+            violations.append((page.number+1, ['raster_size_changed'], {'max_channel_difference': 255,
+                'raster_before': old['image'].shape, 'raster_after': after.shape}))
+            continue
+        delta = np.abs(after.astype(np.int16)-old['image'].astype(np.int16))
+        per_pixel_max = delta.max(axis=2)
+        changed = per_pixel_max > 0
         allowed = np.zeros(changed.shape, dtype=bool)
         margin = settings['bake_bbox_margin_pixels']
         for box in old['boxes']:
             x0,y0,x1,y1 = (fitz.Rect(box)*(settings['diagnostic_dpi']/72)).irect
             allowed[max(0,y0-margin):min(allowed.shape[0],y1+margin),
                     max(0,x0-margin):min(allowed.shape[1],x1+margin)] = True
+        outside_mask = changed & ~allowed
+        outside_above = outside_mask & (per_pixel_max > threshold)
+        outside_rounding = outside_mask & (per_pixel_max <= threshold)
         record = {'annotations_before': len(old['boxes']), 'annotations_after': len(list(page.annots() or [])),
                   'annotation_boxes': old['boxes'], 'widgets_before': old['widgets'],
                   'widgets_after': len(list(page.widgets() or [])),
                   'images_before': old['images'], 'images_after': len(page.get_images()),
                   'drawings_before': old['drawings'], 'drawings_after': len(page.get_drawings()),
                   'text_equal': old['text'] == page.get_text(),
-                  'different_pixels': int(changed.sum()), 'max_channel_difference': int(delta.max()),
-                  'outside_annotation_pixels': int(changed[~allowed].sum())}
-        if (record['annotations_after'] or record['outside_annotation_pixels'] or
-                record['max_channel_difference'] > settings['bake_max_channel_difference'] or
-                not record['text_equal'] or any(record[k+'_before'] != record[k+'_after']
-                                              for k in ('widgets', 'images', 'drawings'))):
-            raise ValueError(f'Bake verification failed on page {page.number+1}: {record}')
+                  'different_pixels': int(changed.sum()), 'max_channel_difference': int(per_pixel_max.max()),
+                  'outside_annotation_pixels': int(outside_above.sum()),
+                  'outside_rounding_pixels': int(outside_rounding.sum())}
+        reasons = _bake_failure_reasons(record, threshold)
+        decision = _bake_decision(record, threshold, review_enabled)
+        if _bake_decision(record, threshold, review_enabled, proof=True) == 'REVIEW':
+            try:
+                if 'proof' not in old:
+                    raise bake_proof.Unproved(old.get('proof_error', 'no same-run AP evidence'))
+                if post_proof_doc is None:
+                    raise bake_proof.Unproved('post-bake geometry copy unavailable')
+                proof = bake_proof.verify(page, old['proof'], post_proof_doc)
+                review = {'reason': BAKE_REVIEW_REASON, 'proof': proof}
+                if review_dir is not None:
+                    visual_diff = np.full_like(after, 255)
+                    visual_diff[changed] = (255, 0, 0)
+                    review['images'] = save_images(Path(review_dir), page_number+1, old['image'],
+                                                   after, visual_diff)
+                record['review'] = review
+                decision = 'REVIEW'
+            except Exception as exc:
+                record['structural_proof_failure'] = f'{type(exc).__name__}: {exc}'
+        if decision == 'BLOCKED':
+            violations.append((page_number+1, reasons, record))
         result.append(record)
+    if post_proof_doc is not None:
+        post_proof_doc.close()
+    if violations:
+        worst = max(violations, key=lambda v: v[2]['max_channel_difference'])
+        raise ValueError(f'Bake verification failed on page {worst[0]}: {worst[2]}')
     return result
 
 
@@ -203,7 +509,7 @@ def fit_content(page, pieces, settings):
             'pdf_matrix': list(transform)}
 
 
-def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
+def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None, progress=None, *, review_dir=None):
     """Copy pages, bake, remove footer text, fit uniformly, overlay vector border.
 
     source is a path or an open Document (never mutated). Dimensions, boxes and
@@ -219,9 +525,11 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
     try:
         out.insert_pdf(original)
         _preserve_rendering_attributes(original, out)
-        baked = bake_annotations(out, config['pages'])
+        baked = bake_annotations(out, config['pages'], review_dir=review_dir)
         with fitz.open(clean_path) as clean:
             for i, page in enumerate(out):
+                if progress is not None:
+                    progress(i + 1, len(out))
                 pieces = placements(page.rect, clean[0].rect, config['border'])
                 before = coverage(original[i], pieces, config['pages'])
                 removed = remove_numbers(page, config['pages'])
@@ -240,8 +548,11 @@ def process_pages(source, config_path=DEFAULT_CONFIG, clean_path=None):
                     raise ValueError(f'Ink remains under strips on page {i+1}: {fitted_coverage}')
                 streams_before = len(page.get_contents())
                 applied = apply_border(page, clean, config['border'])
+                trace_whitespace_shifts = [shift for item in removed
+                                           for shift in item.get('trace_whitespace_shifts', [])]
                 entry = {'page': i+1, 'size': list(page.rect), 'rotation': page.rotation,
                          'removed': removed, 'image_candidates': image_candidates,
+                         'trace_whitespace_shifts': trace_whitespace_shifts,
                          'bake': baked[i], 'paper_rule': measure_paper_rule(original[i], config['pages']),
                          'coverage_original': before, 'coverage_after_number_removal': after,
                          'fit': fitted, 'coverage_after_fit': fitted_coverage,

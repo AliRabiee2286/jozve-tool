@@ -173,7 +173,11 @@ def test_missing_template_and_overflow(data):
 
 def test_sources_unchanged():
     evidence=json.loads((ROOT/'tests/data/inspection_evidence.json').read_text(encoding='utf-8'))
-    for path,digest in evidence['source_hashes_before'].items():
+    expected=dict(evidence['source_hashes_before'])
+    manifest=json.loads((ROOT/'tests/data/current_asset_manifest.json').read_text(encoding='utf-8'))
+    for asset in manifest['assets'].values():
+        expected[asset['path']]=asset['sha256']
+    for path,digest in expected.items():
         assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest
 
 

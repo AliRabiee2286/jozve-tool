@@ -1,0 +1,41 @@
+{
+  "dpi": 72,
+  "files": {
+    "LessonNote_hard_shimi_physic_20_pasokh_v01.pdf": {
+      "source": "shimi_physic_20_pasokh.pdf",
+      "status": "OK",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "d90e74d8b56cbbacbf16b6082d7854a23a9b5bc52869065a33431050caa3cd96"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "2b2d14bb21db2ebbf5b428b945965e44c89123ad402c3f642634624583462622"
+        }
+      ]
+    },
+    "LessonNote_hard_shimi_physic_20_soal_v01.pdf": {
+      "source": "shimi_physic_20_soul.pdf",
+      "status": "REVIEW",
+      "pages": [
+        {
+          "page": 1,
+          "width": 596,
+          "height": 842,
+          "sha256": "b088b2776e04507d3ada6af9574e3eb1caa75fe014737c5411c15bd24427ed37"
+        },
+        {
+          "page": 2,
+          "width": 596,
+          "height": 842,
+          "sha256": "53c5c446a8dbaa4aca6181da3fa53258c8b96eccce88303d2f298151120584b4"
+        }
+      ]
+    }
+  }
+}
